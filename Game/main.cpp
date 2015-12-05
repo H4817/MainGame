@@ -1,287 +1,309 @@
-/*#define _GNU_SOURCE
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-int
-main(void)
-{
-    FILE * fp;
-    char * line = NULL;
-    size_t len = 0;
-    ssize_t read;
-    int i = 0;
-
-
-    fp = fopen("/home/nikolai/ClionProjects/untitled2/input", "r");
-    if (fp == NULL)
-        exit(EXIT_FAILURE);
-
-    while ((read = getline(&line, &len, fp)) != -1) {
-        printf("Retrieved line of length %zu :\n", read);
-        printf("%s", line);
-        while (line[i] != '"' or i <= strlen(line))
-    }
-
-    fclose(fp);
-    if (line)
-        free(line);
-    exit(EXIT_SUCCESS);
-}*/ //last exp
-
-
-#include <fstream>
-#include <string>
-#include<iostream>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-using namespace std;
-
-
-
-int main (int argc, char *argv[]){
-//bool findedQuote = false;
-
-
-    char line[255];
-    char index[255];
-    //char* ptr=line;
-    //const char linex = '"';
-    FILE *InputFile = fopen("/home/nikolai/ClionProjects/untitled2/input", "r");
-    FILE *OutputFile = fopen("/home/nikolai/ClionProjects/untitled2/output", "w");
-    ofstream fout;
-    fout.open("/home/nikolai/ClionProjects/untitled2/output1");
-
-
-
-    while (fgets(line, 255, InputFile) != NULL){
-        int i = 0;
-        int j = 1;
-        int k = 0;
-        while (i <= int (strlen(line)) ) {
-
-            bool findedQuote = false;
-
-            if (i != 0 && line[i] == '"' && line[i+1] == '"') { index[k] = i; k++; i++; j = i+1; index[k] = i; k++; findedQuote = true; }
-
-            else if (line[0] == '"') { index[k] = 0; k++; findedQuote = true; }
-
-            while ((line[i] != '"') && (i <= int (strlen(line)))) {
-                i++;
-                j = i + 1;
-                if (line[i] == '"' ) {
-                    //memmove(&line[i], &line[i + 1], strlen(line) - i);
-                    findedQuote = true;
-                    if (index[k] != index[k-1]){index[k] = i; k++;}
-                    //else {index[k] = i; k++;}
-                    //index[k] = i; k++;
-
-                                     //line[i] = line[i] - 2;   // 32      34- кавычка
-                    /*std::string str (line);
-                    str.erase(i, i);
-                    cout << "STR.ERASE№1: " << str << endl;*/
-                    break;
-                }
-            }
-            while ((line[j] != '"') && (j <= int(strlen(line))) && findedQuote) {
-                //cout << "Смена символа:" << endl;
-                if (((97 <= line[j] && line[j] <= 122) || (224 <= line[j] && line[j] <= 255)))
-                    line[j] = line[j] - 32;
-                j++;
-                i = j - 1;
-            }
-            if (line[j] == '"'){
-                index[k] = j;
-                k++;
-                //std::string str (line);
-                //(str.erase(j, j));
-                //cout << "STR.ERASE№2: " << str << endl;
-            }
-                //line[j] = line[j] - 2;
-            i++;
-        }
-        //strstr(line, '"');
-        /*for (int k = 0; k <= int(strlen(line)); k++){
-            if (line[k] != '"')
-            strcat(linee, &line[k]);
-            //cout << "ABC***:  " << linee << endl;
-        }*/
-        fputs(line, OutputFile);
-        /*for (int k = 0; k <= int(strlen(line)); k++){
-            linee[k] = 0;
-        }*/
-        //fout << str;
-        //line > OutputFile;
-    }
-    fclose (InputFile);
-    fclose (OutputFile);
-    for (int o = 0; o <= strlen(index); o++)
-    cout << "Test123Kappa**: " << int(index[o]) << endl;
-}
-
-/*#include <stdio.h>
-#include <stdlib.h>
-
-int main(int argc, char* argv[]){
-    FILE *f = fopen("/home/nikolai/ClionProjects/untitled2/input.txt", "rb");
-    fseek(f, 0, SEEK_END);
-    long fsize = ftell(f);
-    fseek(f, 0, SEEK_SET);
-
-    char *string = (char *) malloc(fsize + 1);
-    fread(string, fsize, 1, f);
-    fclose(f);
-
-    string[fsize] = 0;
-}*/
-/*#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
+#include <SFML/Graphics.hpp>
+#include <iostream> 
+#include "view.h"
+#include "level.h"
 #include <vector>
+class Entity {
+public:
+	std::vector<Object> obj;
+	float dx, dy, x, y, speed, moveTimer;
+	int w, h, health;
+	bool life, isMove, isSelect;
+	Texture texture;
+	Sprite sprite;
+	String name;
+	Entity(Image &image, float X, float Y, int W, int H, String Name) {
+		x = X; y = Y; w = W; h = H; name = Name; moveTimer = 0;
+		speed = 0; health = 100; dx = 0; dy = 0;
+		life = true; isMove = false;
+		texture.loadFromImage(image);
+		sprite.setTexture(texture);
+		sprite.setOrigin(w / 2, h / 2);
+	}
+	FloatRect getRect() {
+		return FloatRect(x, y, w, h);
+	}
+	virtual void update(float time) = 0;
+};
 
-int main()
-{
-    std::string filename;
-    std::cout<<"Enter filename\n";
-    std::getline(std::cin, filename);
-    std::ifstream ifs(filename.c_str());
-    if(!ifs)
-    {
-        std::cerr<<"Error. Can`t open file "<< filename <<'\n';
-        return 1;
-    }
-    std::string finded, replaced;
-    std::cout<<"Enter string for find\n";
-    std::cin>>finded;
-    std::cout<<"Enter string for replace\n";
-    std::cin>>replaced;
-    std::vector<std::string> Vec;
-    int cnt=0;
-    while(!ifs.eof())
-    {
-        std::string tmp;
-        ifs>>tmp;
-        if(tmp == finded)
-        {
-            tmp=replaced;
-            ++cnt;
-        }
-        Vec.push_back(tmp);
-    }
-    std::ofstream ofs(filename.c_str());
-    for(std::vector<std::string>::const_iterator it=Vec.begin();
-        it != Vec.end(); ++it)
-        ofs<<*it<<' ';
-    ofs<<'\n';
-    ofs<<"Numb of replaces is: "<< cnt <<'\n';
-    std::cout<<"End\n";
-    ofs.close();
-    ifs.close();
-    return 0;
-}*/ //1
-// while(buf[i] != '"');
-/*
-#include <fstream>
-#include <string>
-#include<iostream>
-#include <string.h>
+#include <list>
+using namespace sf;
 
-using namespace std;
+class Player :public Entity {
+public:
+	enum { left, right, up, down, leftUp, rightUp, leftDown, rightDown, stay } state;
+	float rotation;
+	int playerScore;
+	Player(Image &image, Level &lev, float X, float Y, int W, int H, String Name) :Entity(image, X, Y, W, H, Name) {
+		playerScore = 0; state = stay; isSelect = false; obj = lev.GetAllObjects();
 
 
+		if (name == "Player") {
+			sprite.setPosition(w, h);
+		}
+	}
+
+	void control() {
+		bool pressBut = false;
+		if (Keyboard::isKeyPressed(Keyboard::Left)) {
+			state = left; speed = 0.2;
+			pressBut = true;
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Right)) {
+			state = right; speed = 0.2;
+			pressBut = true;
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Up)) {
+			if (pressBut) {
+				if (state == right) {
+					state = rightUp; speed = 0.2;
+				}
+				if (state == left) {
+					state = leftUp; speed = 0.2;
+				}
+			}
+			else {
+				state = up; speed = 0.2;
+			}
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Down)) {
+			if (pressBut) {
+				if (state == right) {
+					state = rightDown; speed = 0.2;
+				}
+				if (state == left) {
+					state = leftDown; speed = 0.2;
+				}
+			}
+			else {
+				state = down; speed = 0.2;
+			}
+		}
+	}
+	void rotation_GG(Vector2f pos) {
+		float dX = pos.x - x;
+		float dY = pos.y - y;
+		rotation = (atan2(dY, dX)) * 180 / 3.14159265;
+	}
+	void checkCollisionWithMap(float Dx, float Dy)
+	{
+		for (int i = 0; i<obj.size(); i++)
+			if (getRect().intersects(obj[i].rect))
+			{
+				if (obj[i].name == "solid")
+				{
+					if (Dy>0) { y = obj[i].rect.top - h;  dy = 0; }
+					if (Dy<0) { y = obj[i].rect.top + obj[i].rect.height;   dy = 0; }
+					if (Dx>0) { x = obj[i].rect.left - w; }
+					if (Dx<0) { x = obj[i].rect.left + obj[i].rect.width; }
+				}
+			}
+	}
+
+	void update(float time)
+	{
+		sprite.setRotation(rotation);
+		control();
+		switch (state)
+		{
+		case right:dx = speed; dy = 0;break;
+		case rightUp: dx = speed; dy = -speed; break;
+		case rightDown: dx = speed; dy = speed; break;
+		case left:dx = -speed; dy = 0; break;
+		case leftUp: dx = -speed; dy = -speed; break;
+		case leftDown: dx = -speed; dy = speed; break;
+		case up: dx = 0; dy = -speed; break;
+		case down: dx = 0; dy = speed; break;
+		case stay: break;
+		}
+		x += dx*time;
+		checkCollisionWithMap(dx, 0);
+		y += dy*time;
+		checkCollisionWithMap(0, dy);
+		sprite.setPosition(x + w / 2, y + h / 2);
+
+		if (health <= 0) { life = false; }
+		if (!isMove) { speed = 0; }
+		if (life) { getPlayerCoordinateForView(x, y); }
+	}
+};
+
+class Enemy :public Entity {
+public:
+	Enemy(Image &image, Level &lvl, float X, float Y, int W, int H, String Name) :Entity(image, X, Y, W, H, Name) {
+		obj = lvl.GetObjects("solid");
+		if (name == "easyEnemy") {
+			//sprite.setTextureRect(IntRect(0, 0, w, h));
+			dx = -0.1;
+
+		}
+	}
+
+	void checkCollisionWithMap(float Dx, float Dy){
+		for (int i = 0; i<obj.size(); i++) {
+			if (getRect().intersects(obj[i].rect)) {
+				if (obj[i].name == "solid") {
+					if (Dy > 0) {
+						y = obj[i].rect.top - h;
+						dy = -0.1;
+					}
+					if (Dy < 0) {
+						y = obj[i].rect.top + obj[i].rect.height;
+						dy = 0.1;
+					}
+					if (Dx > 0) {
+						x = obj[i].rect.left - w;
+						dx = -0.1;
+					}
+					if (Dx < 0) {
+						x = obj[i].rect.left + obj[i].rect.width;
+						dx = 0.1;
+					}
+				}
+			}
+		}
+	}
+
+	void update(float time){
+		if (name == "easyEnemy") {
+			checkCollisionWithMap(dx, dy);
+			x += dx*time;
+			y += dy*time;
+			sprite.setPosition(x + w / 2, y + h / 2);
+			if (health <= 0) { life = false; }
+		}
+	}
+};
+
+class Bullet :public Entity {
+public:
+	int direction;
+	float tempy, tempx, rotation, Dx, Dy;
+	Bullet(Image &image, Level &lvl, float X, float Y, int W, int H, float tempX, float tempY, String Name) :Entity(image, X, Y, W, H, Name) {
+		obj = lvl.GetObjects("solid");
+		x = X;
+		y = Y;
+		speed = 0.1;
+		tempx = tempX;
+		tempy = tempY;
+		w = W;
+		h = H;
+		life = true;
+		dx = x;
+		dy = y;
+		life = true;
+		Dx = tempx - x;
+		Dy = tempy - y;
+		rotation = (atan2(Dy, Dx)) * 180 / 3.14159265;
+	}
+
+	void update(float time)
+	{
+		x += speed * (tempx - dx);
+		y += speed * (tempy - dy);
+
+		if (x <= 0) x = 1;
+		if (y <= 0) y = 1;
+
+		for (int i = 0; i < obj.size(); i++) {
+			if (getRect().intersects(obj[i].rect))
+			{
+				life = false;
+			}
+		}
+		sprite.setRotation(rotation);
+		sprite.setPosition(x + w / 2, y + h / 2);
+	}
+};
+
+int main(){
+	int tempX = 0;
+	int tempY = 0;
+	float distance = 0;
+	sf::RenderWindow window(sf::VideoMode(1370, 768), "Game");
+	view.reset(sf::FloatRect(0, 0, 1370, 768));
+
+	Level lvl;
+	lvl.LoadFromFile("/home/nikolai/ClionProjects/Game/map.tmx");
+
+	Object player = lvl.GetObject("player");
+
+	std::list<Entity*>  entities;
+	std::list<Entity*>::iterator it;
+
+	std::vector<Object> e = lvl.GetObjects("easyEnemy");
 
 
-int main(int argc, char* argv[])
-{
-    char c, str[255], buf[255];
-    int i = 0;
+	Image heroImage, easyEnemyImage, bulletImage;
+	bulletImage.loadFromFile("/home/nikolai/ClionProjects/Game/IMG/projectile_bolt_blue_single.png");
+	heroImage.loadFromFile("/home/nikolai/ClionProjects/Game/IMG/PlayerShip.png");
+	easyEnemyImage.loadFromFile("/home/nikolai/ClionProjects/Game/IMG/EasyEnemy.png");
+	std::cout << player.rect.left << player.rect.top;
+	Player p(heroImage, lvl, player.rect.left, player.rect.top, 91, 54, 72, 20, "Player");
+	Clock clock;
 
-    setlocale(LC_ALL, "rus"); // корректное отображение Кириллицы
-    char buff[50]; // буфер промежуточного хранения считываемого из файла текста
-    ifstream fin("/home/nikolai/ClionProjects/untitled2/input"); // (ВВЕЛИ НЕ КОРРЕКТНОЕ ИМЯ ФАЙЛА)
-    ofstream fout("output.txt", ios_base::out);
+	for (int i = 0; i < e.size(); i++)
+		entities.push_back(new Enemy(easyEnemyImage, lvl, e[i].rect.left, e[i].rect.top, 43, 75, 0, 0, "easyEnemy"));
 
-    if (!fin.is_open()) // если файл не открыт
-        cout << "Файл не может быть открыт!\n"; // сообщить об этом
-    else
-    {
-        while (!fin.eof() && buf[i++] != '"')
-        {
-            fin.getline(str, 255);
+	bool ret = false;
 
-            for (int i = 0; i < strlen(str); i++) {
-                if ((str[i] >= '1') && (str[i] <= '9'))
-                    cout << atoi(&str[i]) << " ";
-            }
+	float CurrentFrame = 0;
+	while (window.isOpen())
+	{
+		std::list<Entity*>::iterator at;
+		Vector2i pixelPos = Mouse::getPosition(window);
+		Vector2f pos = window.mapPixelToCoords(pixelPos);
+		float time = clock.getElapsedTime().asMicroseconds();
 
-            cout << "\n";
+		clock.restart();
+		time = time / 800;
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
+			if (event.key.code == Mouse::Left) {
+				entities.push_back(new Bullet(bulletImage, lvl, p.x, p.y, 23, 7, pos.x, pos.y, "Bullet"));
+			}
+		}
+		p.rotation_GG(pos);
+		p.update(time);// Player update function
+		for (it = entities.begin(); it != entities.end();)
+		{
+			Entity *b = *it;
+			b->update(time);
+			if (b->life == false) { it = entities.erase(it); delete b; }
+			else it++;
+		}
+		for (it = entities.begin(); it != entities.end(); it++)
+		{
+			for (at = entities.begin(); at != entities.end(); at++) {
+				if ((*it)->getRect().intersects((*at)->getRect()) && (((*at)->name == "Bullet") && ((*it)->name == "easyEnemy"))) {
+					(*it)->health -= 13;
+					(*at)->life = false;
+				}
+			}
+			if ((*it)->getRect().intersects(p.getRect()))
+			{
+				if ((*it)->name == "easyEnemy") {
+					(*it)->dx = 0;
+					p.health -= 1;
+				}
+			}
+		}
+		if (!p.life)
+			window.close();
+		//for (it = entities.begin(); it != entities.end(); it++) { (*it)->update(time); }
+		window.setView(view);
+		window.clear();
+		lvl.Draw(window);
+		for (it = entities.begin(); it != entities.end(); it++) {
+			window.draw((*it)->sprite);
+		}
+		//window.draw(easyEnemy.sprite);
+		window.draw(p.sprite);
+		window.display();
+	}
 
-        }
-        cin.get();
-
-    }
-        //fin >> buff; // считали первое слово из файла
-        //cout << buff << endl; // напечатали это слово
-        //while(!fin.eof())
-        //{
-
-        //fin.getline(buff, 255); // считали строку из файла
-        //fin.close(); // закрываем файл
-        //cout << buff << endl; // напечатали эту строку
-
-
-    //}
-    //system("pause");
-    return 0;
-}*/
-
-/* string str;
-    ifstream file("text.DAT",ios::in);
-    while(!file.eof())
-    {
-        getline(file, str);
-        cout<<str<<endl;
-    };
-    file.close();
-    system("pause");
-    return 0;}*/
-
-/*#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <iostream>
-
-using namespace std;
-int main(int argc, char** argv) {
-    int i, j;
-    char *str;
-    float f;
-    FILE *InputFile;
-    InputFile = fopen("input.txt", "r");
-    if (InputFile == NULL){
-        printf("Error");
-        exit(0);
-    }
-    while( !feof(InputFile) ){
-        fscanf(InputFile, "%d", &i ); //считывание всех строк с числами из файла
-        fscanf(InputFile, "%s%f", str, &f);
-        cout<<"i="<<i;
-        // gets(in_string); // функция gets() считывает все введённые символы с пробелами до тех пор, пока не будет нажата клавиша Enter
-
-        if (i == '"'){
-            j += i + 1;
-        }
-    }
-
-    return (EXIT_SUCCESS);
-
-    getline нагуглить
-}*/
-
-//fread fopen fread/работа с памятью, как считать весь файл в память, динамическая память. Массив записать в файл.
-//c how read to buffer stackoverflow;          fseek, fwrite, fread.
-//scanfs - обязательно говорить сколько байт нужно считывать.
+	return 0;
+}
