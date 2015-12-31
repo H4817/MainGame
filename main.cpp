@@ -8,7 +8,8 @@
 
 using namespace sf;
 
-int main(){
+
+int main() {
 	sf::RenderWindow window(sf::VideoMode(parameters.WINDOW_SIZE_X, parameters.WINDOW_SIZE_Y), "Game");
 	view.reset(sf::FloatRect(0, 0, parameters.WINDOW_SIZE_X, parameters.WINDOW_SIZE_Y));
 
@@ -20,7 +21,7 @@ int main(){
 	std::list<Entity*> entities;
 	std::list<Entity*>::iterator it;
 
-	std::vector<Object> e = lvl.GetObjects("easyEnemy");
+	std::vector<Object> easyOpponent = lvl.GetObjects("easyEnemy");
 
 	Image heroImage, easyEnemyImage, bulletImage;
 	bulletImage.loadFromFile("IMG/projectile_bolt_blue_single.png");
@@ -30,10 +31,10 @@ int main(){
 	Player protagonist(heroImage, lvl, player.rect.left, player.rect.top, playerStruct.WIDTH, playerStruct.HEIGHT, "Player");
 	Clock clock;
 
-	for (int i = 0; i < e.size(); i++)
-		entities.push_back(new Enemy(easyEnemyImage, lvl, e[i].rect.left, e[i].rect.top, easyEnemyStruct.WIDTH, easyEnemyStruct.HEIGHT, "easyEnemy"));
+	for (int i = 0; i < easyOpponent.size(); i++)
+		entities.push_back(new Enemy(easyEnemyImage, lvl, easyOpponent[i].rect.left, easyOpponent[i].rect.top, easyEnemyStruct.WIDTH, easyEnemyStruct.HEIGHT, "easyEnemy"));
 
-	while (window.isOpen()){
+	while (window.isOpen()) {
 		std::list<Entity*>::iterator at;
 		Vector2i pixelPos = Mouse::getPosition(window);
 		Vector2f pos = window.mapPixelToCoords(pixelPos);
@@ -42,21 +43,21 @@ int main(){
 		clock.restart();
 		time = time / 800;
 		sf::Event event;
-		while (window.pollEvent(event)){
+		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 				window.close();
-			if (event.key.code == Mouse::Left){
+			if (event.key.code == Mouse::Left) {
 				entities.push_back(new Bullet(bulletImage, lvl, protagonist.x, protagonist.y, playerBulletStruct.WIDTH, playerBulletStruct.HEIGHT, pos.x, pos.y, "Bullet"));
 			}
 		}
 		protagonist.rotation_GG(pos);
 		protagonist.update(time);
-		for (it = entities.begin(); it != entities.end();){
-			Entity *b = *it;
-			b->update(time);
-			if (!b->life){
+		for (it = entities.begin(); it != entities.end();) {
+			Entity *projectile = *it;
+			projectile->update(time);
+			if (!projectile->life) {
 				it = entities.erase(it);
-				delete b;
+				delete projectile;
 			}
 			else it++;
 		}
@@ -67,8 +68,8 @@ int main(){
 					(*at)->life = false;
 				}
 			}
-			if ((*it)->getRect().intersects(protagonist.getRect())){
-				if ((*it)->name == "easyEnemy"){
+			if ((*it)->getRect().intersects(protagonist.getRect())) {
+				if ((*it)->name == "easyEnemy") {
 					(*it)->dx = 0;
 					protagonist.health -= easyEnemyStruct.DAMAGE;
 				}

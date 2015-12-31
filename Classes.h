@@ -64,7 +64,10 @@ public:
 	float rotation;
 	int playerScore;
 	Player(Image &image, Level &lev, float X, float Y, int W, int H, String Name) :Entity(image, X, Y, W, H, Name) {
-		playerScore = 0; state = stay; isSelect = false; obj = lev.GetAllObjects();
+		playerScore = 0;
+        state = stay;
+        isSelect = false;
+        obj = lev.GetAllObjects();
 		if (name == "Player") {
 			sprite.setPosition(w, h);
 		}
@@ -73,37 +76,45 @@ public:
 	void control() {
 		bool pressBut = false;
 		if (Keyboard::isKeyPressed(Keyboard::Left)) {
-			state = left; speed = playerStruct.SPEED;
+			state = left;
+            speed = playerStruct.SPEED;
 			pressBut = true;
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Right)) {
-			state = right; speed = playerStruct.SPEED;
+			state = right;
+            speed = playerStruct.SPEED;
 			pressBut = true;
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Up)) {
 			if (pressBut) {
 				if (state == right) {
-					state = rightUp; speed = playerStruct.SPEED;
+					state = rightUp;
+                    speed = playerStruct.SPEED;
 				}
 				if (state == left) {
-					state = leftUp; speed = playerStruct.SPEED;
+					state = leftUp;
+                    speed = playerStruct.SPEED;
 				}
 			}
 			else {
-				state = up; speed = playerStruct.SPEED;
+				state = up;
+                speed = playerStruct.SPEED;
 			}
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Down)) {
 			if (pressBut) {
 				if (state == right) {
-					state = rightDown; speed = playerStruct.SPEED;
+					state = rightDown;
+                    speed = playerStruct.SPEED;
 				}
 				if (state == left) {
-					state = leftDown; speed = playerStruct.SPEED;
+					state = leftDown;
+                    speed = playerStruct.SPEED;
 				}
 			}
 			else {
-				state = down; speed = playerStruct.SPEED;
+				state = down;
+                speed = playerStruct.SPEED;
 			}
 		}
 	}
@@ -113,7 +124,7 @@ public:
 		rotation = (atan2(dY, dX)) * parameters.ANGLE / M_PI;
 	}
 	void checkCollisionWithMap(float Dx, float Dy) {
-		for (int i = 0; i<obj.size(); i++){
+		for (int i = 0; i<obj.size(); i++) {
 			if (getRect().intersects(obj[i].rect)) {
 				if (obj[i].name == "solid") {
 					if (Dy > 0) {
@@ -179,7 +190,7 @@ public:
 		}
 	}
 
-	void checkCollisionWithMap(float Dx, float Dy){
+	void checkCollisionWithMap(float Dx, float Dy) {
 		for (int i = 0; i < obj.size(); i++) {
 			if (getRect().intersects(obj[i].rect)) {
 				if (obj[i].name == "solid") {
@@ -204,7 +215,7 @@ public:
 		}
 	}
 
-	void update(float time){
+	void update(float time) {
 		if (name == "easyEnemy") {
 			checkCollisionWithMap(dx, dy);
 			x += dx*time;
