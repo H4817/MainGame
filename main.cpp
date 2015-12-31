@@ -55,7 +55,8 @@ int main(){
 			Entity *b = *it;
 			b->update(time);
 			if (!b->life){
-				it = entities.erase(it); delete b;
+				it = entities.erase(it);
+				delete b;
 			}
 			else it++;
 		}
