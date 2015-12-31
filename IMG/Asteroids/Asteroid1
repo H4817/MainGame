@@ -1,0 +1,37 @@
+My first "enemy" for the Galaxus game. I've also included the dimensions for each tile because this on is quite obscure. If you're familiar with the XNA C# syntax you don't need this code bit, if you don't the syntax is below. There are three different sizes for each. I've intended for the spritesheet to have this because when you shoot the asteroid it breaks up into different pieces. Each size has eight tiles to it rotating it 45 degrees further. Run through all eight and you get your animation.
+
+Rectangle( "x-position", "y-position", "width", "height");
+
+Level 0:
+
+Rectangle(0, 0, 200, 165);
+Rectangle(200, 0, 187, 183);
+Rectangle(387, 0, 167, 200);
+Rectangle(554, 0, 184, 189);
+Rectangle(738, 0, 200, 165);
+Rectangle(938, 0, 189, 184);
+Rectangle(1127, 0, 165, 200);
+Rectangle(1292, 0, 183, 187);
+Level 1:
+
+Rectangle(0, 200, 100, 83);
+Rectangle(100, 200, 93, 92);
+Rectangle(193, 200, 83, 101);
+Rectangle(276, 200, 93, 95);
+Rectangle(369, 200, 101, 83);
+Rectangle(470, 200, 95, 92);
+Rectangle(565, 200, 84, 101);
+Rectangle(649, 200, 92, 95);
+Level 2:
+
+Rectangle(0, 301, 50, 41));
+Rectangle(50, 301, 47, 46));
+Rectangle(97, 301, 41, 51));
+Rectangle(138, 301, 47, 47));
+Rectangle(185, 301, 51, 41));
+Rectangle(236, 301, 47, 46));
+Rectangle(283, 301, 42, 51));
+Rectangle(325, 301, 46, 47));
+Attribution Instructions: 
+No credit needed.
+
