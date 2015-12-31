@@ -3,9 +3,14 @@
 #include <SFML/Graphics.hpp>
 #include "level.h"
 #include <vector>
+#include <list>
 
 using namespace sf;
 
+struct BulletStruct {
+	const int WIDTH = 52;
+	const int HEIGHT = 24;
+} bulletStruct;
 
 class Entity {
 public:
@@ -30,7 +35,6 @@ public:
 	virtual void update(float time) = 0;
 };
 
-#include <list>
 
 class Player :public Entity {
 public:
@@ -84,7 +88,7 @@ public:
 	void rotation_GG(Vector2f pos) {
 		float dX = pos.x - x;
 		float dY = pos.y - y;
-		rotation = (atan2(dY, dX)) * 180 / 3.14159265;
+		rotation = (atan2(dY, dX)) * 180 / M_PI;
 	}
 	void checkCollisionWithMap(float Dx, float Dy){
 		for (int i = 0; i<obj.size(); i++){
@@ -199,7 +203,7 @@ public:
 		life = true;
 		Dx = tempx - x;
 		Dy = tempy - y;
-		rotation = (atan2(Dy, Dx)) * 180 / 3.14159265;
+		rotation = (atan2(Dy, Dx)) * 180 / M_PI;
 	}
 
 	void update(float time){

@@ -47,11 +47,11 @@ int main(){
 			if (event.type == sf::Event::Closed)
 				window.close();
 			if (event.key.code == Mouse::Left){
-				entities.push_back(new Bullet(bulletImage, lvl, p.x, p.y, 23, 7, pos.x, pos.y, "Bullet"));
+				entities.push_back(new Bullet(bulletImage, lvl, p.x, p.y, bulletStruct.WIDTH, bulletStruct.HEIGHT, pos.x, pos.y, "Bullet"));
 			}
 		}
 		p.rotation_GG(pos);
-		p.update(time);//Player update function
+		p.update(time);
 		for (it = entities.begin(); it != entities.end();){
 			Entity *b = *it;
 			b->update(time);
