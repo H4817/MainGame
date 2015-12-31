@@ -4,14 +4,13 @@
 #include "level.h"
 #include "Classes.h"
 
-
 //branch dev
 
 using namespace sf;
 
 int main(){
-	sf::RenderWindow window(sf::VideoMode(1680, 1050), "Game");
-	view.reset(sf::FloatRect(0, 0, 1680, 1050));
+	sf::RenderWindow window(sf::VideoMode(parameters.WINDOW_SIZE_X, parameters.WINDOW_SIZE_Y), "Game");
+	view.reset(sf::FloatRect(0, 0, parameters.WINDOW_SIZE_X, parameters.WINDOW_SIZE_Y));
 
 	Level lvl;
 	lvl.LoadFromFile("map.tmx");
@@ -32,7 +31,7 @@ int main(){
 	Clock clock;
 
 	for (int i = 0; i < e.size(); i++)
-		entities.push_back(new Enemy(easyEnemyImage, lvl, e[i].rect.left, e[i].rect.top, 89, 75, "easyEnemy"));
+		entities.push_back(new Enemy(easyEnemyImage, lvl, e[i].rect.left, e[i].rect.top, easyEnemyStruct.WIDTH, easyEnemyStruct.HEIGHT, "easyEnemy"));
 
 	while (window.isOpen()){
 		std::list<Entity*>::iterator at;
@@ -47,7 +46,7 @@ int main(){
 			if (event.type == sf::Event::Closed)
 				window.close();
 			if (event.key.code == Mouse::Left){
-				entities.push_back(new Bullet(bulletImage, lvl, p.x, p.y, bulletStruct.WIDTH, bulletStruct.HEIGHT, pos.x, pos.y, "Bullet"));
+				entities.push_back(new Bullet(bulletImage, lvl, p.x, p.y, playerBulletStruct.WIDTH, playerBulletStruct.HEIGHT, pos.x, pos.y, "Bullet"));
 			}
 		}
 		p.rotation_GG(pos);

@@ -7,10 +7,29 @@
 
 using namespace sf;
 
-struct BulletStruct {
+struct Parameters {
+    const unsigned int WINDOW_SIZE_X = 1680;
+    const unsigned int WINDOW_SIZE_Y = 1050;
+} parameters;
+
+struct PlayerBulletStruct {
 	const int WIDTH = 52;
-	const int HEIGHT = 24;
-} bulletStruct;
+	const int HEIGHT = 14;
+} playerBulletStruct;
+
+struct EasyEnemyStruct {
+	const int WIDTH = 78;
+	const int HEIGHT = 67;
+} easyEnemyStruct;
+
+struct PlayerStruct {
+	const int HEALTH = 100;
+	const float SPEED = 0.2;
+} playerStruct;
+
+struct EnemyStruct {
+	const float SPEED = 0.1;
+} enemyStruct;
 
 class Entity {
 public:
@@ -51,37 +70,37 @@ public:
 	void control(){
 		bool pressBut = false;
 		if (Keyboard::isKeyPressed(Keyboard::Left)) {
-			state = left; speed = 0.2;
+			state = left; speed = playerStruct.SPEED;
 			pressBut = true;
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Right)) {
-			state = right; speed = 0.2;
+			state = right; speed = playerStruct.SPEED;
 			pressBut = true;
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Up)) {
 			if (pressBut) {
 				if (state == right) {
-					state = rightUp; speed = 0.2;
+					state = rightUp; speed = playerStruct.SPEED;
 				}
 				if (state == left) {
-					state = leftUp; speed = 0.2;
+					state = leftUp; speed = playerStruct.SPEED;
 				}
 			}
 			else {
-				state = up; speed = 0.2;
+				state = up; speed = playerStruct.SPEED;
 			}
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Down)) {
 			if (pressBut) {
 				if (state == right) {
-					state = rightDown; speed = 0.2;
+					state = rightDown; speed = playerStruct.SPEED;
 				}
 				if (state == left) {
-					state = leftDown; speed = 0.2;
+					state = leftDown; speed = playerStruct.SPEED;
 				}
 			}
 			else {
-				state = down; speed = 0.2;
+				state = down; speed = playerStruct.SPEED;
 			}
 		}
 	}
@@ -107,7 +126,7 @@ public:
 		sprite.setRotation(rotation);
 		control();
 		switch (state){
-			case right:dx = speed; dy = 0;break;
+			case right:dx = speed; dy = 0; break;
 			case rightUp: dx = speed; dy = -speed; break;
 			case rightDown: dx = speed; dy = speed; break;
 			case left:dx = -speed; dy = 0; break;
@@ -143,7 +162,7 @@ public:
 		if (name == "easyEnemy") {
 			sprite.setTextureRect(IntRect(0, 0, w, h));
 			sprite.rotate(180);
-			dx = -0.1; //тут перемещение
+			dx = -enemyStruct.SPEED; //тут перемещение
 		}
 	}
 
@@ -153,19 +172,19 @@ public:
 				if (obj[i].name == "solid") {
 					if (Dy > 0) {
 						y = obj[i].rect.top - h;
-						dy = -0.1;
+						dy = -enemyStruct.SPEED;
 					}
 					if (Dy < 0) {
 						y = obj[i].rect.top + obj[i].rect.height;
-						dy = 0.1;
+						dy = enemyStruct.SPEED;
 					}
 					if (Dx > 0) {
 						x = obj[i].rect.left - w;
-						dx = -0.1;
+						dx = -enemyStruct.SPEED;
 					}
 					if (Dx < 0) {
 						x = obj[i].rect.left + obj[i].rect.width;
-						dx = 0.1;
+						dx = enemyStruct.SPEED;
 					}
 				}
 			}
