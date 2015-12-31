@@ -27,7 +27,7 @@ int main(){
 	heroImage.loadFromFile("IMG/PlayerShip.png");
 	easyEnemyImage.loadFromFile("IMG/EasyEnemy.png");
 	std::cout << player.rect.left << player.rect.top;
-	Player p(heroImage, lvl, player.rect.left, player.rect.top, 91, 54, "Player");
+	Player protagonist(heroImage, lvl, player.rect.left, player.rect.top, playerStruct.WIDTH, playerStruct.HEIGHT, "Player");
 	Clock clock;
 
 	for (int i = 0; i < e.size(); i++)
@@ -46,11 +46,11 @@ int main(){
 			if (event.type == sf::Event::Closed)
 				window.close();
 			if (event.key.code == Mouse::Left){
-				entities.push_back(new Bullet(bulletImage, lvl, p.x, p.y, playerBulletStruct.WIDTH, playerBulletStruct.HEIGHT, pos.x, pos.y, "Bullet"));
+				entities.push_back(new Bullet(bulletImage, lvl, protagonist.x, protagonist.y, playerBulletStruct.WIDTH, playerBulletStruct.HEIGHT, pos.x, pos.y, "Bullet"));
 			}
 		}
-		p.rotation_GG(pos);
-		p.update(time);
+		protagonist.rotation_GG(pos);
+		protagonist.update(time);
 		for (it = entities.begin(); it != entities.end();){
 			Entity *b = *it;
 			b->update(time);
@@ -60,21 +60,21 @@ int main(){
 			}
 			else it++;
 		}
-		for (it = entities.begin(); it != entities.end(); it++){
+		for (it = entities.begin(); it != entities.end(); it++) {
 			for (at = entities.begin(); at != entities.end(); at++) {
 				if ((*it)->getRect().intersects((*at)->getRect()) && (((*at)->name == "Bullet") && ((*it)->name == "easyEnemy"))) {
-					(*it)->health -= 13;
+					(*it)->health -= playerBulletStruct.DAMAGE;
 					(*at)->life = false;
 				}
 			}
-			if ((*it)->getRect().intersects(p.getRect())){
+			if ((*it)->getRect().intersects(protagonist.getRect())){
 				if ((*it)->name == "easyEnemy"){
 					(*it)->dx = 0;
-					p.health -= 1;
+					protagonist.health -= easyEnemyStruct.DAMAGE;
 				}
 			}
 		}
-		if (!p.life)
+		if (!protagonist.life)
 			window.close();
 		window.setView(view);
 		window.clear();
@@ -82,7 +82,7 @@ int main(){
 		for (it = entities.begin(); it != entities.end(); it++) {
 			window.draw((*it)->sprite);
 		}
-		window.draw(p.sprite);
+		window.draw(protagonist.sprite);
 		window.display();
 	}
 	return 0;

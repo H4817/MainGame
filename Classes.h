@@ -10,26 +10,29 @@ using namespace sf;
 struct Parameters {
     const unsigned int WINDOW_SIZE_X = 1680;
     const unsigned int WINDOW_SIZE_Y = 1050;
+    const unsigned int ANGLE = 180;
 } parameters;
 
 struct PlayerBulletStruct {
-	const int WIDTH = 52;
-	const int HEIGHT = 14;
+	const unsigned int WIDTH = 100;
+	const unsigned int HEIGHT = 14;
+    const unsigned int DAMAGE = 13;
 } playerBulletStruct;
 
 struct EasyEnemyStruct {
-	const int WIDTH = 78;
-	const int HEIGHT = 67;
+	const unsigned int WIDTH = 78;
+	const unsigned int HEIGHT = 67;
+    const unsigned int DAMAGE = 1;
+    const float SPEED = 0.1;
 } easyEnemyStruct;
 
 struct PlayerStruct {
-	const int HEALTH = 100;
+    const unsigned int WIDTH = 147;
+    const unsigned int HEIGHT = 125;
+    const int HEALTH = 100;
 	const float SPEED = 0.2;
 } playerStruct;
 
-struct EnemyStruct {
-	const float SPEED = 0.1;
-} enemyStruct;
 
 class Entity {
 public:
@@ -67,7 +70,7 @@ public:
 		}
 	}
 
-	void control(){
+	void control() {
 		bool pressBut = false;
 		if (Keyboard::isKeyPressed(Keyboard::Left)) {
 			state = left; speed = playerStruct.SPEED;
@@ -107,16 +110,26 @@ public:
 	void rotation_GG(Vector2f pos) {
 		float dX = pos.x - x;
 		float dY = pos.y - y;
-		rotation = (atan2(dY, dX)) * 180 / M_PI;
+		rotation = (atan2(dY, dX)) * parameters.ANGLE / M_PI;
 	}
-	void checkCollisionWithMap(float Dx, float Dy){
+	void checkCollisionWithMap(float Dx, float Dy) {
 		for (int i = 0; i<obj.size(); i++){
-			if (getRect().intersects(obj[i].rect)){
-				if (obj[i].name == "solid"){
-					if (Dy>0) { y = obj[i].rect.top - h;  dy = 0; }
-					if (Dy<0) { y = obj[i].rect.top + obj[i].rect.height;   dy = 0; }
-					if (Dx>0) { x = obj[i].rect.left - w; }
-					if (Dx<0) { x = obj[i].rect.left + obj[i].rect.width; }
+			if (getRect().intersects(obj[i].rect)) {
+				if (obj[i].name == "solid") {
+					if (Dy > 0) {
+                        y = obj[i].rect.top - h;
+                        dy = 0;
+                    }
+					if (Dy < 0) {
+                        y = obj[i].rect.top + obj[i].rect.height;
+                        dy = 0;
+                    }
+					if (Dx > 0) {
+                        x = obj[i].rect.left - w;
+                    }
+					if (Dx < 0) {
+                        x = obj[i].rect.left + obj[i].rect.width;
+                    }
 				}
 			}
 		}
@@ -125,7 +138,7 @@ public:
 	void update(float time)	{
 		sprite.setRotation(rotation);
 		control();
-		switch (state){
+		switch (state) {
 			case right:dx = speed; dy = 0; break;
 			case rightUp: dx = speed; dy = -speed; break;
 			case rightDown: dx = speed; dy = speed; break;
@@ -157,12 +170,12 @@ public:
 
 class Enemy :public Entity {
 public:
-	Enemy(Image &image, Level &lvl, float X, float Y, int W, int H, String Name) :Entity(image, X, Y, W, H, Name){
+	Enemy(Image &image, Level &lvl, float X, float Y, int W, int H, String Name) :Entity(image, X, Y, W, H, Name) {
 		obj = lvl.GetObjects("solid");
 		if (name == "easyEnemy") {
 			sprite.setTextureRect(IntRect(0, 0, w, h));
-			sprite.rotate(180);
-			dx = -enemyStruct.SPEED; //тут перемещение
+			sprite.rotate(parameters.ANGLE);
+			dx = -easyEnemyStruct.SPEED;
 		}
 	}
 
@@ -172,19 +185,19 @@ public:
 				if (obj[i].name == "solid") {
 					if (Dy > 0) {
 						y = obj[i].rect.top - h;
-						dy = -enemyStruct.SPEED;
+						dy = -easyEnemyStruct.SPEED;
 					}
 					if (Dy < 0) {
 						y = obj[i].rect.top + obj[i].rect.height;
-						dy = enemyStruct.SPEED;
+						dy = easyEnemyStruct.SPEED;
 					}
 					if (Dx > 0) {
 						x = obj[i].rect.left - w;
-						dx = -enemyStruct.SPEED;
+						dx = -easyEnemyStruct.SPEED;
 					}
 					if (Dx < 0) {
 						x = obj[i].rect.left + obj[i].rect.width;
-						dx = enemyStruct.SPEED;
+						dx = easyEnemyStruct.SPEED;
 					}
 				}
 			}
@@ -197,7 +210,9 @@ public:
 			x += dx*time;
 			y += dy*time;
 			sprite.setPosition(x + w / 2, y + h / 2);
-			if (health <= 0) { life = false; }
+			if (health <= 0) {
+                life = false;
+            }
 		}
 	}
 };
@@ -222,18 +237,21 @@ public:
 		life = true;
 		Dx = tempx - x;
 		Dy = tempy - y;
-		rotation = (atan2(Dy, Dx)) * 180 / M_PI;
+		rotation = (atan2(Dy, Dx)) * parameters.ANGLE / M_PI;
 	}
 
-	void update(float time){
+	void update(float time) {
 		x += speed * (tempx - dx);
 		y += speed * (tempy - dy);
 
-		if (x <= 0) x = 1;
-		if (y <= 0) y = 1;
+		if (x <= 0)
+            x = 1;
 
-		for (int i = 0; i < obj.size(); i++){
-			if (getRect().intersects(obj[i].rect)){
+		if (y <= 0)
+            y = 1;
+
+		for (int i = 0; i < obj.size(); i++) {
+			if (getRect().intersects(obj[i].rect)) {
 				life = false;
 			}
 		}

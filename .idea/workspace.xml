@@ -46,11 +46,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.3726618">
-              <caret line="53" column="23" selection-start-line="53" selection-start-column="23" selection-end-line="53" selection-end-column="23" />
+            <state vertical-scroll-proportion="-40.064518">
+              <caret line="69" column="68" selection-start-line="69" selection-start-column="68" selection-end-line="69" selection-end-column="68" />
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
               </folding>
@@ -58,11 +58,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Classes.h" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Classes.h" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Classes.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="12" column="14" selection-start-line="12" selection-start-column="2" selection-end-line="12" selection-end-column="14" />
+            <state vertical-scroll-proportion="3.7951808">
+              <caret line="140" column="23" selection-start-line="140" selection-start-column="23" selection-end-line="140" selection-end-column="23" />
               <folding>
                 <element signature="e#14#42#0" expanded="true" />
               </folding>
@@ -73,7 +73,7 @@
       <file leaf-file-name="level.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/level.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
+            <state vertical-scroll-proportion="-140.09677">
               <caret line="248" column="0" selection-start-line="248" selection-start-column="0" selection-end-line="248" selection-end-column="0" />
               <folding />
             </state>
@@ -96,8 +96,8 @@
       <list>
         <option value="$PROJECT_DIR$/../testsfml/testsfml/main.cpp" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/Classes.h" />
         <option value="$PROJECT_DIR$/main.cpp" />
+        <option value="$PROJECT_DIR$/Classes.h" />
       </list>
     </option>
   </component>
@@ -277,7 +277,19 @@
       <option name="project" value="LOCAL" />
       <updated>1451566819134</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="added BulletStruct">
+      <created>1451572852424</created>
+      <option name="number" value="00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1451572852424</updated>
+    </task>
+    <task id="LOCAL-00012" summary="added some structures and deleted global variables">
+      <created>1451577056065</created>
+      <option name="number" value="00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1451577056065</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -351,7 +363,9 @@
     <MESSAGE value="Deleted Some files" />
     <MESSAGE value="test" />
     <MESSAGE value="test Clion git" />
-    <option name="LAST_COMMIT_MESSAGE" value="test Clion git" />
+    <MESSAGE value="added BulletStruct" />
+    <MESSAGE value="added some structures and deleted global variables" />
+    <option name="LAST_COMMIT_MESSAGE" value="added some structures and deleted global variables" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -777,28 +791,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/level.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state vertical-scroll-proportion="-140.09677">
           <caret line="248" column="0" selection-start-line="248" selection-start-column="0" selection-end-line="248" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Classes.h">
+    <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="12" column="14" selection-start-line="12" selection-start-column="2" selection-end-line="12" selection-end-column="14" />
+        <state vertical-scroll-proportion="-40.064518">
+          <caret line="69" column="68" selection-start-line="69" selection-start-column="68" selection-end-line="69" selection-end-column="68" />
           <folding>
-            <element signature="e#14#42#0" expanded="true" />
+            <element signature="e#0#28#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.cpp">
+    <entry file="file://$PROJECT_DIR$/Classes.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.3726618">
-          <caret line="53" column="23" selection-start-line="53" selection-start-column="23" selection-end-line="53" selection-end-column="23" />
+        <state vertical-scroll-proportion="3.7951808">
+          <caret line="140" column="23" selection-start-line="140" selection-start-column="23" selection-end-line="140" selection-end-column="23" />
           <folding>
-            <element signature="e#0#28#0" expanded="true" />
+            <element signature="e#14#42#0" expanded="true" />
           </folding>
         </state>
       </provider>
