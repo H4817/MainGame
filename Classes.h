@@ -150,10 +150,10 @@ public:
 		sprite.setRotation(rotation);
 		control();
 		switch (state) {
-			case right:dx = speed; dy = 0; break;
+			case right: dx = speed; dy = 0; break;
 			case rightUp: dx = speed; dy = -speed; break;
 			case rightDown: dx = speed; dy = speed; break;
-			case left:dx = -speed; dy = 0; break;
+			case left: dx = -speed; dy = 0; break;
 			case leftUp: dx = -speed; dy = -speed; break;
 			case leftDown: dx = -speed; dy = speed; break;
 			case up: dx = 0; dy = -speed; break;
