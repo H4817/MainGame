@@ -259,4 +259,3 @@ public:
 		sprite.setPosition(x + w / 2, y + h / 2);
 	}
 };
-
