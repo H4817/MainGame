@@ -1,8 +1,9 @@
 #include <SFML/Graphics.hpp>
-#include <iostream> 
+#include <iostream>
 #include "view.h"
 #include "level.h"
 #include <vector>
+
 class Entity {
 public:
 	std::vector<Object> obj;
@@ -36,14 +37,12 @@ public:
 	int playerScore;
 	Player(Image &image, Level &lev, float X, float Y, int W, int H, String Name) :Entity(image, X, Y, W, H, Name) {
 		playerScore = 0; state = stay; isSelect = false; obj = lev.GetAllObjects();
-
-
 		if (name == "Player") {
 			sprite.setPosition(w, h);
 		}
 	}
 
-	void control() {
+	void control(){
 		bool pressBut = false;
 		if (Keyboard::isKeyPressed(Keyboard::Left)) {
 			state = left; speed = 0.2;
@@ -85,36 +84,32 @@ public:
 		float dY = pos.y - y;
 		rotation = (atan2(dY, dX)) * 180 / 3.14159265;
 	}
-	void checkCollisionWithMap(float Dx, float Dy)
-	{
-		for (int i = 0; i<obj.size(); i++)
-			if (getRect().intersects(obj[i].rect))
-			{
-				if (obj[i].name == "solid")
-				{
+	void checkCollisionWithMap(float Dx, float Dy){
+		for (int i = 0; i<obj.size(); i++){
+			if (getRect().intersects(obj[i].rect)){
+				if (obj[i].name == "solid"){
 					if (Dy>0) { y = obj[i].rect.top - h;  dy = 0; }
 					if (Dy<0) { y = obj[i].rect.top + obj[i].rect.height;   dy = 0; }
 					if (Dx>0) { x = obj[i].rect.left - w; }
 					if (Dx<0) { x = obj[i].rect.left + obj[i].rect.width; }
 				}
 			}
+		}
 	}
 
-	void update(float time)
-	{
+	void update(float time)	{
 		sprite.setRotation(rotation);
 		control();
-		switch (state)
-		{
-		case right:dx = speed; dy = 0;break;
-		case rightUp: dx = speed; dy = -speed; break;
-		case rightDown: dx = speed; dy = speed; break;
-		case left:dx = -speed; dy = 0; break;
-		case leftUp: dx = -speed; dy = -speed; break;
-		case leftDown: dx = -speed; dy = speed; break;
-		case up: dx = 0; dy = -speed; break;
-		case down: dx = 0; dy = speed; break;
-		case stay: break;
+		switch (state){
+			case right:dx = speed; dy = 0;break;
+			case rightUp: dx = speed; dy = -speed; break;
+			case rightDown: dx = speed; dy = speed; break;
+			case left:dx = -speed; dy = 0; break;
+			case leftUp: dx = -speed; dy = -speed; break;
+			case leftDown: dx = -speed; dy = speed; break;
+			case up: dx = 0; dy = -speed; break;
+			case down: dx = 0; dy = speed; break;
+			case stay: break;
 		}
 		x += dx*time;
 		checkCollisionWithMap(dx, 0);
@@ -122,25 +117,31 @@ public:
 		checkCollisionWithMap(0, dy);
 		sprite.setPosition(x + w / 2, y + h / 2);
 
-		if (health <= 0) { life = false; }
-		if (!isMove) { speed = 0; }
-		if (life) { getPlayerCoordinateForView(x, y); }
+		if (health <= 0) {
+			life = false;
+		}
+		if (!isMove) {
+			speed = 0;
+		}
+		if (life) {
+			getPlayerCoordinateForView(x, y);
+		}
 	}
 };
 
 class Enemy :public Entity {
 public:
-	Enemy(Image &image, Level &lvl, float X, float Y, int W, int H, String Name) :Entity(image, X, Y, W, H, Name) {
+	Enemy(Image &image, Level &lvl, float X, float Y, int W, int H, String Name) :Entity(image, X, Y, W, H, Name){
 		obj = lvl.GetObjects("solid");
 		if (name == "easyEnemy") {
-			//sprite.setTextureRect(IntRect(0, 0, w, h));
-			dx = -0.1;
-
+			sprite.setTextureRect(IntRect(0, 0, w, h));
+			sprite.rotate(180);
+			dx = -0.1; 
 		}
 	}
 
 	void checkCollisionWithMap(float Dx, float Dy){
-		for (int i = 0; i<obj.size(); i++) {
+		for (int i = 0; i < obj.size(); i++) {
 			if (getRect().intersects(obj[i].rect)) {
 				if (obj[i].name == "solid") {
 					if (Dy > 0) {
@@ -197,17 +198,15 @@ public:
 		rotation = (atan2(Dy, Dx)) * 180 / 3.14159265;
 	}
 
-	void update(float time)
-	{
+	void update(float time){
 		x += speed * (tempx - dx);
 		y += speed * (tempy - dy);
 
 		if (x <= 0) x = 1;
 		if (y <= 0) y = 1;
 
-		for (int i = 0; i < obj.size(); i++) {
-			if (getRect().intersects(obj[i].rect))
-			{
+		for (int i = 0; i < obj.size(); i++){
+			if (getRect().intersects(obj[i].rect)){
 				life = false;
 			}
 		}
@@ -220,36 +219,35 @@ int main(){
 	int tempX = 0;
 	int tempY = 0;
 	float distance = 0;
-	sf::RenderWindow window(sf::VideoMode(1370, 768), "Game");
-	view.reset(sf::FloatRect(0, 0, 1370, 768));
+	sf::RenderWindow window(sf::VideoMode(1680, 1050), "Game");
+	view.reset(sf::FloatRect(0, 0, 1680, 1050));
 
 	Level lvl;
-	lvl.LoadFromFile("/home/nikolai/ClionProjects/Game/map.tmx");
+	lvl.LoadFromFile("map.tmx");
 
 	Object player = lvl.GetObject("player");
 
-	std::list<Entity*>  entities;
+	std::list<Entity*> entities;
 	std::list<Entity*>::iterator it;
 
 	std::vector<Object> e = lvl.GetObjects("easyEnemy");
 
 
 	Image heroImage, easyEnemyImage, bulletImage;
-	bulletImage.loadFromFile("/home/nikolai/ClionProjects/Game/IMG/projectile_bolt_blue_single.png");
-	heroImage.loadFromFile("/home/nikolai/ClionProjects/Game/IMG/PlayerShip.png");
-	easyEnemyImage.loadFromFile("/home/nikolai/ClionProjects/Game/IMG/EasyEnemy.png");
+	bulletImage.loadFromFile("IMG/projectile_bolt_blue_single.png");
+	heroImage.loadFromFile("IMG/PlayerShip.png");
+	easyEnemyImage.loadFromFile("IMG/EasyEnemy.png");
 	std::cout << player.rect.left << player.rect.top;
-	Player p(heroImage, lvl, player.rect.left, player.rect.top, 91, 54, 72, 20, "Player");
+	Player p(heroImage, lvl, player.rect.left, player.rect.top, 91, 54, "Player");
 	Clock clock;
 
 	for (int i = 0; i < e.size(); i++)
-		entities.push_back(new Enemy(easyEnemyImage, lvl, e[i].rect.left, e[i].rect.top, 43, 75, 0, 0, "easyEnemy"));
+		entities.push_back(new Enemy(easyEnemyImage, lvl, e[i].rect.left, e[i].rect.top, 89, 75, "easyEnemy"));
 
 	bool ret = false;
 
 	float CurrentFrame = 0;
-	while (window.isOpen())
-	{
+	while (window.isOpen()){
 		std::list<Entity*>::iterator at;
 		Vector2i pixelPos = Mouse::getPosition(window);
 		Vector2f pos = window.mapPixelToCoords(pixelPos);
@@ -258,34 +256,32 @@ int main(){
 		clock.restart();
 		time = time / 800;
 		sf::Event event;
-		while (window.pollEvent(event))
-		{
+		while (window.pollEvent(event)){
 			if (event.type == sf::Event::Closed)
 				window.close();
-			if (event.key.code == Mouse::Left) {
+			if (event.key.code == Mouse::Left){
 				entities.push_back(new Bullet(bulletImage, lvl, p.x, p.y, 23, 7, pos.x, pos.y, "Bullet"));
 			}
 		}
 		p.rotation_GG(pos);
 		p.update(time);// Player update function
-		for (it = entities.begin(); it != entities.end();)
-		{
+		for (it = entities.begin(); it != entities.end();){
 			Entity *b = *it;
 			b->update(time);
-			if (b->life == false) { it = entities.erase(it); delete b; }
+			if (b->life == false){
+				it = entities.erase(it); delete b;
+			}
 			else it++;
 		}
-		for (it = entities.begin(); it != entities.end(); it++)
-		{
+		for (it = entities.begin(); it != entities.end(); it++){
 			for (at = entities.begin(); at != entities.end(); at++) {
 				if ((*it)->getRect().intersects((*at)->getRect()) && (((*at)->name == "Bullet") && ((*it)->name == "easyEnemy"))) {
 					(*it)->health -= 13;
 					(*at)->life = false;
 				}
 			}
-			if ((*it)->getRect().intersects(p.getRect()))
-			{
-				if ((*it)->name == "easyEnemy") {
+			if ((*it)->getRect().intersects(p.getRect())){
+				if ((*it)->name == "easyEnemy"){
 					(*it)->dx = 0;
 					p.health -= 1;
 				}
@@ -293,17 +289,14 @@ int main(){
 		}
 		if (!p.life)
 			window.close();
-		//for (it = entities.begin(); it != entities.end(); it++) { (*it)->update(time); }
 		window.setView(view);
 		window.clear();
 		lvl.Draw(window);
 		for (it = entities.begin(); it != entities.end(); it++) {
 			window.draw((*it)->sprite);
 		}
-		//window.draw(easyEnemy.sprite);
 		window.draw(p.sprite);
 		window.display();
 	}
-
 	return 0;
 }
