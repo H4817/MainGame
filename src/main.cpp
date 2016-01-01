@@ -13,6 +13,16 @@ struct Application {
 	std::list<Entity*> entities;
 } application;
 
+struct PlayerPosition {
+	Vector2i pixelPos;
+	Vector2f pos;
+} playerPosition;
+
+struct ImagesStruct {
+	Image heroImage, easyEnemyImage;
+	Image bulletImage;
+} imagesStruct;
+
 void getPlayerCoordinateForView(float x, float y) {
 	float tempX = x; float tempY = y;
 
@@ -23,6 +33,30 @@ void getPlayerCoordinateForView(float x, float y) {
 
 	application.view.setCenter(tempX, tempY);
 
+}
+
+
+void ProcessEvents(RenderWindow & window, Player & protagonist) {
+	sf::Event event;
+	while (window.pollEvent(event))	{
+		if (event.type == Event::Closed) {
+			window.close();
+		}
+		if (event.key.code == Mouse::Left) {
+			application.entities.push_back(new Bullet(imagesStruct.bulletImage, application.lvl, protagonist.x, protagonist.y, playerBulletStruct.WIDTH, playerBulletStruct.HEIGHT, playerPosition.pos.x, playerPosition.pos.y, "Bullet"));
+		}
+	}
+}
+
+void GetMousePosition(RenderWindow & window) {
+	playerPosition.pixelPos = Mouse::getPosition(window);
+	playerPosition.pos = window.mapPixelToCoords(playerPosition.pixelPos);
+}
+
+void InitializeImages() {
+	imagesStruct.bulletImage.loadFromFile("IMG/projectile_bolt_blue_single.png");
+	imagesStruct.heroImage.loadFromFile("IMG/PlayerShip.png");
+	imagesStruct.easyEnemyImage.loadFromFile("IMG/EasyEnemy.png");
 }
 
 int main() {
@@ -38,32 +72,22 @@ int main() {
 
 	std::vector<Object> easyOpponent = application.lvl.GetObjects("easyEnemy");
 
-	Image heroImage, easyEnemyImage, bulletImage;
-	bulletImage.loadFromFile("IMG/projectile_bolt_blue_single.png");
-	heroImage.loadFromFile("IMG/PlayerShip.png");
-	easyEnemyImage.loadFromFile("IMG/EasyEnemy.png");
-	Player protagonist(heroImage, application.lvl, player.rect.left, player.rect.top, playerStruct.WIDTH, playerStruct.HEIGHT, "Player");
+	InitializeImages();
 
+	Player protagonist(imagesStruct.heroImage, application.lvl, player.rect.left, player.rect.top, playerStruct.WIDTH, playerStruct.HEIGHT, "Player");
 
 	for (int i = 0; i < easyOpponent.size(); i++)
-		application.entities.push_back(new Enemy(easyEnemyImage, application.lvl, easyOpponent[i].rect.left, easyOpponent[i].rect.top, easyEnemyStruct.WIDTH, easyEnemyStruct.HEIGHT, "easyEnemy"));
+		application.entities.push_back(new Enemy(imagesStruct.easyEnemyImage, application.lvl, easyOpponent[i].rect.left, easyOpponent[i].rect.top, easyEnemyStruct.WIDTH, easyEnemyStruct.HEIGHT, "easyEnemy"));
 
 	while (window.isOpen()) {
-		Vector2i pixelPos = Mouse::getPosition(window);
-		Vector2f pos = window.mapPixelToCoords(pixelPos);
+
+		GetMousePosition(window);
 		float time = application.clock.getElapsedTime().asMicroseconds();
 
 		application.clock.restart();
 		time = time / 800;
-		sf::Event event;
-		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::Closed)
-				window.close();
-			if (event.key.code == Mouse::Left) {
-				application.entities.push_back(new Bullet(bulletImage, application.lvl, protagonist.x, protagonist.y, playerBulletStruct.WIDTH, playerBulletStruct.HEIGHT, pos.x, pos.y, "Bullet"));
-			}
-		}
-		protagonist.rotation_GG(pos);
+		ProcessEvents(window, protagonist);
+		protagonist.rotation_GG(playerPosition.pos);
 		protagonist.update(time);
 		for (it = application.entities.begin(); it != application.entities.end();) {
 			Entity *projectile = *it;
