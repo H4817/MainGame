@@ -13,7 +13,7 @@ int main() {
 	view.reset(sf::FloatRect(0, 0, parameters.WINDOW_SIZE_X, parameters.WINDOW_SIZE_Y));
 
 	Level lvl;
-	lvl.LoadFromFile("map.tmx");
+	lvl.LoadFromFile("Assets/map.tmx");
 
 	Object player = lvl.GetObject("player");
 

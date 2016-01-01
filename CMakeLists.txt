@@ -22,7 +22,7 @@ include_directories("${PROJECT_BINARY_DIR}")
 # add_executable(${EXECUTABLE_NAME} main.cpp map.h tinyxml/tinyxml.h tinyxml/tinyxml.cpp tinyxml/tinystr.cpp tinyxml/tinyxmlerror.cpp tinyxml/tinyxmlparser.cpp)
 
 set(EXECUTABLE_NAME "Game")
-add_executable(${EXECUTABLE_NAME} main.cpp map.h TinyXML/tinyxml.h TinyXML/tinystr.h TinyXML/tinyxml.cpp TinyXML/tinystr.cpp  TinyXML/tinyxmlerror.cpp TinyXML/tinyxmlparser.cpp)
+add_executable(${EXECUTABLE_NAME} src/main.cpp src/map.h TinyXML/tinyxml.h TinyXML/tinystr.h TinyXML/tinyxml.cpp TinyXML/tinystr.cpp TinyXML/tinyxmlerror.cpp TinyXML/tinyxmlparser.cpp)
 
 #add_executable(${EXECUTABLE_NAME} main.cpp)
 
