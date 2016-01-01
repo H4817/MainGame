@@ -14,8 +14,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ad15b9ec-5b0d-4615-9b14-024ad6c71c3c" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Classes.h" afterPath="$PROJECT_DIR$/Classes.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/view.h" afterPath="$PROJECT_DIR$/view.h" />
     </list>
     <ignored path="Game.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -332,7 +330,13 @@
       <option name="project" value="LOCAL" />
       <updated>1451588608891</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="updated Classes.h view.h">
+      <created>1451594382417</created>
+      <option name="number" value="00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1451594382417</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -411,7 +415,8 @@
     <MESSAGE value="deleted global variables" />
     <MESSAGE value="deleted some global variables &amp;&amp; fix level.h" />
     <MESSAGE value="renamed some variables" />
-    <option name="LAST_COMMIT_MESSAGE" value="renamed some variables" />
+    <MESSAGE value="updated Classes.h view.h" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated Classes.h view.h" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
