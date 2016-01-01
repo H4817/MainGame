@@ -7,6 +7,8 @@
 
 using namespace sf;
 
+void getPlayerCoordinateForView(float x, float y);
+
 struct Parameters {
     const unsigned int WINDOW_SIZE_X = 1680;
     const unsigned int WINDOW_SIZE_Y = 1050;
@@ -16,11 +18,11 @@ struct Parameters {
 struct PlayerBulletStruct {
 	const unsigned int WIDTH = 100;
 	const unsigned int HEIGHT = 14;
-    const unsigned int DAMAGE = 13;
+    const unsigned int DAMAGE = 1;
 } playerBulletStruct;
 
 struct EasyEnemyStruct {
-	const unsigned int WIDTH = 78;
+	const unsigned int WIDTH = 74;
 	const unsigned int HEIGHT = 67;
     const unsigned int DAMAGE = 1;
     const float SPEED = 0.1;
@@ -32,6 +34,8 @@ struct PlayerStruct {
     const int HEALTH = 100;
 	const float SPEED = 0.2;
 } playerStruct;
+
+
 
 
 class Entity {
@@ -270,3 +274,4 @@ public:
 		sprite.setPosition(x + w / 2, y + h / 2);
 	}
 };
+

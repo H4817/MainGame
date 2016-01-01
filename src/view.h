@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
+#include "Classes.h"
 using namespace sf;
 
-sf::View view;
 void getPlayerCoordinateForView(float x, float y) {
 	float tempX = x; float tempY = y;
  
@@ -9,7 +9,7 @@ void getPlayerCoordinateForView(float x, float y) {
 	if (x > 1325) tempX = 1325;
 	if (y < 380) tempY = 380;
 	if (y > 1650) tempY = 1650;
- 
-	view.setCenter(tempX, tempY);
+
+	application.view.setCenter(tempX, tempY);
 	
 }

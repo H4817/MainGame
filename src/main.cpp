@@ -1,67 +1,81 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "view.h"
 #include "level.h"
 #include "Classes.h"
 
 
 using namespace sf;
 
+struct Application {
+	Clock clock;
+	Level lvl;
+	sf::View view;
+	std::list<Entity*> entities;
+} application;
+
+void getPlayerCoordinateForView(float x, float y) {
+	float tempX = x; float tempY = y;
+
+	if (x < 685) tempX = 685;
+	if (x > 1325) tempX = 1325;
+	if (y < 380) tempY = 380;
+	if (y > 1650) tempY = 1650;
+
+	application.view.setCenter(tempX, tempY);
+
+}
 
 int main() {
 	sf::RenderWindow window(sf::VideoMode(parameters.WINDOW_SIZE_X, parameters.WINDOW_SIZE_Y), "Game");
-	view.reset(sf::FloatRect(0, 0, parameters.WINDOW_SIZE_X, parameters.WINDOW_SIZE_Y));
+	application.view.reset(sf::FloatRect(0, 0, parameters.WINDOW_SIZE_X, parameters.WINDOW_SIZE_Y));
 
-	Level lvl;
-	lvl.LoadFromFile("Assets/map.tmx");
+	application.lvl.LoadFromFile("Assets/map.tmx");
 
-	Object player = lvl.GetObject("player");
+	Object player = application.lvl.GetObject("player");
 
-	std::list<Entity*> entities;
+
 	std::list<Entity*>::iterator it;
 
-	std::vector<Object> easyOpponent = lvl.GetObjects("easyEnemy");
+	std::vector<Object> easyOpponent = application.lvl.GetObjects("easyEnemy");
 
 	Image heroImage, easyEnemyImage, bulletImage;
 	bulletImage.loadFromFile("IMG/projectile_bolt_blue_single.png");
 	heroImage.loadFromFile("IMG/PlayerShip.png");
 	easyEnemyImage.loadFromFile("IMG/EasyEnemy.png");
-	std::cout << player.rect.left << player.rect.top;
-	Player protagonist(heroImage, lvl, player.rect.left, player.rect.top, playerStruct.WIDTH, playerStruct.HEIGHT, "Player");
-	Clock clock;
+	Player protagonist(heroImage, application.lvl, player.rect.left, player.rect.top, playerStruct.WIDTH, playerStruct.HEIGHT, "Player");
+
 
 	for (int i = 0; i < easyOpponent.size(); i++)
-		entities.push_back(new Enemy(easyEnemyImage, lvl, easyOpponent[i].rect.left, easyOpponent[i].rect.top, easyEnemyStruct.WIDTH, easyEnemyStruct.HEIGHT, "easyEnemy"));
+		application.entities.push_back(new Enemy(easyEnemyImage, application.lvl, easyOpponent[i].rect.left, easyOpponent[i].rect.top, easyEnemyStruct.WIDTH, easyEnemyStruct.HEIGHT, "easyEnemy"));
 
 	while (window.isOpen()) {
-		std::list<Entity*>::iterator at;
 		Vector2i pixelPos = Mouse::getPosition(window);
 		Vector2f pos = window.mapPixelToCoords(pixelPos);
-		float time = clock.getElapsedTime().asMicroseconds();
+		float time = application.clock.getElapsedTime().asMicroseconds();
 
-		clock.restart();
+		application.clock.restart();
 		time = time / 800;
 		sf::Event event;
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 				window.close();
 			if (event.key.code == Mouse::Left) {
-				entities.push_back(new Bullet(bulletImage, lvl, protagonist.x, protagonist.y, playerBulletStruct.WIDTH, playerBulletStruct.HEIGHT, pos.x, pos.y, "Bullet"));
+				application.entities.push_back(new Bullet(bulletImage, application.lvl, protagonist.x, protagonist.y, playerBulletStruct.WIDTH, playerBulletStruct.HEIGHT, pos.x, pos.y, "Bullet"));
 			}
 		}
 		protagonist.rotation_GG(pos);
 		protagonist.update(time);
-		for (it = entities.begin(); it != entities.end();) {
+		for (it = application.entities.begin(); it != application.entities.end();) {
 			Entity *projectile = *it;
 			projectile->update(time);
 			if (!projectile->life) {
-				it = entities.erase(it);
+				it = application.entities.erase(it);
 				delete projectile;
 			}
 			else it++;
 		}
-		for (it = entities.begin(); it != entities.end(); it++) {
-			for (at = entities.begin(); at != entities.end(); at++) {
+		for (auto it = application.entities.begin(); it != application.entities.end(); ++it) {
+			for (auto at = application.entities.begin(); at != application.entities.end(); ++at) {
 				if ((*it)->getRect().intersects((*at)->getRect()) && (((*at)->name == "Bullet") && ((*it)->name == "easyEnemy"))) {
 					(*it)->health -= playerBulletStruct.DAMAGE;
 					(*at)->life = false;
@@ -76,10 +90,10 @@ int main() {
 		}
 		if (!protagonist.life)
 			window.close();
-		window.setView(view);
+		window.setView(application.view);
 		window.clear();
-		lvl.Draw(window);
-		for (it = entities.begin(); it != entities.end(); it++) {
+		application.lvl.Draw(window);
+		for (it = application.entities.begin(); it != application.entities.end(); it++) {
 			window.draw((*it)->sprite);
 		}
 		window.draw(protagonist.sprite);
