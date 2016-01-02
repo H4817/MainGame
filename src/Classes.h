@@ -18,7 +18,7 @@ struct Parameters {
 struct PlayerBulletStruct {
 	const unsigned int WIDTH = 100;
 	const unsigned int HEIGHT = 14;
-    const unsigned int DAMAGE = 1;
+    const unsigned int DAMAGE = 10;
 } playerBulletStruct;
 
 struct EasyEnemyStruct {
