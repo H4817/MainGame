@@ -241,13 +241,13 @@ class Bullet :public Entity {
 public:
 	int direction;
 	float tempy, tempx, rotation, Dx, Dy;
-	Bullet(Image &image, Level &lvl, float X, float Y, int W, int H, float tempX, float tempY, String Name) :Entity(image, X, Y, W, H, Name) {
+	Bullet(Image &image, Level &lvl, float X, float Y, int W, int H, Vector2f temp, String Name) :Entity(image, X, Y, W, H, Name) {
 		objectStruct.obj = lvl.GetObjects("solid");
 		position.x = X;
 		position.y = Y;
 		speed = 0.1;
-		tempx = tempX;
-		tempy = tempY;
+		tempx = temp.x;
+		tempy = temp.y;
 		size.x = W;
 		size.y = H;
 		alive = true;

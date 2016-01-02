@@ -52,7 +52,7 @@ void ProcessEvents(RenderWindow & window, Player & protagonist, ImagesStruct & i
 			window.close();
 		}
 		if (event.key.code == Mouse::Left) {
-			application.entities.push_back(new Bullet(imagesStruct.bulletImage, application.lvl, protagonist.position.x, protagonist.position.y, playerBulletStruct.WIDTH, playerBulletStruct.HEIGHT, playerPosition.pos.x, playerPosition.pos.y, "Bullet"));
+			application.entities.push_back(new Bullet(imagesStruct.bulletImage, application.lvl, protagonist.position.x, protagonist.position.y, playerBulletStruct.WIDTH, playerBulletStruct.HEIGHT, playerPosition.pos, "Bullet"));
 		}
 	}
 }
