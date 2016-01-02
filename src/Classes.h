@@ -43,21 +43,22 @@ public:
 	std::vector<Object> obj;
 	float dx, dy, speed, moveTimer;
 	Vector2f position;
-	int w, h, health;
+	int health;
+	Vector2i size;
 	bool life, isMove, isSelect;
 	Texture texture;
 	Sprite sprite;
 	String name;
 	Entity(Image &image, float X, float Y, int W, int H, String Name) {
-		position.x = X; position.y = Y; w = W; h = H; name = Name; moveTimer = 0;
+		position.x = X; position.y = Y; size.x = W; size.y = H; name = Name; moveTimer = 0;
 		speed = 0; health = 100; dx = 0; dy = 0;
 		life = true; isMove = false;
 		texture.loadFromImage(image);
 		sprite.setTexture(texture);
-		sprite.setOrigin(w / 2, h / 2);
+		sprite.setOrigin(size.x / 2, size.y / 2);
 	}
 	FloatRect getRect() {
-		return FloatRect(position.x, position.y, w, h);
+		return FloatRect(position.x, position.y, size.x, size.y);
 	}
 	virtual void update(float time) = 0;
 };
@@ -74,7 +75,7 @@ public:
 		isSelect = false;
 		obj = lev.GetAllObjects();
 		if (name == "Player") {
-			sprite.setPosition(w, h);
+			sprite.setPosition(size.x, size.y);
 		}
 	}
 
@@ -133,7 +134,7 @@ public:
 			if (getRect().intersects(obj[i].rect)) {
 				if (obj[i].name == "solid") {
 					if (Dy > 0) {
-						position.y = obj[i].rect.top - h;
+						position.y = obj[i].rect.top - size.y;
 						dy = 0;
 					}
 					if (Dy < 0) {
@@ -141,7 +142,7 @@ public:
 						dy = 0;
 					}
 					if (Dx > 0) {
-						position.x = obj[i].rect.left - w;
+						position.x = obj[i].rect.left - size.x;
 					}
 					if (Dx < 0) {
 						position.x = obj[i].rect.left + obj[i].rect.width;
@@ -169,7 +170,7 @@ public:
 		checkCollisionWithMap(dx, 0);
 		position.y += dy*time;
 		checkCollisionWithMap(0, dy);
-		sprite.setPosition(position.x + w / 2, position.y + h / 2);
+		sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
 
 		if (health <= 0) {
 			life = false;
@@ -189,7 +190,7 @@ public:
 	Enemy(Image &image, Level &lvl, float X, float Y, int W, int H, String Name) :Entity(image, X, Y, W, H, Name) {
 		obj = lvl.GetObjects("solid");
 		if (name == "easyEnemy") {
-			sprite.setTextureRect(IntRect(0, 0, w, h));
+			sprite.setTextureRect(IntRect(0, 0, size.x, size.y));
 			sprite.rotate(parameters.ANGLE);
 			dx = -easyEnemyStruct.SPEED;
 		}
@@ -200,7 +201,7 @@ public:
 			if (getRect().intersects(obj[i].rect)) {
 				if (obj[i].name == "solid") {
 					if (Dy > 0) {
-						position.y = obj[i].rect.top - h;
+						position.y = obj[i].rect.top - size.y;
 						dy = -easyEnemyStruct.SPEED;
 					}
 					if (Dy < 0) {
@@ -208,7 +209,7 @@ public:
 						dy = easyEnemyStruct.SPEED;
 					}
 					if (Dx > 0) {
-						position.x = obj[i].rect.left - w;
+						position.x = obj[i].rect.left - size.x;
 						dx = -easyEnemyStruct.SPEED;
 					}
 					if (Dx < 0) {
@@ -225,7 +226,7 @@ public:
 			checkCollisionWithMap(dx, dy);
 			position.x += dx*time;
 			position.y += dy*time;
-			sprite.setPosition(position.x + w / 2, position.y + h / 2);
+			sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
 			if (health <= 0) {
 				life = false;
 			}
@@ -245,8 +246,8 @@ public:
 		speed = 0.1;
 		tempx = tempX;
 		tempy = tempY;
-		w = W;
-		h = H;
+		size.x = W;
+		size.y = H;
 		life = true;
 		dx = position.x;
 		dy = position.y;
@@ -272,6 +273,6 @@ public:
 			}
 		}
 		sprite.setRotation(rotation);
-		sprite.setPosition(position.x + w / 2, position.y + h / 2);
+		sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
 	}
 };
