@@ -30,12 +30,12 @@ struct ImagesStruct {
 
 
 void getPlayerCoordinateForView(Vector2f position) {
-	float tempX = position.x; float tempY = position.y;
-	if (position.x < application.MAP_WIDTH.x) tempX = application.MAP_WIDTH.x;
-	if (position.x > application.MAP_WIDTH.y) tempX = application.MAP_WIDTH.y;
-	if (position.y < application.MAP_HEIGHT.x) tempY = application.MAP_HEIGHT.x;
-	if (position.y > application.MAP_HEIGHT.y) tempY = application.MAP_HEIGHT.y;
-	application.view.setCenter(tempX, tempY);
+	Vector2f centerPosition = {position.x, position.y};
+	if (position.x < application.MAP_WIDTH.x) centerPosition.x = application.MAP_WIDTH.x;
+	if (position.x > application.MAP_WIDTH.y) centerPosition.x = application.MAP_WIDTH.y;
+	if (position.y < application.MAP_HEIGHT.x) centerPosition.y = application.MAP_HEIGHT.x;
+	if (position.y > application.MAP_HEIGHT.y) centerPosition.y = application.MAP_HEIGHT.y;
+	application.view.setCenter(centerPosition.x, centerPosition.y);
 }
 
 float RunTimer() {
