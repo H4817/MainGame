@@ -78,7 +78,7 @@ void ProcessEntities(float & time) {
 	for (application.it = application.entities.begin(); application.it != application.entities.end();) {
 		Entity *entity = *application.it;
 		entity->update(time);
-		if (!entity->life) {
+		if (!entity->alive) {
 			application.it = application.entities.erase(application.it);
 			delete entity;
 		}
@@ -91,7 +91,7 @@ void ProcessDamage(Player & protagonist) {
 		for (auto at = application.entities.begin(); at != application.entities.end(); ++at) {
 			if ((*it)->getRect().intersects((*at)->getRect()) && (((*at)->name == "Bullet") && ((*it)->name == "easyEnemy"))) {
 				(*it)->health -= playerBulletStruct.DAMAGE;
-				(*at)->life = false;
+				(*at)->alive = false;
 			}
 		}
 		if ((*it)->getRect().intersects(protagonist.getRect())) {
@@ -109,7 +109,7 @@ void AppendEnemies(std::vector<Object> & easyOpponent, ImagesStruct & imagesStru
 }
 
 void CheckExistenceProtagonist(Player &protagonist, RenderWindow &window) {
-	if (!protagonist.life)
+	if (!protagonist.alive)
 		window.close();
 }
 

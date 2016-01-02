@@ -46,14 +46,14 @@ public:
 	Vector2f position;
 	int health;
 	Vector2i size;
-	bool life, isMove, isSelect;
+	bool alive, isMove, isSelect;
 	Texture texture;
 	Sprite sprite;
 	String name;
 	Entity(Image &image, float X, float Y, int W, int H, String Name) {
 		position.x = X; position.y = Y; size.x = W; size.y = H; name = Name; moveTimer = 0;
 		speed = 0; health = 100; boost.x = 0; boost.y = 0;
-		life = true; isMove = false;
+		alive = true; isMove = false;
 		texture.loadFromImage(image);
 		sprite.setTexture(texture);
 		sprite.setOrigin(size.x / 2, size.y / 2);
@@ -131,7 +131,7 @@ public:
 		rotation = (atan2(dY, dX)) * parameters.ANGLE / M_PI;
 	}
 	void checkCollisionWithMap(float Dx, float Dy) {
-		for (int i = 0; i<obj.size(); i++) {
+		for (int i = 0; i< obj.size(); i++) {
 			if (getRect().intersects(obj[i].rect)) {
 				if (obj[i].name == "solid") {
 					if (Dy > 0) {
@@ -174,12 +174,12 @@ public:
 		sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
 
 		if (health <= 0) {
-			life = false;
+			alive = false;
 		}
 		if (!isMove) {
 			speed = 0;
 		}
-		if (life) {
+		if (alive) {
 			getPlayerCoordinateForView(position);
 		}
 	}
@@ -229,7 +229,7 @@ public:
 			position.y += boost.y*time;
 			sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
 			if (health <= 0) {
-				life = false;
+				alive = false;
 			}
 		}
 	}
@@ -249,10 +249,10 @@ public:
 		tempy = tempY;
 		size.x = W;
 		size.y = H;
-		life = true;
+		alive = true;
 		boost.x = position.x;
 		boost.y = position.y;
-		life = true;
+		alive = true;
 		Dx = tempx - position.x;
 		Dy = tempy - position.y;
 		rotation = (atan2(Dy, Dx)) * parameters.ANGLE / M_PI;
@@ -270,7 +270,7 @@ public:
 
 		for (int i = 0; i < obj.size(); i++) {
 			if (getRect().intersects(obj[i].rect)) {
-				life = false;
+				alive = false;
 			}
 		}
 		sprite.setRotation(rotation);
