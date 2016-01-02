@@ -14,7 +14,7 @@ struct Application {
 	sf::View view;
 	std::list<Entity*> entities;
 	std::list<Entity*>::iterator it;
-};
+} application;
 
 struct PlayerPosition {
 	Vector2i pixelPos;
@@ -27,28 +27,23 @@ struct ImagesStruct {
 };
 
 
-
-void getPlayerCoordinateForView(float x, float y, Application & application) {
+void getPlayerCoordinateForView(float x, float y) {
 	float tempX = x; float tempY = y;
-
 	if (x < 685) tempX = 685;
 	if (x > 1325) tempX = 1325;
 	if (y < 380) tempY = 380;
 	if (y > 1650) tempY = 1650;
-
 	application.view.setCenter(tempX, tempY);
-
 }
 
-
-float RunTimer(Application & application) {
+float RunTimer() {
 	float time = application.clock.getElapsedTime().asMicroseconds();
 	application.clock.restart();
 	time = time / 800;
 	return time;
 }
 
-void ProcessEvents(RenderWindow & window, Player & protagonist, ImagesStruct & imagesStruct, PlayerPosition & playerPosition, Application & application) {
+void ProcessEvents(RenderWindow & window, Player & protagonist, ImagesStruct & imagesStruct, PlayerPosition & playerPosition) {
 	sf::Event event;
 	while (window.pollEvent(event))	{
 		if (event.type == Event::Closed) {
@@ -65,19 +60,19 @@ void GetMousePosition(RenderWindow & window, PlayerPosition & playerPosition) {
 	playerPosition.pos = window.mapPixelToCoords(playerPosition.pixelPos);
 }
 
-void InitializeImages(ImagesStruct & imagesStruct, Application & application) {
+void InitializeImages(ImagesStruct & imagesStruct) {
 	application.lvl.LoadFromFile("Assets/map.tmx");
 	imagesStruct.bulletImage.loadFromFile("IMG/projectile_bolt_blue_single.png");
 	imagesStruct.heroImage.loadFromFile("IMG/PlayerShip.png");
 	imagesStruct.easyEnemyImage.loadFromFile("IMG/EasyEnemy.png");
 }
 
-Object InitializePlayer(Application & application) {
+Object InitializePlayer() {
 	Object player = application.lvl.GetObject("player");
 	return player;
 }
 
-void ProcessEntities(float & time, Application & application) {
+void ProcessEntities(float & time) {
 	for (application.it = application.entities.begin(); application.it != application.entities.end();) {
 		Entity *entity = *application.it;
 		entity->update(time);
@@ -89,7 +84,7 @@ void ProcessEntities(float & time, Application & application) {
 	}
 }
 
-void ProcessDamage(Player & protagonist, Application & application) {
+void ProcessDamage(Player & protagonist) {
 	for (auto it = application.entities.begin(); it != application.entities.end(); ++it) {
 		for (auto at = application.entities.begin(); at != application.entities.end(); ++at) {
 			if ((*it)->getRect().intersects((*at)->getRect()) && (((*at)->name == "Bullet") && ((*it)->name == "easyEnemy"))) {
@@ -106,7 +101,7 @@ void ProcessDamage(Player & protagonist, Application & application) {
 	}
 }
 
-void AppendEnemies(std::vector<Object> & easyOpponent, ImagesStruct & imagesStruct, Application & application) {
+void AppendEnemies(std::vector<Object> & easyOpponent, ImagesStruct & imagesStruct) {
 	for (int i = 0; i < easyOpponent.size(); i++)
 		application.entities.push_back(new Enemy(imagesStruct.easyEnemyImage, application.lvl, easyOpponent[i].rect.left, easyOpponent[i].rect.top, easyEnemyStruct.WIDTH, easyEnemyStruct.HEIGHT, "easyEnemy"));
 }
@@ -116,7 +111,7 @@ void CheckExistenceProtagonist(Player &protagonist, RenderWindow &window) {
 		window.close();
 }
 
-void Draw(RenderWindow &window, Player & protagonist, Application & application) {
+void Draw(RenderWindow &window, Player & protagonist) {
 	window.clear();
 	application.lvl.Draw(window);
 	for (application.it = application.entities.begin(); application.it != application.entities.end(); application.it++) {
@@ -127,29 +122,27 @@ void Draw(RenderWindow &window, Player & protagonist, Application & application)
 }
 
 
-
 int main() {
 	sf::RenderWindow window(sf::VideoMode(parameters.WINDOW_SIZE_X, parameters.WINDOW_SIZE_Y), "Game");
-	Application application;
 	application.view.reset(sf::FloatRect(0, 0, parameters.WINDOW_SIZE_X, parameters.WINDOW_SIZE_Y));
 	ImagesStruct imagesStruct;
 	PlayerPosition playerPosition;
-	InitializeImages(imagesStruct, application);
-	Object player = InitializePlayer(application);
+	InitializeImages(imagesStruct);
+	Object player = InitializePlayer();
 	std::vector<Object> easyOpponent = application.lvl.GetObjects("easyEnemy");
 	Player protagonist(imagesStruct.heroImage, application.lvl, player.rect.left, player.rect.top, playerStruct.WIDTH, playerStruct.HEIGHT, "Player");
-	AppendEnemies(easyOpponent, imagesStruct, application);
+	AppendEnemies(easyOpponent, imagesStruct);
 	while (window.isOpen()) {
 		GetMousePosition(window, playerPosition);
-		float time = RunTimer(application);
-		ProcessEvents(window, protagonist, imagesStruct, playerPosition, application);
+		float time = RunTimer();
+		ProcessEvents(window, protagonist, imagesStruct, playerPosition);
 		protagonist.rotation_GG(playerPosition.pos);
 		protagonist.update(time);
-		ProcessEntities(time, application);
-		ProcessDamage(protagonist, application);
+		ProcessEntities(time);
+		ProcessDamage(protagonist);
 		CheckExistenceProtagonist(protagonist, window);
 		window.setView(application.view);
-		Draw(window, protagonist, application);
+		Draw(window, protagonist);
 	}
 	return 0;
 }
