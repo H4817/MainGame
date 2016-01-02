@@ -41,7 +41,8 @@ struct PlayerStruct {
 class Entity {
 public:
 	std::vector<Object> obj;
-	float dx, dy, speed, moveTimer;
+	float speed, moveTimer;
+	Vector2f boost;
 	Vector2f position;
 	int health;
 	Vector2i size;
@@ -51,7 +52,7 @@ public:
 	String name;
 	Entity(Image &image, float X, float Y, int W, int H, String Name) {
 		position.x = X; position.y = Y; size.x = W; size.y = H; name = Name; moveTimer = 0;
-		speed = 0; health = 100; dx = 0; dy = 0;
+		speed = 0; health = 100; boost.x = 0; boost.y = 0;
 		life = true; isMove = false;
 		texture.loadFromImage(image);
 		sprite.setTexture(texture);
@@ -135,11 +136,11 @@ public:
 				if (obj[i].name == "solid") {
 					if (Dy > 0) {
 						position.y = obj[i].rect.top - size.y;
-						dy = 0;
+						boost.y = 0;
 					}
 					if (Dy < 0) {
 						position.y = obj[i].rect.top + obj[i].rect.height;
-						dy = 0;
+						boost.y = 0;
 					}
 					if (Dx > 0) {
 						position.x = obj[i].rect.left - size.x;
@@ -156,20 +157,20 @@ public:
 		sprite.setRotation(rotation);
 		control();
 		switch (state) {
-			case right: dx = speed; dy = 0; break;
-			case rightUp: dx = speed; dy = -speed; break;
-			case rightDown: dx = speed; dy = speed; break;
-			case left: dx = -speed; dy = 0; break;
-			case leftUp: dx = -speed; dy = -speed; break;
-			case leftDown: dx = -speed; dy = speed; break;
-			case up: dx = 0; dy = -speed; break;
-			case down: dx = 0; dy = speed; break;
+			case right: boost.x = speed; boost.y = 0; break;
+			case rightUp: boost.x = speed; boost.y = -speed; break;
+			case rightDown: boost.x = speed; boost.y = speed; break;
+			case left: boost.x = -speed; boost.y = 0; break;
+			case leftUp: boost.x = -speed; boost.y = -speed; break;
+			case leftDown: boost.x = -speed; boost.y = speed; break;
+			case up: boost.x = 0; boost.y = -speed; break;
+			case down: boost.x = 0; boost.y = speed; break;
 			case stay: break;
 		}
-		position.x += dx*time;
-		checkCollisionWithMap(dx, 0);
-		position.y += dy*time;
-		checkCollisionWithMap(0, dy);
+		position.x += boost.x*time;
+		checkCollisionWithMap(boost.x, 0);
+		position.y += boost.y*time;
+		checkCollisionWithMap(0, boost.y);
 		sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
 
 		if (health <= 0) {
@@ -192,7 +193,7 @@ public:
 		if (name == "easyEnemy") {
 			sprite.setTextureRect(IntRect(0, 0, size.x, size.y));
 			sprite.rotate(parameters.ANGLE);
-			dx = -easyEnemyStruct.SPEED;
+			boost.x = -easyEnemyStruct.SPEED;
 		}
 	}
 
@@ -202,19 +203,19 @@ public:
 				if (obj[i].name == "solid") {
 					if (Dy > 0) {
 						position.y = obj[i].rect.top - size.y;
-						dy = -easyEnemyStruct.SPEED;
+						boost.y = -easyEnemyStruct.SPEED;
 					}
 					if (Dy < 0) {
 						position.y = obj[i].rect.top + obj[i].rect.height;
-						dy = easyEnemyStruct.SPEED;
+						boost.y = easyEnemyStruct.SPEED;
 					}
 					if (Dx > 0) {
 						position.x = obj[i].rect.left - size.x;
-						dx = -easyEnemyStruct.SPEED;
+						boost.x = -easyEnemyStruct.SPEED;
 					}
 					if (Dx < 0) {
 						position.x = obj[i].rect.left + obj[i].rect.width;
-						dx = easyEnemyStruct.SPEED;
+						boost.x = easyEnemyStruct.SPEED;
 					}
 				}
 			}
@@ -223,9 +224,9 @@ public:
 
 	void update(float time) {
 		if (name == "easyEnemy") {
-			checkCollisionWithMap(dx, dy);
-			position.x += dx*time;
-			position.y += dy*time;
+			checkCollisionWithMap(boost.x, boost.y);
+			position.x += boost.x*time;
+			position.y += boost.y*time;
 			sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
 			if (health <= 0) {
 				life = false;
@@ -249,8 +250,8 @@ public:
 		size.x = W;
 		size.y = H;
 		life = true;
-		dx = position.x;
-		dy = position.y;
+		boost.x = position.x;
+		boost.y = position.y;
 		life = true;
 		Dx = tempx - position.x;
 		Dy = tempy - position.y;
@@ -258,8 +259,8 @@ public:
 	}
 
 	void update(float time) {
-		position.x += speed * (tempx - dx);
-		position.y += speed * (tempy - dy);
+		position.x += speed * (tempx - boost.x);
+		position.y += speed * (tempy - boost.y);
 
 		if (position.x <= 0)
 			position.x = 1;

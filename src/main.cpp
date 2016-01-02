@@ -96,7 +96,7 @@ void ProcessDamage(Player & protagonist) {
 		}
 		if ((*it)->getRect().intersects(protagonist.getRect())) {
 			if ((*it)->name == "easyEnemy") {
-				(*it)->dx = 0;
+				(*it)->boost.x = 0;
 				protagonist.health -= easyEnemyStruct.DAMAGE;
 			}
 		}
