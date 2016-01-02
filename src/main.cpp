@@ -9,6 +9,8 @@ using namespace sf;
 
 
 struct Application {
+	const Vector2f MAP_WIDTH = {850, 2400};
+	const Vector2f MAP_HEIGHT = {530, 2600};
 	Clock clock;
 	Level lvl;
 	sf::View view;
@@ -27,12 +29,12 @@ struct ImagesStruct {
 };
 
 
-void getPlayerCoordinateForView(float x, float y) {
-	float tempX = x; float tempY = y;
-	if (x < 685) tempX = 685;
-	if (x > 1325) tempX = 1325;
-	if (y < 380) tempY = 380;
-	if (y > 1650) tempY = 1650;
+void getPlayerCoordinateForView(Vector2f position) {
+	float tempX = position.x; float tempY = position.y;
+	if (position.x < application.MAP_WIDTH.x) tempX = application.MAP_WIDTH.x;
+	if (position.x > application.MAP_WIDTH.y) tempX = application.MAP_WIDTH.y;
+	if (position.y < application.MAP_HEIGHT.x) tempY = application.MAP_HEIGHT.x;
+	if (position.y > application.MAP_HEIGHT.y) tempY = application.MAP_HEIGHT.y;
 	application.view.setCenter(tempX, tempY);
 }
 
@@ -50,7 +52,7 @@ void ProcessEvents(RenderWindow & window, Player & protagonist, ImagesStruct & i
 			window.close();
 		}
 		if (event.key.code == Mouse::Left) {
-			application.entities.push_back(new Bullet(imagesStruct.bulletImage, application.lvl, protagonist.x, protagonist.y, playerBulletStruct.WIDTH, playerBulletStruct.HEIGHT, playerPosition.pos.x, playerPosition.pos.y, "Bullet"));
+			application.entities.push_back(new Bullet(imagesStruct.bulletImage, application.lvl, protagonist.position.x, protagonist.position.y, playerBulletStruct.WIDTH, playerBulletStruct.HEIGHT, playerPosition.pos.x, playerPosition.pos.y, "Bullet"));
 		}
 	}
 }
