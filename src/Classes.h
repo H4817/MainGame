@@ -36,11 +36,12 @@ struct PlayerStruct {
 } playerStruct;
 
 
-
+struct ObjectStruct {
+	std::vector<Object> obj;
+} objectStruct;
 
 class Entity {
 public:
-	std::vector<Object> obj;
 	float speed, moveTimer;
 	Vector2f boost;
 	Vector2f position;
@@ -74,7 +75,7 @@ public:
 		playerScore = 0;
 		state = stay;
 		isSelect = false;
-		obj = lev.GetAllObjects();
+		objectStruct.obj = lev.GetAllObjects();
 		if (name == "Player") {
 			sprite.setPosition(size.x, size.y);
 		}
@@ -131,22 +132,22 @@ public:
 		rotation = (atan2(dY, dX)) * parameters.ANGLE / M_PI;
 	}
 	void checkCollisionWithMap(float Dx, float Dy) {
-		for (int i = 0; i< obj.size(); i++) {
-			if (getRect().intersects(obj[i].rect)) {
-				if (obj[i].name == "solid") {
+		for (int i = 0; i < objectStruct.obj.size(); i++) {
+			if (getRect().intersects(objectStruct.obj[i].rect)) {
+				if (objectStruct.obj[i].name == "solid") {
 					if (Dy > 0) {
-						position.y = obj[i].rect.top - size.y;
+						position.y = objectStruct.obj[i].rect.top - size.y;
 						boost.y = 0;
 					}
 					if (Dy < 0) {
-						position.y = obj[i].rect.top + obj[i].rect.height;
+						position.y = objectStruct.obj[i].rect.top + objectStruct.obj[i].rect.height;
 						boost.y = 0;
 					}
 					if (Dx > 0) {
-						position.x = obj[i].rect.left - size.x;
+						position.x = objectStruct.obj[i].rect.left - size.x;
 					}
 					if (Dx < 0) {
-						position.x = obj[i].rect.left + obj[i].rect.width;
+						position.x = objectStruct.obj[i].rect.left + objectStruct.obj[i].rect.width;
 					}
 				}
 			}
@@ -189,7 +190,7 @@ public:
 class Enemy :public Entity {
 public:
 	Enemy(Image &image, Level &lvl, float X, float Y, int W, int H, String Name) :Entity(image, X, Y, W, H, Name) {
-		obj = lvl.GetObjects("solid");
+		objectStruct.obj = lvl.GetObjects("solid");
 		if (name == "easyEnemy") {
 			sprite.setTextureRect(IntRect(0, 0, size.x, size.y));
 			sprite.rotate(parameters.ANGLE);
@@ -198,23 +199,23 @@ public:
 	}
 
 	void checkCollisionWithMap(float Dx, float Dy) {
-		for (int i = 0; i < obj.size(); i++) {
-			if (getRect().intersects(obj[i].rect)) {
-				if (obj[i].name == "solid") {
+		for (int i = 0; i < objectStruct.obj.size(); i++) {
+			if (getRect().intersects(objectStruct.obj[i].rect)) {
+				if (objectStruct.obj[i].name == "solid") {
 					if (Dy > 0) {
-						position.y = obj[i].rect.top - size.y;
+						position.y = objectStruct.obj[i].rect.top - size.y;
 						boost.y = -easyEnemyStruct.SPEED;
 					}
 					if (Dy < 0) {
-						position.y = obj[i].rect.top + obj[i].rect.height;
+						position.y = objectStruct.obj[i].rect.top + objectStruct.obj[i].rect.height;
 						boost.y = easyEnemyStruct.SPEED;
 					}
 					if (Dx > 0) {
-						position.x = obj[i].rect.left - size.x;
+						position.x = objectStruct.obj[i].rect.left - size.x;
 						boost.x = -easyEnemyStruct.SPEED;
 					}
 					if (Dx < 0) {
-						position.x = obj[i].rect.left + obj[i].rect.width;
+						position.x = objectStruct.obj[i].rect.left + objectStruct.obj[i].rect.width;
 						boost.x = easyEnemyStruct.SPEED;
 					}
 				}
@@ -241,7 +242,7 @@ public:
 	int direction;
 	float tempy, tempx, rotation, Dx, Dy;
 	Bullet(Image &image, Level &lvl, float X, float Y, int W, int H, float tempX, float tempY, String Name) :Entity(image, X, Y, W, H, Name) {
-		obj = lvl.GetObjects("solid");
+		objectStruct.obj = lvl.GetObjects("solid");
 		position.x = X;
 		position.y = Y;
 		speed = 0.1;
@@ -268,8 +269,8 @@ public:
 		if (position.y <= 0)
 			position.y = 1;
 
-		for (int i = 0; i < obj.size(); i++) {
-			if (getRect().intersects(obj[i].rect)) {
+		for (int i = 0; i < objectStruct.obj.size(); i++) {
+			if (getRect().intersects(objectStruct.obj[i].rect)) {
 				alive = false;
 			}
 		}
