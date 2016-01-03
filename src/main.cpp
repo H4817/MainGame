@@ -22,7 +22,8 @@ struct PlayerPosition {
 };
 
 struct ImageAssets {
-	Image heroImage, easyEnemyImage;
+	Image heroImage;
+	Image easyEnemyImage;
 	Image bulletImage;
 };
 
