@@ -16,8 +16,7 @@ struct Parameters {
 } parameters;
 
 struct PlayerBulletStruct {
-	const unsigned int WIDTH = 100;
-	const unsigned int HEIGHT = 14;
+	const Vector2i SIZE = {100, 14};
 	const unsigned int DAMAGE = 10;
 } playerBulletStruct;
 
@@ -29,8 +28,7 @@ struct EasyEnemyStruct {
 } easyEnemyStruct;
 
 struct PlayerStruct {
-	const unsigned int WIDTH = 147;
-	const unsigned int HEIGHT = 125;
+	const Vector2i SIZE = {147, 125};
 	const int HEALTH = 100;
 	const float SPEED = 0.2;
 } playerStruct;
