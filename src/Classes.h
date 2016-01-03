@@ -10,33 +10,41 @@ using namespace sf;
 void getPlayerCoordinateForView(Vector2f position);
 
 struct Parameters {
-	const unsigned int WINDOW_SIZE_X = 1680;
-	const unsigned int WINDOW_SIZE_Y = 1050;
-	const unsigned int ANGLE = 180;
-} parameters;
+	const unsigned WINDOW_SIZE_X = 1680;
+	const unsigned WINDOW_SIZE_Y = 1050;
+	const unsigned ANGLE = 180;
+};
 
-struct PlayerBulletStruct {
+Parameters g_parameters;
+
+struct PlayerBullet {
 	const Vector2i SIZE = {100, 14};
-	const unsigned int DAMAGE = 10;
-} playerBulletStruct;
+	const unsigned DAMAGE = 10;
+};
 
-struct EasyEnemyStruct {
-	const unsigned int WIDTH = 74;
-	const unsigned int HEIGHT = 67;
-	const unsigned int DAMAGE = 1;
+PlayerBullet g_playerBullet;
+
+struct EasyEnemy {
+	const Vector2i SIZE = {74, 67};
+	const unsigned DAMAGE = 1;
 	const float SPEED = 0.1;
-} easyEnemyStruct;
+};
 
-struct PlayerStruct {
+EasyEnemy g_easyEnemy;
+
+struct PlayerProperties {
 	const Vector2i SIZE = {147, 125};
 	const int HEALTH = 100;
 	const float SPEED = 0.2;
-} playerStruct;
+};
 
+PlayerProperties g_playerProperties;
 
-struct ObjectStruct {
+struct MapObjects {
 	std::vector<Object> obj;
-} objectStruct;
+};
+
+MapObjects g_objects;
 
 class Entity {
 public:
@@ -73,7 +81,7 @@ public:
 		playerScore = 0;
 		state = stay;
 		isSelect = false;
-		objectStruct.obj = lev.GetAllObjects();
+		g_objects.obj = lev.GetAllObjects();
 		if (name == "Player") {
 			sprite.setPosition(size.x, size.y);
 		}
@@ -83,69 +91,69 @@ public:
 		bool pressBut = false;
 		if (Keyboard::isKeyPressed(Keyboard::Left)) {
 			state = left;
-			speed = playerStruct.SPEED;
+			speed = g_playerProperties.SPEED;
 			pressBut = true;
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Right)) {
 			state = right;
-			speed = playerStruct.SPEED;
+			speed = g_playerProperties.SPEED;
 			pressBut = true;
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Up)) {
 			if (pressBut) {
 				if (state == right) {
 					state = rightUp;
-					speed = playerStruct.SPEED;
+					speed = g_playerProperties.SPEED;
 				}
 				if (state == left) {
 					state = leftUp;
-					speed = playerStruct.SPEED;
+					speed = g_playerProperties.SPEED;
 				}
 			}
 			else {
 				state = up;
-				speed = playerStruct.SPEED;
+				speed = g_playerProperties.SPEED;
 			}
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Down)) {
 			if (pressBut) {
 				if (state == right) {
 					state = rightDown;
-					speed = playerStruct.SPEED;
+					speed = g_playerProperties.SPEED;
 				}
 				if (state == left) {
 					state = leftDown;
-					speed = playerStruct.SPEED;
+					speed = g_playerProperties.SPEED;
 				}
 			}
 			else {
 				state = down;
-				speed = playerStruct.SPEED;
+				speed = g_playerProperties.SPEED;
 			}
 		}
 	}
 	void rotation_GG(Vector2f pos) {
 		float dX = pos.x - position.x;
 		float dY = pos.y - position.y;
-		rotation = (atan2(dY, dX)) * parameters.ANGLE / M_PI;
+		rotation = (atan2(dY, dX)) * g_parameters.ANGLE / M_PI;
 	}
 	void checkCollisionWithMap(float Dx, float Dy) {
-		for (int i = 0; i < objectStruct.obj.size(); i++) {
-			if (getRect().intersects(objectStruct.obj[i].rect)) {
-				if (objectStruct.obj[i].name == "solid") {
+		for (int i = 0; i < g_objects.obj.size(); i++) {
+			if (getRect().intersects(g_objects.obj[i].rect)) {
+				if (g_objects.obj[i].name == "solid") {
 					if (Dy > 0) {
-						position.y = objectStruct.obj[i].rect.top - size.y;
+						position.y = g_objects.obj[i].rect.top - size.y;
 						boost.y = 0;
 					}
 					if (Dy < 0) {
-						position.y = objectStruct.obj[i].rect.top + objectStruct.obj[i].rect.height;
+						position.y = g_objects.obj[i].rect.top + g_objects.obj[i].rect.height;
 						boost.y = 0;
 					}
 					if (Dx > 0) {
-						position.x = objectStruct.obj[i].rect.left - size.x;
+						position.x = g_objects.obj[i].rect.left - size.x;
 					}
 					if (Dx < 0) {
-						position.x = objectStruct.obj[i].rect.left + objectStruct.obj[i].rect.width;
+						position.x = g_objects.obj[i].rect.left + g_objects.obj[i].rect.width;
 					}
 				}
 			}
@@ -188,33 +196,33 @@ public:
 class Enemy :public Entity {
 public:
 	Enemy(Image &image, Level &lvl, Vector2f Position, Vector2i Size, String Name) :Entity(image, Position, Size, Name) {
-		objectStruct.obj = lvl.GetObjects("solid");
+		g_objects.obj = lvl.GetObjects("solid");
 		if (name == "easyEnemy") {
 			sprite.setTextureRect(IntRect(0, 0, size.x, size.y));
-			sprite.rotate(parameters.ANGLE);
-			boost.x = -easyEnemyStruct.SPEED;
+			sprite.rotate(g_parameters.ANGLE);
+			boost.x = -g_easyEnemy.SPEED;
 		}
 	}
 
 	void checkCollisionWithMap(float Dx, float Dy) {
-		for (int i = 0; i < objectStruct.obj.size(); i++) {
-			if (getRect().intersects(objectStruct.obj[i].rect)) {
-				if (objectStruct.obj[i].name == "solid") {
+		for (int i = 0; i < g_objects.obj.size(); i++) {
+			if (getRect().intersects(g_objects.obj[i].rect)) {
+				if (g_objects.obj[i].name == "solid") {
 					if (Dy > 0) {
-						position.y = objectStruct.obj[i].rect.top - size.y;
-						boost.y = -easyEnemyStruct.SPEED;
+						position.y = g_objects.obj[i].rect.top - size.y;
+						boost.y = -g_easyEnemy.SPEED;
 					}
 					if (Dy < 0) {
-						position.y = objectStruct.obj[i].rect.top + objectStruct.obj[i].rect.height;
-						boost.y = easyEnemyStruct.SPEED;
+						position.y = g_objects.obj[i].rect.top + g_objects.obj[i].rect.height;
+						boost.y = g_easyEnemy.SPEED;
 					}
 					if (Dx > 0) {
-						position.x = objectStruct.obj[i].rect.left - size.x;
-						boost.x = -easyEnemyStruct.SPEED;
+						position.x = g_objects.obj[i].rect.left - size.x;
+						boost.x = -g_easyEnemy.SPEED;
 					}
 					if (Dx < 0) {
-						position.x = objectStruct.obj[i].rect.left + objectStruct.obj[i].rect.width;
-						boost.x = easyEnemyStruct.SPEED;
+						position.x = g_objects.obj[i].rect.left + g_objects.obj[i].rect.width;
+						boost.x = g_easyEnemy.SPEED;
 					}
 				}
 			}
@@ -240,7 +248,7 @@ public:
 	int direction;
 	float tempy, tempx, rotation, Dx, Dy;
 	Bullet(Image &image, Level &lvl, Vector2f Position, Vector2i Size, Vector2f temp, String Name) :Entity(image, Position, Size, Name) {
-		objectStruct.obj = lvl.GetObjects("solid");
+		g_objects.obj = lvl.GetObjects("solid");
 		position = Position;
 		speed = 0.1;
 		tempx = temp.x;
@@ -252,7 +260,7 @@ public:
 		alive = true;
 		Dx = tempx - position.x;
 		Dy = tempy - position.y;
-		rotation = (atan2(Dy, Dx)) * parameters.ANGLE / M_PI;
+		rotation = (atan2(Dy, Dx)) * g_parameters.ANGLE / M_PI;
 	}
 
 	void update(float time) {
@@ -265,8 +273,8 @@ public:
 		if (position.y <= 0)
 			position.y = 1;
 
-		for (int i = 0; i < objectStruct.obj.size(); i++) {
-			if (getRect().intersects(objectStruct.obj[i].rect)) {
+		for (int i = 0; i < g_objects.obj.size(); i++) {
+			if (getRect().intersects(g_objects.obj[i].rect)) {
 				alive = false;
 			}
 		}
