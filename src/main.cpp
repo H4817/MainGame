@@ -21,7 +21,7 @@ struct PlayerPosition {
 	Vector2f pos;
 };
 
-struct ImagesStruct {
+struct ImageAssets {
 	Image heroImage, easyEnemyImage;
 	Image bulletImage;
 };
@@ -43,7 +43,7 @@ float RunTimer() {
 	return time;
 }
 
-void ProcessEvents(RenderWindow & window, Player & protagonist, ImagesStruct & imagesStruct, PlayerPosition & playerPosition) {
+void ProcessEvents(RenderWindow & window, Player & protagonist, ImageAssets & imagesStruct, PlayerPosition & playerPosition) {
 	sf::Event event;
 	while (window.pollEvent(event))	{
 		if (event.type == Event::Closed) {
@@ -60,7 +60,7 @@ void GetMousePosition(RenderWindow & window, PlayerPosition & playerPosition) {
 	playerPosition.pos = window.mapPixelToCoords(pixelPos);
 }
 
-void InitializeImages(ImagesStruct & imagesStruct) {
+void InitializeImages(ImageAssets & imagesStruct) {
 	application.lvl.LoadFromFile("Assets/map.tmx");
 	imagesStruct.bulletImage.loadFromFile("IMG/projectile_bolt_blue_single.png");
 	imagesStruct.heroImage.loadFromFile("IMG/PlayerShip.png");
@@ -72,9 +72,10 @@ Object InitializePlayer() {
 	return player;
 }
 
-bool IsAliveEntity(Entity *&entity) {
+bool IsAliveEntity(Entity *entity) {
 	return !entity->alive;
 }
+
 void ProcessEntities(float & time) {
 	auto new_end = std::remove_if(application.entities.begin(), application.entities.end(), IsAliveEntity);
 	application.entities.erase(new_end, application.entities.end());
@@ -84,23 +85,23 @@ void ProcessEntities(float & time) {
 }
 
 void ProcessDamage(Player & protagonist) {
-	for (auto it = application.entities.begin(); it != application.entities.end(); ++it) {
-		for (auto at = application.entities.begin(); at != application.entities.end(); ++at) {
-			if ((*it)->getRect().intersects((*at)->getRect()) && (((*at)->name == "Bullet") && ((*it)->name == "easyEnemy"))) {
-				(*it)->health -= playerBulletStruct.DAMAGE;
-				(*at)->alive = false;
+	for (auto it : application.entities) {
+		for (auto at : application.entities) {
+			if ((it)->getRect().intersects((at)->getRect()) && (((at)->name == "Bullet") && ((it)->name == "easyEnemy"))) {
+				(it)->health -= playerBulletStruct.DAMAGE;
+				(at)->alive = false;
 			}
 		}
-		if ((*it)->getRect().intersects(protagonist.getRect())) {
-			if ((*it)->name == "easyEnemy") {
-				(*it)->boost.x = 0;
+		if ((it)->getRect().intersects(protagonist.getRect())) {
+			if ((it)->name == "easyEnemy") {
+				(it)->boost.x = 0;
 				protagonist.health -= easyEnemyStruct.DAMAGE;
 			}
 		}
 	}
 }
 
-void AppendEnemies(std::vector<Object> & easyOpponent, ImagesStruct & imagesStruct) {
+void AppendEnemies(std::vector<Object> & easyOpponent, ImageAssets & imagesStruct) {
 	for (int i = 0; i < easyOpponent.size(); i++) {
 		application.entities.push_back(new Enemy(imagesStruct.easyEnemyImage, application.lvl, {easyOpponent[i].rect.left, easyOpponent[i].rect.top}, {easyEnemyStruct.WIDTH, easyEnemyStruct.HEIGHT}, "easyEnemy"));
 	}
@@ -114,8 +115,8 @@ void CheckExistenceProtagonist(Player &protagonist, RenderWindow &window) {
 void Draw(RenderWindow &window, Player & protagonist) {
 	window.clear();
 	application.lvl.Draw(window);
-	for (auto it = application.entities.begin(); it != application.entities.end(); it++) {
-		window.draw((*it)->sprite);
+	for (auto it : application.entities) {
+		window.draw((it)->sprite);
 	}
 	window.draw(protagonist.sprite);
 	window.display();
@@ -125,17 +126,17 @@ void Draw(RenderWindow &window, Player & protagonist) {
 int main() {
 	sf::RenderWindow window(sf::VideoMode(parameters.WINDOW_SIZE_X, parameters.WINDOW_SIZE_Y), "Game");
 	application.view.reset(sf::FloatRect(0, 0, parameters.WINDOW_SIZE_X, parameters.WINDOW_SIZE_Y));
-	ImagesStruct imagesStruct;
+	ImageAssets imageAssets;
 	PlayerPosition playerPosition;
-	InitializeImages(imagesStruct);
+	InitializeImages(imageAssets);
 	Object player = InitializePlayer();
 	std::vector<Object> easyOpponent = application.lvl.GetObjects("easyEnemy");
-	Player protagonist(imagesStruct.heroImage, application.lvl, {player.rect.left, player.rect.top}, playerStruct.SIZE, "Player");
-	AppendEnemies(easyOpponent, imagesStruct);
+	Player protagonist(imageAssets.heroImage, application.lvl, {player.rect.left, player.rect.top}, playerStruct.SIZE, "Player");
+	AppendEnemies(easyOpponent, imageAssets);
 	while (window.isOpen()) {
 		GetMousePosition(window, playerPosition);
 		float time = RunTimer();
-		ProcessEvents(window, protagonist, imagesStruct, playerPosition);
+		ProcessEvents(window, protagonist, imageAssets, playerPosition);
 		protagonist.rotation_GG(playerPosition.pos);
 		protagonist.update(time);
 		ProcessEntities(time);
