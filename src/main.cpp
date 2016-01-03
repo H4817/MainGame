@@ -15,11 +15,9 @@ struct Application {
 	Level lvl;
 	sf::View view;
 	std::list<Entity*> entities;
-	std::list<Entity*>::iterator it;
 } application;
 
 struct PlayerPosition {
-	Vector2i pixelPos;
 	Vector2f pos;
 };
 
@@ -58,8 +56,8 @@ void ProcessEvents(RenderWindow & window, Player & protagonist, ImagesStruct & i
 }
 
 void GetMousePosition(RenderWindow & window, PlayerPosition & playerPosition) {
-	playerPosition.pixelPos = Mouse::getPosition(window);
-	playerPosition.pos = window.mapPixelToCoords(playerPosition.pixelPos);
+	Vector2i pixelPos = Mouse::getPosition(window);
+	playerPosition.pos = window.mapPixelToCoords(pixelPos);
 }
 
 void InitializeImages(ImagesStruct & imagesStruct) {
@@ -75,14 +73,14 @@ Object InitializePlayer() {
 }
 
 void ProcessEntities(float & time) {
-	for (application.it = application.entities.begin(); application.it != application.entities.end();) {
-		Entity *entity = *application.it;
+	for (auto it = application.entities.begin(); it != application.entities.end();) {
+		Entity *entity = *it;
 		entity->update(time);
 		if (!entity->alive) {
-			application.it = application.entities.erase(application.it);
+			it = application.entities.erase(it);
 			delete entity;
 		}
-		else application.it++;
+		else it++;
 	}
 }
 
@@ -117,8 +115,8 @@ void CheckExistenceProtagonist(Player &protagonist, RenderWindow &window) {
 void Draw(RenderWindow &window, Player & protagonist) {
 	window.clear();
 	application.lvl.Draw(window);
-	for (application.it = application.entities.begin(); application.it != application.entities.end(); application.it++) {
-		window.draw((*application.it)->sprite);
+	for (auto it = application.entities.begin(); it != application.entities.end(); it++) {
+		window.draw((*it)->sprite);
 	}
 	window.draw(protagonist.sprite);
 	window.display();
