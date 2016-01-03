@@ -72,15 +72,14 @@ Object InitializePlayer() {
 	return player;
 }
 
+bool IsAliveEntity(Entity *&entity) {
+	return !entity->alive;
+}
 void ProcessEntities(float & time) {
-	for (auto it = application.entities.begin(); it != application.entities.end();) {
-		Entity *entity = *it;
-		entity->update(time);
-		if (!entity->alive) {
-			it = application.entities.erase(it);
-			delete entity;
-		}
-		else it++;
+	auto new_end = std::remove_if(application.entities.begin(), application.entities.end(), IsAliveEntity);
+	application.entities.erase(new_end, application.entities.end());
+	for (auto it : application.entities) {
+		it->update(time);
 	}
 }
 
