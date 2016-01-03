@@ -52,7 +52,7 @@ void ProcessEvents(RenderWindow & window, Player & protagonist, ImagesStruct & i
 			window.close();
 		}
 		if (event.key.code == Mouse::Left) {
-			application.entities.push_back(new Bullet(imagesStruct.bulletImage, application.lvl, protagonist.position.x, protagonist.position.y, playerBulletStruct.WIDTH, playerBulletStruct.HEIGHT, playerPosition.pos, "Bullet"));
+			application.entities.push_back(new Bullet(imagesStruct.bulletImage, application.lvl, protagonist.position, playerBulletStruct.WIDTH, playerBulletStruct.HEIGHT, playerPosition.pos, "Bullet"));
 		}
 	}
 }
@@ -104,8 +104,9 @@ void ProcessDamage(Player & protagonist) {
 }
 
 void AppendEnemies(std::vector<Object> & easyOpponent, ImagesStruct & imagesStruct) {
-	for (int i = 0; i < easyOpponent.size(); i++)
-		application.entities.push_back(new Enemy(imagesStruct.easyEnemyImage, application.lvl, easyOpponent[i].rect.left, easyOpponent[i].rect.top, easyEnemyStruct.WIDTH, easyEnemyStruct.HEIGHT, "easyEnemy"));
+	for (int i = 0; i < easyOpponent.size(); i++) {
+		application.entities.push_back(new Enemy(imagesStruct.easyEnemyImage, application.lvl, {easyOpponent[i].rect.left, easyOpponent[i].rect.top}, easyEnemyStruct.WIDTH, easyEnemyStruct.HEIGHT, "easyEnemy"));
+	}
 }
 
 void CheckExistenceProtagonist(Player &protagonist, RenderWindow &window) {
@@ -132,7 +133,7 @@ int main() {
 	InitializeImages(imagesStruct);
 	Object player = InitializePlayer();
 	std::vector<Object> easyOpponent = application.lvl.GetObjects("easyEnemy");
-	Player protagonist(imagesStruct.heroImage, application.lvl, player.rect.left, player.rect.top, playerStruct.WIDTH, playerStruct.HEIGHT, "Player");
+	Player protagonist(imagesStruct.heroImage, application.lvl, {player.rect.left, player.rect.top}, playerStruct.WIDTH, playerStruct.HEIGHT, "Player");
 	AppendEnemies(easyOpponent, imagesStruct);
 	while (window.isOpen()) {
 		GetMousePosition(window, playerPosition);

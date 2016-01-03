@@ -51,8 +51,8 @@ public:
 	Texture texture;
 	Sprite sprite;
 	String name;
-	Entity(Image &image, float X, float Y, int W, int H, String Name) {
-		position.x = X; position.y = Y; size.x = W; size.y = H; name = Name; moveTimer = 0;
+	Entity(Image &image, Vector2f Position, int W, int H, String Name) {
+		position = Position; size.x = W; size.y = H; name = Name; moveTimer = 0;
 		speed = 0; health = 100; boost.x = 0; boost.y = 0;
 		alive = true; isMove = false;
 		texture.loadFromImage(image);
@@ -71,7 +71,7 @@ public:
 	enum { left, right, up, down, leftUp, rightUp, leftDown, rightDown, stay } state;
 	float rotation;
 	int playerScore;
-	Player(Image &image, Level &lev, float X, float Y, int W, int H, String Name) :Entity(image, X, Y, W, H, Name) {
+	Player(Image &image, Level &lev, Vector2f Position, int W, int H, String Name) :Entity(image, Position, W, H, Name) {
 		playerScore = 0;
 		state = stay;
 		isSelect = false;
@@ -189,7 +189,7 @@ public:
 
 class Enemy :public Entity {
 public:
-	Enemy(Image &image, Level &lvl, float X, float Y, int W, int H, String Name) :Entity(image, X, Y, W, H, Name) {
+	Enemy(Image &image, Level &lvl, Vector2f Position, int W, int H, String Name) :Entity(image, Position, W, H, Name) {
 		objectStruct.obj = lvl.GetObjects("solid");
 		if (name == "easyEnemy") {
 			sprite.setTextureRect(IntRect(0, 0, size.x, size.y));
@@ -241,10 +241,9 @@ class Bullet :public Entity {
 public:
 	int direction;
 	float tempy, tempx, rotation, Dx, Dy;
-	Bullet(Image &image, Level &lvl, float X, float Y, int W, int H, Vector2f temp, String Name) :Entity(image, X, Y, W, H, Name) {
+	Bullet(Image &image, Level &lvl, Vector2f Position, int W, int H, Vector2f temp, String Name) :Entity(image, Position, W, H, Name) {
 		objectStruct.obj = lvl.GetObjects("solid");
-		position.x = X;
-		position.y = Y;
+		position = Position;
 		speed = 0.1;
 		tempx = temp.x;
 		tempy = temp.y;
