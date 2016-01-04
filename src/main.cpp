@@ -1,11 +1,10 @@
-#include <SFML/Graphics.hpp>
-#include <iostream>
-#include "level.h"
-#include "Classes.h"
+#include "Player.h"
+#include "Bullet.h"
+#include "Enemy.h"
 
 
 using namespace sf;
-
+using namespace std;
 
 
 struct Application {
