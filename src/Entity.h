@@ -10,15 +10,19 @@ using namespace std;
 
 struct Entity {
 public:
+    EasyEnemy easyEnemy;
+    MapObjects objects;
+    Parameters parameters;
+    PlayerProperties playerProperties;
     float speed;
     float moveTimer;
     Vector2f boost;
     Vector2f position;
-    int health;
+    Vector2f temp;
     Vector2i size;
+    int health;
     bool alive;
     bool isMove;
-    bool isSelect;
     Texture texture;
     Sprite sprite;
     String name;

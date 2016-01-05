@@ -8,7 +8,6 @@ Player::Player(Image &image, Level &lev, Vector2f Position, Vector2i Size, Strin
                                                                                                  Name) {
     playerScore = 0;
     state = stay;
-    isSelect = false;
     objects.obj = lev.GetAllObjects();
     if (name == "Player") {
         sprite.setPosition(size.x, size.y);

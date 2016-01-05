@@ -8,9 +8,6 @@ using namespace std;
 
 struct Player : public Entity {
 public:
-    PlayerProperties playerProperties;
-    Parameters parameters;
-    MapObjects objects;
     enum {
         left, right, up, down, leftUp, rightUp, leftDown, rightDown, stay
     } state;
