@@ -6,7 +6,7 @@ Bullet::Bullet(Image &image, Level &lvl, Vector2f Position, Vector2i Size, Vecto
                                                                                                                 Position,
                                                                                                                 Size,
                                                                                                                 Name) {
-    g_objects.obj = lvl.GetObjects("solid");
+    objects.obj = lvl.GetObjects("solid");
     position = Position;
     speed = 0.1;
     tempx = temp.x;
@@ -18,7 +18,7 @@ Bullet::Bullet(Image &image, Level &lvl, Vector2f Position, Vector2i Size, Vecto
     alive = true;
     Dx = tempx - position.x;
     Dy = tempy - position.y;
-    rotation = (atan2(Dy, Dx)) * g_parameters.ANGLE / M_PI;
+    rotation = (atan2(Dy, Dx)) * parameters.ANGLE / M_PI;
 }
 
 void Bullet::update(float time) {
@@ -31,8 +31,8 @@ void Bullet::update(float time) {
     if (position.y <= 0)
         position.y = 1;
 
-    for (int i = 0; i < g_objects.obj.size(); i++) {
-        if (getRect().intersects(g_objects.obj[i].rect)) {
+    for (int i = 0; i < objects.obj.size(); i++) {
+        if (getRect().intersects(objects.obj[i].rect)) {
             alive = false;
         }
     }

@@ -1,8 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "level.h"
-#include "resource.h"
 #include <list>
+#include "resource.h"
 
 
 using namespace sf;

@@ -3,8 +3,6 @@
 #include "Enemy.h"
 
 
-using namespace sf;
-using namespace std;
 
 
 struct Application {
@@ -45,14 +43,14 @@ float RunTimer() {
 	return time_ms;
 }
 
-void ProcessEvents(RenderWindow & window, Player & protagonist, ImageAssets & imagesStruct, PlayerPosition & playerPosition) {
+void ProcessEvents(RenderWindow & window, Player & protagonist, ImageAssets & imagesStruct, PlayerPosition & playerPosition, PlayerBullet & playerBullet) {
 	sf::Event event;
 	while (window.pollEvent(event))	{
 		if (event.type == Event::Closed) {
 			window.close();
 		}
 		if (event.key.code == Mouse::Left) {
-			g_application.entities.push_back(new Bullet(imagesStruct.bulletImage, g_application.lvl, protagonist.position, g_playerBullet.SIZE, playerPosition.pos, "Bullet"));
+			g_application.entities.push_back(new Bullet(imagesStruct.bulletImage, g_application.lvl, protagonist.position, playerBullet.SIZE, playerPosition.pos, "Bullet"));
 		}
 	}
 }
@@ -86,26 +84,26 @@ void ProcessEntities(float & time_ms) {
 	}
 }
 
-void ProcessDamage(Player & protagonist) {
+void ProcessDamage(Player & protagonist, PlayerBullet & playerBullet, EasyEnemy & easyEnemy) {
 	for (auto it : g_application.entities) {
 		for (auto at : g_application.entities) {
 			if ((it)->getRect().intersects((at)->getRect()) && (((at)->name == "Bullet") && ((it)->name == "easyEnemy"))) {
-				(it)->health -= g_playerBullet.DAMAGE;
+				(it)->health -= playerBullet.DAMAGE;
 				(at)->alive = false;
 			}
 		}
 		if ((it)->getRect().intersects(protagonist.getRect())) {
 			if ((it)->name == "easyEnemy") {
 				(it)->boost.x = 0;
-				protagonist.health -= g_easyEnemy.DAMAGE;
+				protagonist.health -= easyEnemy.DAMAGE;
 			}
 		}
 	}
 }
 
-void AppendEnemies(std::vector<Object> & easyOpponent, ImageAssets & imagesStruct) {
+void AppendEnemies(std::vector<Object> & easyOpponent, ImageAssets & imagesStruct, EasyEnemy & easyEnemy) {
 	for (int i = 0; i < easyOpponent.size(); i++) {
-		g_application.entities.push_back(new Enemy(imagesStruct.easyEnemyImage, g_application.lvl, {easyOpponent[i].rect.left, easyOpponent[i].rect.top}, g_easyEnemy.SIZE, "easyEnemy"));
+		g_application.entities.push_back(new Enemy(imagesStruct.easyEnemyImage, g_application.lvl, {easyOpponent[i].rect.left, easyOpponent[i].rect.top}, easyEnemy.SIZE, "easyEnemy"));
 	}
 }
 
@@ -126,23 +124,27 @@ void Draw(RenderWindow &window, Player & protagonist) {
 
 
 int main() {
-	sf::RenderWindow window(sf::VideoMode(g_parameters.WINDOW_SIZE_X, g_parameters.WINDOW_SIZE_Y), "Game");
-	g_application.view.reset(sf::FloatRect(0, 0, g_parameters.WINDOW_SIZE_X, g_parameters.WINDOW_SIZE_Y));
+	EasyEnemy easyEnemy;
+	PlayerBullet playerBullet;
+	PlayerProperties playerProperties;
+	Parameters parameters;
+	sf::RenderWindow window(sf::VideoMode(parameters.WINDOW_SIZE_X, parameters.WINDOW_SIZE_Y), "Game");
+	g_application.view.reset(sf::FloatRect(0, 0, parameters.WINDOW_SIZE_X, parameters.WINDOW_SIZE_Y));
 	ImageAssets imageAssets;
 	PlayerPosition playerPosition;
 	InitializeImages(imageAssets);
 	Object player = InitializePlayer();
 	std::vector<Object> easyOpponent = g_application.lvl.GetObjects("easyEnemy");
-	Player protagonist(imageAssets.heroImage, g_application.lvl, {player.rect.left, player.rect.top}, g_playerProperties.SIZE, "Player");
-	AppendEnemies(easyOpponent, imageAssets);
+	Player protagonist(imageAssets.heroImage, g_application.lvl, {player.rect.left, player.rect.top}, playerProperties.SIZE, "Player");
+	AppendEnemies(easyOpponent, imageAssets, easyEnemy);
 	while (window.isOpen()) {
 		GetMousePosition(window, playerPosition);
 		float time_ms = RunTimer();
-		ProcessEvents(window, protagonist, imageAssets, playerPosition);
+		ProcessEvents(window, protagonist, imageAssets, playerPosition, playerBullet);
 		protagonist.rotation_GG(playerPosition.pos);
 		protagonist.update(time_ms);
 		ProcessEntities(time_ms);
-		ProcessDamage(protagonist);
+		ProcessDamage(protagonist, playerBullet, easyEnemy);
 		CheckExistenceProtagonist(protagonist, window);
 		window.setView(g_application.view);
 		Draw(window, protagonist);

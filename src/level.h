@@ -1,5 +1,3 @@
-#ifndef LEVEL_H
-#define LEVEL_H
 
 #include <string>
 #include <vector>
@@ -44,19 +42,19 @@ private:
 };
 
 
-int Object::GetPropertyInt(std::string name) {
+inline int Object::GetPropertyInt(std::string name) {
 	return atoi(properties[name].c_str());
 }
 
-float Object::GetPropertyFloat(std::string name) {
+inline float Object::GetPropertyFloat(std::string name) {
 	return strtod(properties[name].c_str(), NULL);
 }
 
-std::string Object::GetPropertyString(std::string name) {
+inline std::string Object::GetPropertyString(std::string name) {
 	return properties[name];
 }
 
-bool Level::LoadFromFile(std::string filename) {
+inline bool Level::LoadFromFile(std::string filename) {
 	TiXmlDocument levelFile(filename.c_str());
 
 	if (!levelFile.LoadFile()) {
@@ -247,13 +245,13 @@ bool Level::LoadFromFile(std::string filename) {
 	return true;
 }
 
-Object Level::GetObject(std::string name) {
+inline Object Level::GetObject(std::string name) {
 	for (int i = 0; i < objects.size(); i++)
 	if (objects[i].name == name)
 		return objects[i];
 }
 
-std::vector<Object> Level::GetObjects(std::string name) {
+inline std::vector<Object> Level::GetObjects(std::string name) {
 	std::vector<Object> vec;
 	for (int i = 0; i < objects.size(); i++)
 	if (objects[i].name == name)
@@ -262,18 +260,17 @@ std::vector<Object> Level::GetObjects(std::string name) {
 }
 
 
-std::vector<Object> Level::GetAllObjects() {
+inline std::vector<Object> Level::GetAllObjects() {
 	return objects;
 };
 
 
-sf::Vector2i Level::GetTileSize() {
+inline sf::Vector2i Level::GetTileSize() {
 	return sf::Vector2i(tileWidth, tileHeight);
 }
 
-void Level::Draw(sf::RenderWindow &window) {
+inline void Level::Draw(sf::RenderWindow &window) {
 	for (int layer = 0; layer < layers.size(); layer++)
 	for (int tile = 0; tile < layers[layer].tiles.size(); tile++)
 		window.draw(layers[layer].tiles[tile]);
 }
-#endif

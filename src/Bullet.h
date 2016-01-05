@@ -7,6 +7,8 @@ using namespace std;
 
 struct Bullet :public Entity {
 public:
+    Parameters parameters;
+    MapObjects objects;
     int direction;
     float tempy;
     float tempx;
