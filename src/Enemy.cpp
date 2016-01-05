@@ -3,7 +3,7 @@
 
 
 
-Enemy::Enemy(Image &image, Level &lvl, Vector2f Position, Vector2i Size, String Name) :Entity(image, Position, Size, Name) {
+Enemy::Enemy(Image &image, MapObjects & objects, Level &lvl, Vector2f Position, Vector2i Size, String Name) :Entity(image, Position, Size, Name) {
 	objects.obj = lvl.GetObjects("solid");
 		if (name == "easyEnemy") {
 			sprite.setTextureRect(IntRect(0, 0, size.x, size.y));
@@ -12,7 +12,7 @@ Enemy::Enemy(Image &image, Level &lvl, Vector2f Position, Vector2i Size, String 
 		}
 	}
 
-	void Enemy::checkCollisionWithMap(float Dx, float Dy) {
+	void Enemy::checkCollisionWithMap(float Dx, float Dy, MapObjects & objects) {
 		for (int i = 0; i < objects.obj.size(); i++) {
 			if (getRect().intersects(objects.obj[i].rect)) {
 				if (objects.obj[i].name == "solid") {
@@ -37,9 +37,9 @@ Enemy::Enemy(Image &image, Level &lvl, Vector2f Position, Vector2i Size, String 
 		}
 	}
 
-	void Enemy::update(float time) {
+	void Enemy::update(float time, MapObjects & objects) {
 		if (name == "easyEnemy") {
-			checkCollisionWithMap(boost.x, boost.y);
+			checkCollisionWithMap(boost.x, boost.y, objects);
 			position.x += boost.x*time;
 			position.y += boost.y*time;
 			sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);

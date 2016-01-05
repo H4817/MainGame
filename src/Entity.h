@@ -11,7 +11,6 @@ using namespace std;
 struct Entity {
 public:
     EasyEnemy easyEnemy;
-    MapObjects objects;
     Parameters parameters;
     PlayerProperties playerProperties;
     float speed;
@@ -28,5 +27,5 @@ public:
     String name;
     Entity(Image &image, Vector2f Position, Vector2i Size, String Name);
     FloatRect getRect();
-    virtual void update(float time) = 0;
+    virtual void update(float time, MapObjects & objects) = 0;
 };

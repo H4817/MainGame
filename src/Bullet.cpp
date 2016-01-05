@@ -2,7 +2,7 @@
 
 
 
-Bullet::Bullet(Image &image, Level &lvl, Vector2f Position, Vector2i Size, Vector2f temp, String Name) : Entity(image,
+Bullet::Bullet(Image &image, MapObjects & objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f temp, String Name) : Entity(image,
                                                                                                                 Position,
                                                                                                                 Size,
                                                                                                                 Name) {
@@ -18,7 +18,7 @@ Bullet::Bullet(Image &image, Level &lvl, Vector2f Position, Vector2i Size, Vecto
     rotation = (atan2(temp.y - position.y, temp.x - position.x)) * parameters.ANGLE / M_PI;
 }
 
-void Bullet::update(float time) {
+void Bullet::update(float time, MapObjects & objects) {
     position.x += speed * (temp.x - boost.x);
     position.y += speed * (temp.y - boost.y);
 

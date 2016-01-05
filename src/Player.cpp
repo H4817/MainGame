@@ -4,7 +4,7 @@
 void getPlayerCoordinateForView(Vector2f position);
 
 
-Player::Player(Image &image, Level &lev, Vector2f Position, Vector2i Size, String Name) : Entity(image, Position, Size,
+Player::Player(Image &image, MapObjects & objects, Level &lev, Vector2f Position, Vector2i Size, String Name) : Entity(image, Position, Size,
                                                                                                  Name) {
     playerScore = 0;
     state = stay;
@@ -66,7 +66,7 @@ void Player::rotation_GG(Vector2f pos) {
     rotation = (atan2(dY, dX)) * parameters.ANGLE / M_PI;
 }
 
-void Player::checkCollisionWithMap(float Dx, float Dy) {
+void Player::checkCollisionWithMap(float Dx, float Dy, MapObjects & objects) {
     for (int i = 0; i < objects.obj.size(); i++) {
         if (getRect().intersects(objects.obj[i].rect)) {
             if (objects.obj[i].name == "solid") {
@@ -89,7 +89,7 @@ void Player::checkCollisionWithMap(float Dx, float Dy) {
     }
 }
 
-void Player::update(float time) {
+void Player::update(float time, MapObjects & objects) {
     sprite.setRotation(rotation);
     control();
     switch (state) {
@@ -129,9 +129,9 @@ void Player::update(float time) {
             break;
     }
     position.x += boost.x * time;
-    checkCollisionWithMap(boost.x, 0);
+    checkCollisionWithMap(boost.x, 0, objects);
     position.y += boost.y * time;
-    checkCollisionWithMap(0, boost.y);
+    checkCollisionWithMap(0, boost.y, objects);
     sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
 
     if (health <= 0) {
