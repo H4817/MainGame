@@ -1,6 +1,4 @@
-#pragma hdrstop
 #include "Entity.h"
-#pragma package(smart_init)
 
 
 Entity::Entity(Image &image, Vector2f Position, Vector2i Size, String Name) {
