@@ -94,36 +94,28 @@ void Player::update(float time, MapObjects & objects) {
     control();
     switch (state) {
         case right:
-            boost.x = speed;
-            boost.y = 0;
+            boost = {speed, 0};
             break;
         case rightUp:
-            boost.x = speed;
-            boost.y = -speed;
+            boost = {speed, -speed};
             break;
         case rightDown:
-            boost.x = speed;
-            boost.y = speed;
+            boost = {speed, speed};
             break;
         case left:
-            boost.x = -speed;
-            boost.y = 0;
+            boost = {-speed, 0};
             break;
         case leftUp:
-            boost.x = -speed;
-            boost.y = -speed;
+            boost = {-speed, -speed};
             break;
         case leftDown:
-            boost.x = -speed;
-            boost.y = speed;
+            boost = {-speed, speed};
             break;
         case up:
-            boost.x = 0;
-            boost.y = -speed;
+            boost = {0, -speed};
             break;
         case down:
-            boost.x = 0;
-            boost.y = speed;
+            boost = {0, speed};
             break;
         case stay:
             break;
