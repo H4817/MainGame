@@ -7,20 +7,14 @@ Bullet::Bullet(Image &image, MapObjects & objects, Level &lvl, Vector2f Position
                                                                                                                 Size,
                                                                                                                 Name) {
     objects.obj = lvl.GetObjects("solid");
-    position = Position;
     speed = 0.1;
     Entity::temp = temp;
-    size = Size;
-    alive = true;
-    boost.x = position.x;
-    boost.y = position.y;
-    alive = true;
+    boost = {position.x, position.y};
     rotation = (atan2(temp.y - position.y, temp.x - position.x)) * parameters.ANGLE / M_PI;
 }
 
 void Bullet::update(float time, MapObjects & objects) {
-    position.x += speed * (temp.x - boost.x);
-    position.y += speed * (temp.y - boost.y);
+    position += (temp - boost) * speed;
 
     if (position.x <= 0)
         position.x = 1;
