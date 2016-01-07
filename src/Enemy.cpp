@@ -2,8 +2,8 @@
 #include "resource.h"
 
 
-Enemy::Enemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, String Name) : Entity(
-        image, Position, Size, Name) {
+Enemy::Enemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, String Name) : EntityLogic(
+         Name), EntityVisual(image, Position, Size) {
     objects.obj = lvl.GetObjects("solid");
     if (name == "easyEnemy") {
         sprite.setTextureRect(IntRect(0, 0, size.x, size.y));

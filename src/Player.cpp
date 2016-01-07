@@ -4,8 +4,7 @@
 void getPlayerCoordinateForView(Vector2f position);
 
 
-Player::Player(Image &image, MapObjects & objects, Level &lev, Vector2f Position, Vector2i Size, String Name) : Entity(image, Position, Size,
-                                                                                                 Name) {
+Player::Player(Image &image, MapObjects & objects, Level &lev, Vector2f Position, Vector2i Size, String Name) : EntityLogic(Name), EntityVisual(image, Position, Size) {
     playerScore = 0;
     state = stay;
     objects.obj = lev.GetAllObjects();

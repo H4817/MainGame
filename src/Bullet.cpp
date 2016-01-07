@@ -2,13 +2,10 @@
 
 
 
-Bullet::Bullet(Image &image, MapObjects & objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f temp, String Name) : Entity(image,
-                                                                                                                Position,
-                                                                                                                Size,
-                                                                                                                Name) {
+Bullet::Bullet(Image &image, MapObjects & objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f temp, String Name) : EntityLogic(Name), EntityVisual(image, Position, Size) {
     objects.obj = lvl.GetObjects("solid");
     speed = 0.1;
-    Entity::temp = temp;
+    EntityLogic::temp = temp;
     boost = {position.x, position.y};
     rotation = (atan2(temp.y - position.y, temp.x - position.x)) * parameters.ANGLE / M_PI;
 }

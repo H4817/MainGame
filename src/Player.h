@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Entity.h"
+#include "EntityLogic.h"
 
 
 using namespace sf;
 using namespace std;
 
-struct Player : public Entity {
+struct Player : public EntityLogic, public EntityVisual {
 public:
     enum {
         left, right, up, down, leftUp, rightUp, leftDown, rightDown, stay

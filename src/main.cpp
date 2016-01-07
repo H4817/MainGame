@@ -11,7 +11,7 @@ struct Application {
 	Clock clock;
 	Level lvl;
 	sf::View view;
-	std::list<Entity*> entities;
+	std::list<EntityLogic*> entities;
 };
 
 Application g_application;
@@ -72,7 +72,7 @@ Object InitializePlayer() {
 	return player;
 }
 
-bool IsAliveEntity(Entity *entity) {
+bool IsAliveEntity(EntityLogic *entity) {
 	return !entity->alive;
 }
 

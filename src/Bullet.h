@@ -1,11 +1,11 @@
 #pragma once
-#include "Entity.h"
+#include "EntityLogic.h"
 
 
 using namespace sf;
 using namespace std;
 
-struct Bullet :public Entity {
+struct Bullet :public EntityLogic, public EntityVisual {
 public:
     int direction;
     float rotation;

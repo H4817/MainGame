@@ -1,14 +1,16 @@
 #pragma once
+
 #include <SFML/Graphics.hpp>
 #include "level.h"
 #include <list>
 #include "resource.h"
+#include "EntityVisual.h"
 
 
 using namespace sf;
 using namespace std;
 
-struct Entity {
+struct EntityLogic {
 public:
     EasyEnemy easyEnemy;
     Parameters parameters;
@@ -16,16 +18,15 @@ public:
     float speed;
     float moveTimer;
     Vector2f boost;
-    Vector2f position;
     Vector2f temp;
-    Vector2i size;
     int health;
     bool alive;
     bool isMove;
-    Texture texture;
-    Sprite sprite;
     String name;
-    Entity(Image &image, Vector2f Position, Vector2i Size, String Name);
+
+    EntityLogic(String Name);
+
     FloatRect getRect();
-    virtual void update(float time, MapObjects & objects) = 0;
+
+    virtual void update(float time, MapObjects &objects) = 0;
 };
