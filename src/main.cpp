@@ -12,6 +12,7 @@ struct Application {
 	Level lvl;
 	sf::View view;
 	std::list<EntityLogic*> entities;
+	std::list<EntityVisual*> entitiesVisual;
 };
 
 Application g_application;
@@ -51,6 +52,7 @@ void ProcessEvents(RenderWindow & window, Player & protagonist, ImageAssets & im
 		}
 		if (event.key.code == Mouse::Left) {
 			g_application.entities.push_back(new Bullet(imagesStruct.bulletImage, objects, g_application.lvl, protagonist.position, playerBullet.SIZE, playerPosition.pos, "Bullet"));
+			//g_application.entitiesVisual.push_back();
 		}
 	}
 }
@@ -84,15 +86,15 @@ void ProcessEntities(float & time_ms, MapObjects & objects) {
 	}
 }
 
-void ProcessDamage(Player & protagonist, PlayerBullet & playerBullet, EasyEnemy & easyEnemy) {
+void ProcessDamage(Player & protagonist, PlayerBullet & playerBullet, EasyEnemy & easyEnemy, EntityVisual * visual) {
 	for (auto it : g_application.entities) {
 		for (auto at : g_application.entities) {
-			if ((it)->getRect().intersects((at)->getRect()) && (((at)->name == "Bullet") && ((it)->name == "easyEnemy"))) {
+			if ((it)->getRect(*visual).intersects((at)->getRect(*visual)) && (((at)->name == "Bullet") && ((it)->name == "easyEnemy"))) {
 				(it)->health -= playerBullet.DAMAGE;
 				(at)->alive = false;
 			}
 		}
-		if ((it)->getRect().intersects(protagonist.getRect())) {
+		if ((it)->getRect(*visual).intersects(protagonist.getRect())) {
 			if ((it)->name == "easyEnemy") {
 				(it)->boost.x = 0;
 				protagonist.health -= easyEnemy.DAMAGE;
@@ -112,10 +114,10 @@ void CheckExistenceProtagonist(Player &protagonist, RenderWindow &window) {
 		window.close();
 }
 
-void Draw(RenderWindow &window, Player & protagonist) {
+void Draw(RenderWindow &window, Player & protagonist) { /////////////////////////////////
 	window.clear();
 	g_application.lvl.Draw(window);
-	for (auto it : g_application.entities) {
+	for (auto it : g_application.entitiesVisual) {
 		window.draw((it)->sprite);
 	}
 	window.draw(protagonist.sprite);
@@ -124,6 +126,7 @@ void Draw(RenderWindow &window, Player & protagonist) {
 
 
 int main() {
+	EntityVisual *visual;
 	EasyEnemy easyEnemy;
 	PlayerBullet playerBullet;
 	PlayerProperties playerProperties;
@@ -145,7 +148,7 @@ int main() {
 		protagonist.rotation_GG(playerPosition.pos);
 		protagonist.update(time_ms, objects);
 		ProcessEntities(time_ms, objects);
-		ProcessDamage(protagonist, playerBullet, easyEnemy);
+		ProcessDamage(protagonist, playerBullet, easyEnemy, visual);
 		CheckExistenceProtagonist(protagonist, window);
 		window.setView(g_application.view);
 		Draw(window, protagonist);

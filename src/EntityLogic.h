@@ -24,9 +24,9 @@ public:
     bool isMove;
     String name;
 
-    EntityLogic(String Name);
+    EntityLogic(String Name, EntityVisual & visual);
 
-    FloatRect getRect();
+    FloatRect getRect(EntityVisual & visual);
 
     virtual void update(float time, MapObjects &objects) = 0;
 };

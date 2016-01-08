@@ -1,10 +1,6 @@
 #pragma once
-
 #include <SFML/Graphics.hpp>
-#include "level.h"
-#include <list>
 #include "resource.h"
-
 
 struct EntityVisual {
 public:
@@ -18,4 +14,5 @@ public:
     EntityVisual(Image &image, Vector2f Position, Vector2i Size);
 
     FloatRect getRect();
+
 };

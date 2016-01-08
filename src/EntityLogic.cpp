@@ -1,9 +1,8 @@
 #include "EntityLogic.h"
-#include "EntityVisual.h"
 
 
-EntityLogic::EntityLogic(String Name) {
-    EntityVisual * visual;
+EntityLogic::EntityLogic(String Name, EntityVisual & visual) {
+    EntityVisual *Visual;
     name = Name;
     moveTimer = 0;
     speed = 0;
@@ -13,6 +12,6 @@ EntityLogic::EntityLogic(String Name) {
     isMove = false;
 }
 
-FloatRect EntityLogic::getRect() {
-    return FloatRect(position.x, position.y, size.x, size.y);
+FloatRect EntityLogic::getRect(EntityVisual & visual) {
+    return FloatRect(visual.position.x, visual.position.y, visual.size.x, visual.size.y);
 }

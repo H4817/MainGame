@@ -2,7 +2,7 @@
 
 
 
-Bullet::Bullet(Image &image, MapObjects & objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f temp, String Name) : EntityLogic(Name), EntityVisual(image, Position, Size) {
+Bullet::Bullet(Image &image, MapObjects & objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f temp, String Name) : EntityLogic(Name, *visual), EntityVisual(image, Position, Size) {
     objects.obj = lvl.GetObjects("solid");
     speed = 0.1;
     EntityLogic::temp = temp;
