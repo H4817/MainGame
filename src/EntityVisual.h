@@ -1,11 +1,11 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "resource.h"
+
+using namespace sf;
+
 
 struct EntityVisual {
 public:
-    EasyEnemy easyEnemy;
-    PlayerProperties playerProperties;
     Vector2f position;
     Vector2i size;
     Texture texture;

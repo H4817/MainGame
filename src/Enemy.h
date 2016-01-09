@@ -7,8 +7,7 @@ using namespace std;
 
 struct Enemy :public EntityLogic {
 public:
-    EntityVisual *visual;
-    Enemy(Image &image, MapObjects & objects, Level &lvl, Vector2f Position, Vector2i Size, String Name);
+    Enemy(MapObjects &objects, Level &lvl, String Name, std::list<EntityVisual*> visual);
     void checkCollisionWithMap(float Dx, float Dy, MapObjects & objects);
-    void update(float time, MapObjects & objects);
+    void update(float time, MapObjects & objects, std::list<EntityVisual*> & visual);
 };

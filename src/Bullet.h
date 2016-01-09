@@ -5,11 +5,10 @@
 using namespace sf;
 using namespace std;
 
-struct Bullet :public EntityLogic, public EntityVisual {
+struct Bullet :public EntityLogic {
 public:
-    EntityVisual *visual;
     int direction;
     float rotation;
-    Bullet(Image &image, MapObjects & objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f temp, String Name);
-    void update(float time, MapObjects & objects);
+    Bullet(MapObjects & objects, Level & lvl, Vector2f temp, String Name, std::list<EntityVisual*> visual);
+    void update(float time, MapObjects & objects, std::list<EntityVisual*> & visual);
 };

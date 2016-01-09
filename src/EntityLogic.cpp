@@ -1,8 +1,8 @@
 #include "EntityLogic.h"
 
 
-EntityLogic::EntityLogic(String Name, EntityVisual & visual) {
-    EntityVisual *Visual;
+EntityLogic::EntityLogic(String Name, EntityVisual * visual) {
+    *Visual = *visual;
     name = Name;
     moveTimer = 0;
     speed = 0;

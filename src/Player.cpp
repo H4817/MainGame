@@ -4,12 +4,12 @@
 void getPlayerCoordinateForView(Vector2f position);
 
 
-Player::Player(Image &image, MapObjects & objects, Level &lev, Vector2f Position, Vector2i Size, String Name) : EntityLogic(Name), EntityVisual(image, Position, Size) {
+Player::Player(MapObjects & objects, Level &lev, String Name, std::list<EntityVisual*> visual) : EntityLogic(Name, Visual) {
     playerScore = 0;
     state = stay;
     objects.obj = lev.GetAllObjects();
     if (name == "Player") {
-        sprite.setPosition(size.x, size.y);
+        Visual->sprite.setPosition(Visual->size.x, Visual->size.y);
     }
 }
 
@@ -60,36 +60,36 @@ void Player::control() {
 }
 
 void Player::rotation_GG(Vector2f pos) {
-    float dX = pos.x - position.x;
-    float dY = pos.y - position.y;
+    float dX = pos.x - Visual->position.x;
+    float dY = pos.y - Visual->position.y;
     rotation = (atan2(dY, dX)) * parameters.ANGLE / M_PI;
 }
 
 void Player::checkCollisionWithMap(float Dx, float Dy, MapObjects & objects) {
     for (int i = 0; i < objects.obj.size(); i++) {
-        if (getRect().intersects(objects.obj[i].rect)) {
+        if (getRect(*Visual).intersects(objects.obj[i].rect)) {
             if (objects.obj[i].name == "solid") {
                 if (Dy > 0) {
-                    position.y = objects.obj[i].rect.top - size.y;
+                    Visual->position.y = objects.obj[i].rect.top - Visual->size.y;
                     boost.y = 0;
                 }
                 if (Dy < 0) {
-                    position.y = objects.obj[i].rect.top + objects.obj[i].rect.height;
+                    Visual->position.y = objects.obj[i].rect.top + objects.obj[i].rect.height;
                     boost.y = 0;
                 }
                 if (Dx > 0) {
-                    position.x = objects.obj[i].rect.left - size.x;
+                    Visual->position.x = objects.obj[i].rect.left - Visual->size.x;
                 }
                 if (Dx < 0) {
-                    position.x = objects.obj[i].rect.left + objects.obj[i].rect.width;
+                    Visual->position.x = objects.obj[i].rect.left + objects.obj[i].rect.width;
                 }
             }
         }
     }
 }
 
-void Player::update(float time, MapObjects & objects) {
-    sprite.setRotation(rotation);
+void Player::update(float time, MapObjects & objects, std::list<EntityVisual*> & visual) {
+    Visual->sprite.setRotation(rotation);
     control();
     switch (state) {
         case right:
@@ -119,11 +119,11 @@ void Player::update(float time, MapObjects & objects) {
         case stay:
             break;
     }
-    position.x += boost.x * time;
+    Visual->position.x += boost.x * time;
     checkCollisionWithMap(boost.x, 0, objects);
-    position.y += boost.y * time;
+    Visual->position.y += boost.y * time;
     checkCollisionWithMap(0, boost.y, objects);
-    sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
+    Visual->sprite.setPosition(Visual->position.x + Visual->size.x / 2, Visual->position.y + Visual->size.y / 2);
 
     if (health <= 0) {
         alive = false;
@@ -132,6 +132,6 @@ void Player::update(float time, MapObjects & objects) {
         speed = 0;
     }
     if (alive) {
-        getPlayerCoordinateForView(position);
+        getPlayerCoordinateForView(Visual->position);
     }
 }

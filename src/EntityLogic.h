@@ -15,6 +15,7 @@ public:
     EasyEnemy easyEnemy;
     Parameters parameters;
     PlayerProperties playerProperties;
+    EntityVisual * Visual;
     float speed;
     float moveTimer;
     Vector2f boost;
@@ -24,9 +25,9 @@ public:
     bool isMove;
     String name;
 
-    EntityLogic(String Name, EntityVisual & visual);
+    EntityLogic(String Name, EntityVisual * visual);
 
     FloatRect getRect(EntityVisual & visual);
 
-    virtual void update(float time, MapObjects &objects) = 0;
+    virtual void update(float time, MapObjects & objects, std::list<EntityVisual*> & visual) = 0;
 };

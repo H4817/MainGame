@@ -11,7 +11,7 @@ struct Application {
 	Clock clock;
 	Level lvl;
 	sf::View view;
-	std::list<EntityLogic*> entities;
+	std::list<EntityLogic*> entitiesLogic;
 	std::list<EntityVisual*> entitiesVisual;
 };
 
@@ -51,8 +51,8 @@ void ProcessEvents(RenderWindow & window, Player & protagonist, ImageAssets & im
 			window.close();
 		}
 		if (event.key.code == Mouse::Left) {
-			g_application.entities.push_back(new Bullet(imagesStruct.bulletImage, objects, g_application.lvl, protagonist.position, playerBullet.SIZE, playerPosition.pos, "Bullet"));
-			//g_application.entitiesVisual.push_back();
+			g_application.entitiesVisual.push_back(new EntityVisual(imagesStruct.bulletImage, playerPosition.pos, playerBullet.SIZE));
+			g_application.entitiesLogic.push_back(new Bullet(objects, g_application.lvl, playerPosition.pos, "Bullet", g_application.entitiesVisual));
 		}
 	}
 }
@@ -79,22 +79,22 @@ bool IsAliveEntity(EntityLogic *entity) {
 }
 
 void ProcessEntities(float & time_ms, MapObjects & objects) {
-	auto new_end = std::remove_if(g_application.entities.begin(), g_application.entities.end(), IsAliveEntity);
-	g_application.entities.erase(new_end, g_application.entities.end());
-	for (auto it : g_application.entities) {
-		it->update(time_ms, objects);
+	auto new_end = std::remove_if(g_application.entitiesLogic.begin(), g_application.entitiesLogic.end(), IsAliveEntity);
+	g_application.entitiesLogic.erase(new_end, g_application.entitiesLogic.end());
+	for (auto it : g_application.entitiesLogic) {
+		it->update(time_ms, objects, g_application.entitiesVisual);
 	}
 }
 
 void ProcessDamage(Player & protagonist, PlayerBullet & playerBullet, EasyEnemy & easyEnemy, EntityVisual * visual) {
-	for (auto it : g_application.entities) {
-		for (auto at : g_application.entities) {
+	for (auto it : g_application.entitiesLogic) {
+		for (auto at : g_application.entitiesLogic) {
 			if ((it)->getRect(*visual).intersects((at)->getRect(*visual)) && (((at)->name == "Bullet") && ((it)->name == "easyEnemy"))) {
 				(it)->health -= playerBullet.DAMAGE;
 				(at)->alive = false;
 			}
 		}
-		if ((it)->getRect(*visual).intersects(protagonist.getRect())) {
+		if ((it)->getRect(*visual).intersects(protagonist.getRect(*visual))) {
 			if ((it)->name == "easyEnemy") {
 				(it)->boost.x = 0;
 				protagonist.health -= easyEnemy.DAMAGE;
@@ -105,7 +105,8 @@ void ProcessDamage(Player & protagonist, PlayerBullet & playerBullet, EasyEnemy 
 
 void AppendEnemies(std::vector<Object> & easyOpponent, ImageAssets & imagesStruct, EasyEnemy & easyEnemy, MapObjects & objects) {
 	for (int i = 0; i < easyOpponent.size(); i++) {
-		g_application.entities.push_back(new Enemy(imagesStruct.easyEnemyImage, objects, g_application.lvl, {easyOpponent[i].rect.left, easyOpponent[i].rect.top}, easyEnemy.SIZE, "easyEnemy"));
+		g_application.entitiesVisual.push_back(new EntityVisual(imagesStruct.easyEnemyImage, {easyOpponent[i].rect.left, easyOpponent[i].rect.top}, easyEnemy.SIZE));
+		g_application.entitiesLogic.push_back(new Enemy(objects, g_application.lvl, "easyEnemy", g_application.entitiesVisual));
 	}
 }
 
@@ -120,7 +121,6 @@ void Draw(RenderWindow &window, Player & protagonist) { ////////////////////////
 	for (auto it : g_application.entitiesVisual) {
 		window.draw((it)->sprite);
 	}
-	window.draw(protagonist.sprite);
 	window.display();
 }
 
@@ -139,14 +139,15 @@ int main() {
 	InitializeImages(imageAssets);
 	Object player = InitializePlayer();
 	std::vector<Object> easyOpponent = g_application.lvl.GetObjects("easyEnemy");
-	Player protagonist(imageAssets.heroImage, objects, g_application.lvl, {player.rect.left, player.rect.top}, playerProperties.SIZE, "Player");
+	g_application.entitiesVisual.push_back(new EntityVisual(imageAssets.heroImage, {player.rect.left, player.rect.top}, playerProperties.SIZE));
+	Player protagonist(objects, g_application.lvl, "Player", g_application.entitiesVisual);
 	AppendEnemies(easyOpponent, imageAssets, easyEnemy, objects);
 	while (window.isOpen()) {
 		GetMousePosition(window, playerPosition);
 		float time_ms = RunTimer();
 		ProcessEvents(window, protagonist, imageAssets, playerPosition, playerBullet, objects);
 		protagonist.rotation_GG(playerPosition.pos);
-		protagonist.update(time_ms, objects);
+		protagonist.update(time_ms, objects, g_application.entitiesVisual);
 		ProcessEntities(time_ms, objects);
 		ProcessDamage(protagonist, playerBullet, easyEnemy, visual);
 		CheckExistenceProtagonist(protagonist, window);
