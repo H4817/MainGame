@@ -84,19 +84,25 @@ void ProcessEntities(float & time_ms, MapObjects & objects) {
 	}
 }
 
-void ProcessDamage(Player & protagonist, PlayerBullet & playerBullet, EasyEnemy & easyEnemy) {
+void ProcessDamage(Player & protagonist, PlayerBullet & playerBullet, EasyEnemy & easyEnemy, PlayerProperties & playerProperties) {
 	for (auto it : g_application.entities) {
 		for (auto at : g_application.entities) {
 			if ((it)->getRect().intersects((at)->getRect()) && (((at)->name == "Bullet") && ((it)->name == "easyEnemy"))) {
 				(it)->health -= playerBullet.DAMAGE;
 				(at)->alive = false;
-				g_application.lifeBar.updateEnemy(100, it->health);
+				g_application.lifeBar.updateEnemy(it->health);
 			}
 		}
 		if ((it)->getRect().intersects(protagonist.getRect())) {
 			if ((it)->name == "easyEnemy") {
 				(it)->boost.x = 0;
-				protagonist.health -= easyEnemy.DAMAGE;
+				if(playerProperties.shield > 0) {
+					playerProperties.shield -= easyEnemy.DAMAGE;
+				}
+				else {
+					protagonist.health -= easyEnemy.DAMAGE;
+				}
+				g_application.lifeBar.updateSelf(protagonist.health, playerProperties.shield);
 			}
 		}
 	}
@@ -147,7 +153,7 @@ int main() {
 		protagonist.rotation_GG(playerPosition.pos);
 		protagonist.update(time_ms, objects);
 		ProcessEntities(time_ms, objects);
-		ProcessDamage(protagonist, playerBullet, easyEnemy);
+		ProcessDamage(protagonist, playerBullet, easyEnemy, playerProperties);
 		CheckExistenceProtagonist(protagonist, window);
 		window.setView(g_application.view);
 		Draw(window, protagonist);

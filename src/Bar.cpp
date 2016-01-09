@@ -1,22 +1,38 @@
 #include "Bar.h"
 
 LifeBar::LifeBar() {
-    image.loadFromFile("IMG/RedBar4.png");
-    t.loadFromImage(image);
-    s.setTexture(t);
+    texture1.loadFromFile("IMG/EnemyBar.png");
+    playerBarHealth.setTexture(texture1);
 
-    entitiesBar.loadFromFile("IMG/Enemy.png");
+    texture2.loadFromFile("IMG/BlueBar.png");
+    playerBarShield.setTexture(texture2);
+
+    entitiesBar.loadFromFile("IMG/EnemyBar.png");
     entitiesTexture.loadFromImage(entitiesBar);
-    bar2.setTexture(entitiesTexture);
-    bar.setRotation(180);
-    bar.setFillColor(Color(0, 0, 0));
-
+    enemyBar.setTexture(entitiesTexture);
+    enemyBarBlack.setRotation(180);
+    enemyBarBlack.setFillColor(Color(0, 0, 0));
+    playerBarBlackHP.setRotation(180);
+    playerBarBlackHP.setFillColor(Color(0, 0, 0));
+    playerBarBlackShield.setRotation(180);
+    playerBarBlackShield.setFillColor(Color(0, 0, 0));
 }
 
-void LifeBar::updateEnemy(int Shields, int Health) {
-    barOffset = {(maxHealth - Health)*201.5/maxHealth, 10};
-    if ((Health > 0) && (Health < maxHealth)) {
-        bar.setSize(barOffset);
+void LifeBar::updateEnemy(int & Health) {
+    healthBarOffset = {(maxHealthEnemy - Health)+1.2, 10};
+    if ((Health > 0) && (Health < maxHealthEnemy)) {
+        enemyBarBlack.setSize(healthBarOffset);
+    }
+}
+
+void LifeBar::updateSelf(int & Health, int & Shield) {
+    if ((Health > 0) && (Health < maxHealthPlayer)) {
+        healthBarOffset = {(maxHealthPlayer - Health)-6, 10};
+        playerBarBlackHP.setSize(healthBarOffset);
+    }
+    if ((Shield > 0) && (Shield < maxShieldPlayer)) {
+        shieldBarOffset = {(maxShieldPlayer - Shield)-6, 10};
+        playerBarBlackShield.setSize(shieldBarOffset);
     }
 }
 
@@ -24,11 +40,17 @@ void LifeBar::draw(RenderWindow &window) {
     Vector2f center = window.getView().getCenter();
     Vector2f size = window.getView().getSize();
 
-    s.setPosition((center.x - size.x  / halfScreen) + 500, center.y - size.y / halfScreen);
-    bar.setPosition((center.x - size.x  / halfScreen) + 950, (center.y - size.y / halfScreen) + 1035);
-    bar2.setPosition((center.x - size.x  / halfScreen) + 750, (center.y - size.y / halfScreen) + 1020);
+    playerBarHealth.setPosition((center.x - size.x  / halfScreen), center.y - size.y / halfScreen + 15);
+    playerBarShield.setPosition((center.x - size.x  / halfScreen), center.y - size.y / halfScreen + 45);
+    playerBarBlackHP.setPosition((center.x - size.x  / halfScreen) + 200, center.y - size.y / halfScreen + 30);
+    playerBarBlackShield.setPosition((center.x - size.x  / halfScreen) + 200, center.y - size.y / halfScreen + 60);
+    enemyBarBlack.setPosition((center.x - size.x  / halfScreen) +  950, (center.y - size.y / halfScreen) + 1035);
+    enemyBar.setPosition((center.x - size.x  / halfScreen) + 750, (center.y - size.y / halfScreen) + 1020);
 
-    window.draw(s);
-    window.draw(bar2);
-    window.draw(bar);
+    window.draw(playerBarHealth);
+    window.draw(playerBarShield);
+    window.draw(enemyBar);
+    window.draw(enemyBarBlack);
+    window.draw(playerBarBlackHP);
+    window.draw(playerBarBlackShield);
 }

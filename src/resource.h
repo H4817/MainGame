@@ -8,7 +8,8 @@ using namespace std;
 
 struct PlayerProperties {
     const Vector2i SIZE = {147, 125};
-    const int HEALTH = 100;
+    const int HEALTH = 200;
+    int shield = 200;
     const float SPEED = 0.2;
 };
 
