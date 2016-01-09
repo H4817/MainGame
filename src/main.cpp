@@ -1,8 +1,7 @@
 #include "Player.h"
 #include "Bullet.h"
 #include "Enemy.h"
-
-
+#include "Bar.h"
 
 
 struct Application {
@@ -12,6 +11,7 @@ struct Application {
 	Level lvl;
 	sf::View view;
 	std::list<Entity*> entities;
+	LifeBar lifeBar;
 };
 
 Application g_application;
@@ -90,6 +90,7 @@ void ProcessDamage(Player & protagonist, PlayerBullet & playerBullet, EasyEnemy 
 			if ((it)->getRect().intersects((at)->getRect()) && (((at)->name == "Bullet") && ((it)->name == "easyEnemy"))) {
 				(it)->health -= playerBullet.DAMAGE;
 				(at)->alive = false;
+				g_application.lifeBar.updateEnemy(100, it->health);
 			}
 		}
 		if ((it)->getRect().intersects(protagonist.getRect())) {
@@ -119,6 +120,7 @@ void Draw(RenderWindow &window, Player & protagonist) {
 		window.draw((it)->sprite);
 	}
 	window.draw(protagonist.sprite);
+	g_application.lifeBar.draw(window);
 	window.display();
 }
 
