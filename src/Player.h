@@ -13,6 +13,7 @@ public:
     } state;
     float rotation;
     int playerScore;
+    int health = playerProperties.HEALTH;
 
     Player(Image &image, MapObjects & objects, Level &lev, Vector2f Position, Vector2i Size, String Name);
 

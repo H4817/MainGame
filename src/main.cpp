@@ -88,9 +88,9 @@ void ProcessDamage(Player & protagonist, PlayerBullet & playerBullet, EasyEnemy 
 	for (auto it : g_application.entities) {
 		for (auto at : g_application.entities) {
 			if ((it)->getRect().intersects((at)->getRect()) && (((at)->name == "Bullet") && ((it)->name == "easyEnemy"))) {
-				(it)->health -= playerBullet.DAMAGE;
+				it->healthEasyEnemy -= playerBullet.DAMAGE;
 				(at)->alive = false;
-				g_application.lifeBar.updateEnemy(it->health);
+				g_application.lifeBar.updateEnemy(it->healthEasyEnemy);
 			}
 		}
 		if ((it)->getRect().intersects(protagonist.getRect())) {

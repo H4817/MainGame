@@ -25,7 +25,8 @@ struct PlayerBullet {
 };
 
 struct EasyEnemy {
-    const Vector2i SIZE = {74, 67};
+    int health = 200;
+    const Vector2i SIZE = {72, 66};
     const unsigned DAMAGE = 1;
     const float SPEED = 0.1;
 };

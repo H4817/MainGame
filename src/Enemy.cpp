@@ -42,7 +42,7 @@ void Enemy::update(float time, MapObjects &objects) {
         checkCollisionWithMap(boost.x, boost.y, objects);
         position += boost * time;
         sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
-        if (health <= 0) {
+        if (healthEasyEnemy <= 0) {
             alive = false;
         }
     }

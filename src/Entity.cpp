@@ -7,7 +7,6 @@ Entity::Entity(Image &image, Vector2f Position, Vector2i Size, String Name) {
     name = Name;
     moveTimer = 0;
     speed = 0;
-    health = 200;
     boost = {0, 0};
     alive = true;
     isMove = false;

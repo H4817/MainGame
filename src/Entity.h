@@ -13,13 +13,13 @@ public:
     EasyEnemy easyEnemy;
     Parameters parameters;
     PlayerProperties playerProperties;
+    int healthEasyEnemy = 200;
     float speed;
     float moveTimer;
     Vector2f boost;
     Vector2f position;
     Vector2f temp;
     Vector2i size;
-    int health;
     bool alive;
     bool isMove;
     Texture texture;
