@@ -20,7 +20,7 @@ include_directories("${PROJECT_BINARY_DIR}")
 
 # Define sources and executable
 set(EXECUTABLE_NAME "Game")
-add_executable(${EXECUTABLE_NAME} src/main.cpp src/Entity.cpp src/Enemy.cpp src/Player.cpp src/Bullet.cpp src/Bar.cpp TinyXML/tinyxml.cpp TinyXML/tinystr.cpp TinyXML/tinyxmlerror.cpp TinyXML/tinyxmlparser.cpp)
+add_executable(${EXECUTABLE_NAME} src/main.cpp src/Entity.cpp src/Enemy.cpp src/Player.cpp src/Bullet.cpp src/Bar.cpp src/shield.cpp TinyXML/tinyxml.cpp TinyXML/tinystr.cpp TinyXML/tinyxmlerror.cpp TinyXML/tinyxmlparser.cpp)
 
 
 

@@ -2,9 +2,11 @@
 #include "Bullet.h"
 #include "Enemy.h"
 #include "Bar.h"
+#include "shield.h"
 
 
 struct Application {
+	bool playerShieldIsActive = false;
 	const Vector2f MAP_WIDTH = {850, 2400};
 	const Vector2f MAP_HEIGHT = {530, 2600};
 	Clock clock;
@@ -12,7 +14,9 @@ struct Application {
 	sf::View view;
 	std::list<Entity*> entities;
 	LifeBar lifeBar;
+	Shield shield;
 };
+
 
 Application g_application;
 
@@ -27,7 +31,7 @@ struct ImageAssets {
 };
 
 
-void getPlayerCoordinateForView(Vector2f position) {
+void getPlayerCoordinateForView(Vector2f position, PlayerProperties & playerProperties) {
 	Vector2f centerPosition = {position.x, position.y};
 	if (position.x < g_application.MAP_WIDTH.x) centerPosition.x = g_application.MAP_WIDTH.x;
 	if (position.x > g_application.MAP_WIDTH.y) centerPosition.x = g_application.MAP_WIDTH.y;
@@ -46,11 +50,15 @@ float RunTimer() {
 void ProcessEvents(RenderWindow & window, Player & protagonist, ImageAssets & imagesStruct, PlayerPosition & playerPosition, PlayerBullet & playerBullet, MapObjects & objects) {
 	sf::Event event;
 	while (window.pollEvent(event))	{
+
 		if (event.type == Event::Closed) {
 			window.close();
 		}
 		if (event.key.code == Mouse::Left) {
 			g_application.entities.push_back(new Bullet(imagesStruct.bulletImage, objects, g_application.lvl, protagonist.position, playerBullet.SIZE, playerPosition.pos, "Bullet"));
+		}
+		if(event.type == Event::KeyPressed && event.key.code == sf::Keyboard::F) {
+			g_application.playerShieldIsActive = !g_application.playerShieldIsActive;
 		}
 	}
 }
@@ -63,7 +71,7 @@ void GetMousePosition(RenderWindow & window, PlayerPosition & playerPosition) {
 void InitializeImages(ImageAssets & imagesStruct) {
 	g_application.lvl.LoadFromFile("Assets/map.tmx");
 	imagesStruct.bulletImage.loadFromFile("IMG/projectile_bolt_blue_single.png");
-	imagesStruct.heroImage.loadFromFile("IMG/PlayerShip.png");
+	imagesStruct.heroImage.loadFromFile("IMG/PlayerxShip.png");
 	imagesStruct.easyEnemyImage.loadFromFile("IMG/EasyEnemy.png");
 }
 
@@ -108,9 +116,9 @@ void ProcessDamage(Player & protagonist, PlayerBullet & playerBullet, EasyEnemy 
 	}
 }
 
-void AppendEnemies(std::vector<Object> & easyOpponent, ImageAssets & imagesStruct, EasyEnemy & easyEnemy, MapObjects & objects) {
+void AppendEnemies(std::vector<Object> & easyOpponent, ImageAssets & imagesStruct, EasyEnemy & easyEnemy, MapObjects & objects, PlayerPosition & playerPosition, Player & protagonist) {
 	for (int i = 0; i < easyOpponent.size(); i++) {
-		g_application.entities.push_back(new Enemy(imagesStruct.easyEnemyImage, objects, g_application.lvl, {easyOpponent[i].rect.left, easyOpponent[i].rect.top}, easyEnemy.SIZE, "easyEnemy"));
+		g_application.entities.push_back(new Enemy(imagesStruct.easyEnemyImage, objects, g_application.lvl, {easyOpponent[i].rect.left, easyOpponent[i].rect.top}, easyEnemy.SIZE, protagonist.position, "easyEnemy"));
 	}
 }
 
@@ -126,6 +134,9 @@ void Draw(RenderWindow &window, Player & protagonist) {
 		window.draw((it)->sprite);
 	}
 	window.draw(protagonist.sprite);
+    if(g_application.playerShieldIsActive) {
+		g_application.shield.draw(window, protagonist.position);
+	}
 	g_application.lifeBar.draw(window);
 	window.display();
 }
@@ -145,7 +156,7 @@ int main() {
 	Object player = InitializePlayer();
 	std::vector<Object> easyOpponent = g_application.lvl.GetObjects("easyEnemy");
 	Player protagonist(imageAssets.heroImage, objects, g_application.lvl, {player.rect.left, player.rect.top}, playerProperties.SIZE, "Player");
-	AppendEnemies(easyOpponent, imageAssets, easyEnemy, objects);
+	AppendEnemies(easyOpponent, imageAssets, easyEnemy, objects, playerPosition, protagonist);
 	while (window.isOpen()) {
 		GetMousePosition(window, playerPosition);
 		float time_ms = RunTimer();

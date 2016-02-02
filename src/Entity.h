@@ -19,6 +19,7 @@ public:
     Vector2f boost;
     Vector2f position;
     Vector2f temp;
+    Vector2f temp1;
     Vector2i size;
     bool alive;
     bool isMove;

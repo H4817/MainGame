@@ -1,7 +1,7 @@
 #include "Player.h"
 
 
-void getPlayerCoordinateForView(Vector2f position);
+void getPlayerCoordinateForView(Vector2f position, PlayerProperties & playerProperties);
 
 
 Player::Player(Image &image, MapObjects & objects, Level &lev, Vector2f Position, Vector2i Size, String Name) : Entity(image, Position, Size,
@@ -133,6 +133,6 @@ void Player::update(float time, MapObjects & objects) {
         speed = 0;
     }
     if (alive) {
-        getPlayerCoordinateForView(position);
+        getPlayerCoordinateForView(position, playerProperties);
     }
 }
