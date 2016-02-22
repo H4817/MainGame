@@ -7,7 +7,7 @@ using namespace std;
 
 
 struct PlayerProperties {
-    const Vector2i SIZE = {144, 124};
+    const Vector2i SIZE = {79, 99};
     const int HEALTH = 200;
     int shield = 200;
     const float SPEED = 0.2;
@@ -21,7 +21,7 @@ struct Parameters {
 };
 
 struct PlayerBullet {
-    const Vector2i SIZE = {100, 14};
+    const Vector2i SIZE = {54, 25};
     const unsigned DAMAGE = 10;
 };
 

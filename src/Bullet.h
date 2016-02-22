@@ -9,6 +9,7 @@ struct Bullet :public Entity {
 public:
     int direction;
     float rotation;
+    const Vector2f IMAGE_SIZE = {54, 25};
     Vector2f playerPos;
     float timer;
     int distance = 2000;

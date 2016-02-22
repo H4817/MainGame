@@ -70,8 +70,8 @@ void GetMousePosition(RenderWindow & window, PlayerPosition & playerPosition) {
 
 void InitializeImages(ImageAssets & imagesStruct) {
 	g_application.lvl.LoadFromFile("Assets/map.tmx");
-	imagesStruct.bulletImage.loadFromFile("IMG/projectile_bolt_blue_single.png");
-	imagesStruct.heroImage.loadFromFile("IMG/PlayerxShip.png");
+	imagesStruct.bulletImage.loadFromFile("IMG/PlasmaBullet.png");
+	imagesStruct.heroImage.loadFromFile("IMG/888.png");
 	imagesStruct.easyEnemyImage.loadFromFile("IMG/EasyEnemy.png");
 }
 
@@ -103,8 +103,9 @@ void ProcessDamage(Player & protagonist, PlayerBullet & playerBullet, EasyEnemy 
 		}
 		if ((it)->getRect().intersects(protagonist.getRect())) {
 			if ((it)->name == "easyEnemy") {
-				(it)->boost.x = 0;
-				if(playerProperties.shield > 0) {
+				(it)->boost.x -= it->boost.x;
+				(it)->boost.y -= it->boost.y;
+				if(playerProperties.shield > 0 && g_application.playerShieldIsActive) {
 					playerProperties.shield -= easyEnemy.DAMAGE;
 				}
 				else {
@@ -127,15 +128,15 @@ void CheckExistenceProtagonist(Player &protagonist, RenderWindow &window) {
 		window.close();
 }
 
-void Draw(RenderWindow &window, Player & protagonist) {
+void Draw(RenderWindow &window, Player & protagonist, PlayerProperties & playerProperties) {
 	window.clear();
 	g_application.lvl.Draw(window);
 	for (auto it : g_application.entities) {
 		window.draw((it)->sprite);
 	}
 	window.draw(protagonist.sprite);
-    if(g_application.playerShieldIsActive) {
-		g_application.shield.draw(window, protagonist.position);
+    if(g_application.playerShieldIsActive && playerProperties.shield > 0 ) {
+		g_application.shield.Draw(window, protagonist.position);
 	}
 	g_application.lifeBar.draw(window);
 	window.display();
@@ -149,13 +150,14 @@ int main() {
 	Parameters parameters;
 	MapObjects objects;
 	sf::RenderWindow window(sf::VideoMode(parameters.WINDOW_SIZE_X, parameters.WINDOW_SIZE_Y), "Game");
+	//window.setMouseCursorVisible(false);
 	g_application.view.reset(sf::FloatRect(0, 0, parameters.WINDOW_SIZE_X, parameters.WINDOW_SIZE_Y));
 	ImageAssets imageAssets;
 	PlayerPosition playerPosition;
 	InitializeImages(imageAssets);
 	Object player = InitializePlayer();
 	std::vector<Object> easyOpponent = g_application.lvl.GetObjects("easyEnemy");
-	Player protagonist(imageAssets.heroImage, objects, g_application.lvl, {player.rect.left, player.rect.top}, playerProperties.SIZE, "Player");
+	Player protagonist(imageAssets.heroImage, objects, g_application.lvl, {player.rect.left, player.rect.top}, playerProperties.SIZE, "player");
 	AppendEnemies(easyOpponent, imageAssets, easyEnemy, objects, playerPosition, protagonist);
 	while (window.isOpen()) {
 		GetMousePosition(window, playerPosition);
@@ -167,7 +169,7 @@ int main() {
 		ProcessDamage(protagonist, playerBullet, easyEnemy, playerProperties);
 		CheckExistenceProtagonist(protagonist, window);
 		window.setView(g_application.view);
-		Draw(window, protagonist);
+		Draw(window, protagonist, playerProperties);
 	}
 	return 0;
 }

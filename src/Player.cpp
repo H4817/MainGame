@@ -9,24 +9,25 @@ Player::Player(Image &image, MapObjects & objects, Level &lev, Vector2f Position
     playerScore = 0;
     state = stay;
     objects.obj = lev.GetAllObjects();
-    if (name == "Player") {
+    if (name == "player") {
         sprite.setPosition(size.x, size.y);
+        sprite.setOrigin(ImageSize.x / 2, ImageSize.y / 2);
     }
 }
 
 void Player::control() {
     bool pressBut = false;
-    if (Keyboard::isKeyPressed(Keyboard::Left)) {
+    if (Keyboard::isKeyPressed(Keyboard::A)) {
         state = left;
         speed = playerProperties.SPEED;
         pressBut = true;
     }
-    if (Keyboard::isKeyPressed(Keyboard::Right)) {
+    if (Keyboard::isKeyPressed(Keyboard::D)) {
         state = right;
         speed = playerProperties.SPEED;
         pressBut = true;
     }
-    if (Keyboard::isKeyPressed(Keyboard::Up)) {
+    if (Keyboard::isKeyPressed(Keyboard::W)) {
         if (pressBut) {
             if (state == right) {
                 state = rightUp;
@@ -42,7 +43,7 @@ void Player::control() {
             speed = playerProperties.SPEED;
         }
     }
-    if (Keyboard::isKeyPressed(Keyboard::Down)) {
+    if (Keyboard::isKeyPressed(Keyboard::S)) {
         if (pressBut) {
             if (state == right) {
                 state = rightDown;

@@ -14,7 +14,7 @@ public:
     float rotation;
     int playerScore;
     int health = playerProperties.HEALTH;
-
+    const Vector2f ImageSize = {79, 99};
     Player(Image &image, MapObjects & objects, Level &lev, Vector2f Position, Vector2i Size, String Name);
 
     void control();
