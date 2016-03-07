@@ -12,7 +12,6 @@ Enemy::Enemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, V
         Entity::temp1 = temp;
         rotation = (atan2(temp1.y - position.y, temp1.x - position.x)) * parameters.ANGLE / M_PI;
         sprite.setTextureRect(IntRect(0, 0, size.x, size.y));
-
     }
 }
 
@@ -41,6 +40,15 @@ void Enemy::checkCollisionWithMap(float Dx, float Dy, MapObjects &objects) {
     }
 }
 
+void Enemy::VisualPart() {
+    texture1.loadFromFile("IMG/thrust_green22.png");
+    explosion.setTexture(texture1);
+    texture2.loadFromFile("IMG/thrust_green22.png");
+    shieldReward.setTexture(texture2);
+    texture3.loadFromFile("IMG/thrust_green22.png");
+    healthReward.setTexture(texture3);
+}
+
 void Enemy::update(float time, MapObjects &objects) {
     if (name == "easyEnemy") {
         sprite.setRotation(rotation);
@@ -50,7 +58,9 @@ void Enemy::update(float time, MapObjects &objects) {
             sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
         }
         if (healthEasyEnemy <= 0) {
+            shieldReward.setPosition(position.x + size.x / 2, position.y + size.y / 2);
             alive = false;
+            VisualPart();
         }
     }
 }

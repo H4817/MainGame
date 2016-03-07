@@ -1,11 +1,12 @@
 #include "Player.h"
 
 
-void getPlayerCoordinateForView(Vector2f position, PlayerProperties & playerProperties);
+void getPlayerCoordinateForView(Vector2f position, PlayerProperties &playerProperties);
 
 
-Player::Player(Image &image, MapObjects & objects, Level &lev, Vector2f Position, Vector2i Size, String Name) : Entity(image, Position, Size,
-                                                                                                 Name) {
+Player::Player(Image &image, MapObjects &objects, Level &lev, Vector2f Position, Vector2i Size, String Name) : Entity(
+        image, Position, Size,
+        Name) {
     playerScore = 0;
     state = stay;
     objects.obj = lev.GetAllObjects();
@@ -59,6 +60,7 @@ void Player::control() {
             speed = playerProperties.SPEED;
         }
     }
+    isMOVE = false;
 }
 
 void Player::rotation_GG(Vector2f pos) {
@@ -67,7 +69,7 @@ void Player::rotation_GG(Vector2f pos) {
     rotation = (atan2(dY, dX)) * parameters.ANGLE / M_PI;
 }
 
-void Player::checkCollisionWithMap(float Dx, float Dy, MapObjects & objects) {
+void Player::checkCollisionWithMap(float Dx, float Dy, MapObjects &objects) {
     for (int i = 0; i < objects.obj.size(); i++) {
         if (getRect().intersects(objects.obj[i].rect)) {
             if (objects.obj[i].name == "solid") {
@@ -90,35 +92,44 @@ void Player::checkCollisionWithMap(float Dx, float Dy, MapObjects & objects) {
     }
 }
 
-void Player::update(float time, MapObjects & objects) {
+void Player::update(float time, MapObjects &objects) {
     sprite.setRotation(rotation);
     control();
     switch (state) {
         case right:
             boost = {speed, 0};
+            isMOVE = true;
             break;
         case rightUp:
             boost = {speed, -speed};
+            isMOVE = true;
             break;
         case rightDown:
             boost = {speed, speed};
+            isMOVE = true;
             break;
         case left:
             boost = {-speed, 0};
+            isMOVE = true;
             break;
         case leftUp:
             boost = {-speed, -speed};
+            isMOVE = true;
             break;
         case leftDown:
             boost = {-speed, speed};
+            isMOVE = true;
             break;
         case up:
             boost = {0, -speed};
+            isMOVE = true;
             break;
         case down:
             boost = {0, speed};
+            isMOVE = true;
             break;
         case stay:
+            isMOVE = false;
             break;
     }
     position.x += boost.x * time;
