@@ -12,4 +12,8 @@ void getPlayerCoordinateForView(float x, float y) {
 
 	application.view.setCenter(tempX, tempY);
 	
+
+  //test
+
+
 }
