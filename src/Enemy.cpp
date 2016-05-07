@@ -1,5 +1,4 @@
 #include "Enemy.h"
-#include "Reward.h"
 
 Enemy::Enemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f &temp,
              String Name) : Entity(
