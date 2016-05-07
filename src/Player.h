@@ -13,6 +13,7 @@ public:
     } state;
     bool isMOVE = false;
     float rotation;
+    PlayerProperties playerProperties;
     int playerScore;
     int health = playerProperties.HEALTH;
     const Vector2f ImageSize = {79, 99};

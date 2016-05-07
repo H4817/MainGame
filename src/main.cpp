@@ -4,12 +4,13 @@
 #include "Bar.h"
 #include "shield.h"
 #include "Thrust.h"
-
+#include "aim.h"
 
 struct Application {
     bool playerShieldIsActive = false;
     const Vector2f MAP_WIDTH = {850, 2400};
     const Vector2f MAP_HEIGHT = {530, 2600};
+    PlayerProperties playerProperties;
     Clock clock;
     Level lvl;
     sf::View view;
@@ -17,9 +18,9 @@ struct Application {
     LifeBar lifeBar;
     Shield shield;
     Thrust thrust;
-    Enemy *enemy;
+    Aim aim;
+   // Reward reward;
 };
-
 
 Application g_application;
 
@@ -121,6 +122,16 @@ void ProcessDamage(Player &protagonist, PlayerBullet &playerBullet, EasyEnemy &e
                 }
                 g_application.lifeBar.updateSelf(protagonist.health, playerProperties.shield);
             }
+            else if (it->name == "ShieldReward") {
+                playerProperties.shield += 30;
+                it->alive = false;
+                g_application.lifeBar.updateSelf(protagonist.health, playerProperties.shield);
+            }
+            else if (it->name == "HealthReward") {
+                protagonist.health += 30;
+                it->alive = false;
+                g_application.lifeBar.updateSelf(protagonist.health, playerProperties.shield);
+            }
         }
     }
 }
@@ -130,7 +141,7 @@ void AppendEnemies(vector<Object> &easyOpponent, ImageAssets &imagesStruct, Easy
     for (int i = 0; i < easyOpponent.size(); i++) {
         g_application.entities.push_back(new Enemy(imagesStruct.easyEnemyImage, objects, g_application.lvl,
                                                    {easyOpponent[i].rect.left, easyOpponent[i].rect.top},
-                                                   easyEnemy.SIZE, protagonist.position, "easyEnemy"));
+                                                   easyEnemy.SIZE, g_application.playerProperties.position, "easyEnemy"));
     }
 }
 
@@ -154,6 +165,8 @@ void Draw(RenderWindow &window, Player &protagonist, PlayerProperties &playerPro
     if (protagonist.isMOVE) {
         g_application.thrust.Draw(window, protagonist.position, protagonist.rotation);
     }
+   // g_application.reward.Draw(window);
+    g_application.aim.Draw(window);
     //window.draw((&g_application)->enemy->shieldReward);
     window.display();
 }
@@ -166,7 +179,7 @@ int main() {
     Parameters parameters;
     MapObjects objects;
     sf::RenderWindow window(sf::VideoMode(parameters.WINDOW_SIZE_X, parameters.WINDOW_SIZE_Y), "Game");
-    //window.setMouseCursorVisible(false);
+    window.setMouseCursorVisible(false);
     g_application.view.reset(sf::FloatRect(0, 0, parameters.WINDOW_SIZE_X, parameters.WINDOW_SIZE_Y));
     ImageAssets imageAssets;
     PlayerPosition playerPosition;

@@ -135,6 +135,7 @@ void Player::update(float time, MapObjects &objects) {
     position.x += boost.x * time;
     checkCollisionWithMap(boost.x, 0, objects);
     position.y += boost.y * time;
+    playerProperties.position = position;
     checkCollisionWithMap(0, boost.y, objects);
     sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
 

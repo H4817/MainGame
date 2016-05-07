@@ -14,6 +14,10 @@ struct PlayerProperties {
     Vector2f position;
 };
 
+struct _Reward_ {
+    Vector2f position;
+};
+
 struct Parameters {
     const unsigned WINDOW_SIZE_X = 1680;
     const unsigned WINDOW_SIZE_Y = 1050;
