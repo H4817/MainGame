@@ -19,6 +19,26 @@ FloatRect Entity::getRect() {
     return FloatRect(position.x, position.y, size.x, size.y);
 }
 
+void Entity::SetRightPosition(Vector2f &position) {
+    if (position.x <= 20) {
+        position.x = 20;
+        velocity.x = 0;
+    }
+    if (position.y <= 10) {
+        position.y = 10;
+        velocity.y = 0;
+    }
+
+    if (position.x >= parameters.MAP_SIZE.first) {
+        position.x = parameters.MAP_SIZE.first;
+        velocity.x = 0;
+    }
+    if (position.y >= parameters.MAP_SIZE.second) {
+        velocity.y = 0;
+        position.y = parameters.MAP_SIZE.second;
+    }
+}
+
 /*bool Entity::isCollide(Entity *a,Entity *b)
 {
   return (b->x - a->x)*(b->x - a->x)+

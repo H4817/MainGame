@@ -8,14 +8,14 @@
 
 struct Application {
     bool playerShieldIsActive = false;
-    const Vector2f MAP_WIDTH = {850, 2400};
+    const Vector2f MAP_WIDTH = {850, 2370};
     const Vector2f MAP_HEIGHT = {530, 2600};
     PlayerProperties playerProperties;
     Clock clock;
     Level lvl;
     sf::View view;
     std::list<Entity *> entities;
-    LifeBar lifeBar;
+    Bar bar;
     Shield shield;
     Thrust thrust;
     Aim aim;
@@ -75,8 +75,8 @@ void GetMousePosition(RenderWindow &window, PlayerPosition &playerPosition) {
 }
 
 void InitializeImages(ImageAssets &imagesStruct) {
-    g_application.lvl.LoadFromFile("Assets/map.tmx");
-    imagesStruct.bulletImage.loadFromFile("IMG/RedPlasmaBullet.png");
+    g_application.lvl.LoadFromFile("Assets/map1.tmx");
+    imagesStruct.bulletImage.loadFromFile("IMG/PlasmaBullet.png");
     imagesStruct.heroImage.loadFromFile("IMG/8888.png");
     imagesStruct.easyEnemyImage.loadFromFile("IMG/EasyEnemyYellowThrust1.png");
 }
@@ -106,7 +106,7 @@ void ProcessDamage(Player &protagonist, PlayerBullet &playerBullet, EasyEnemy &e
                 ((at->name == "Bullet") && (it->name == "easyEnemy"))) { //!!!!
                 it->healthEasyEnemy -= playerBullet.DAMAGE;
                 at->alive = false;
-                g_application.lifeBar.updateEnemy(it->healthEasyEnemy);
+                g_application.bar.UpdateEnemy(it->healthEasyEnemy);
             }
         }
         if (it->getRect().intersects(protagonist.getRect())) {
@@ -114,23 +114,21 @@ void ProcessDamage(Player &protagonist, PlayerBullet &playerBullet, EasyEnemy &e
                 it->boost.x = 0;
                 it->boost.y = 0;
                 if (playerProperties.shield > 0 && g_application.playerShieldIsActive) {
-                    playerProperties.shield -= easyEnemy.DAMAGE;
+                    playerProperties.shield -= (easyEnemy.DAMAGE + (it->velocity.x + it->velocity.y) / 2);
                 }
                 else {
-                    protagonist.health -= easyEnemy.DAMAGE;
+                    protagonist.health -= (easyEnemy.DAMAGE + (it->velocity.x + it->velocity.y) / 2);
                 }
-                g_application.lifeBar.updateSelf(protagonist.health, playerProperties.shield);
             }
             else if (it->name == "ShieldReward") {
                 playerProperties.shield += 30;
                 it->alive = false;
-                g_application.lifeBar.updateSelf(protagonist.health, playerProperties.shield);
             }
             else if (it->name == "HealthReward") {
                 protagonist.health += 30;
                 it->alive = false;
-                g_application.lifeBar.updateSelf(protagonist.health, playerProperties.shield);
             }
+            g_application.bar.UpdateProtagonist(protagonist.health, playerProperties.shield);
         }
     }
 }
@@ -160,7 +158,7 @@ void Draw(RenderWindow &window, Player &protagonist, PlayerProperties &playerPro
     if (g_application.playerShieldIsActive && playerProperties.shield > 0) {
         g_application.shield.Draw(window, protagonist.position);
     }
-        g_application.lifeBar.draw(window);
+    g_application.bar.draw(window);
     g_application.aim.Draw(window);
     window.display();
 }

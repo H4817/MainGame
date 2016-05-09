@@ -16,6 +16,7 @@ struct Parameters {
     const unsigned WINDOW_SIZE_X = 1680;
     const unsigned WINDOW_SIZE_Y = 1050;
     const unsigned ANGLE = 180;
+    const std::pair<int, int> MAP_SIZE = {3120, 3028};
 };
 
 struct PlayerBullet {
@@ -26,8 +27,7 @@ struct PlayerBullet {
 struct EasyEnemy {
     int health = 200;
     const Vector2i SIZE = {72, 66};
-    const unsigned DAMAGE = 1;
-    Vector2f speed = {0.1, 0.1};
+    const unsigned DAMAGE = 2;
 };
 
 struct MapObjects {

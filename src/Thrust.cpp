@@ -13,7 +13,7 @@ void Thrust::Draw(RenderWindow &window, Vector2f &position, float &rotation) {
         frameCounter -= 24;
     }
     else {
-        thrust.setTextureRect(IntRect(42.66666 * int(frameCounter), 43, 36, 43));
+        thrust.setTextureRect(IntRect(int(42.66666 * frameCounter), 43, 36, 43));
         frameCounter += 0.005 * time;
     }
     thrust.setPosition(position.x, position.y);

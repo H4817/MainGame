@@ -3,18 +3,18 @@
 
 using namespace sf;
 
-class LifeBar {
+class Bar {
 public:
-    LifeBar();
+    Bar();
 
     const int maxHealthEnemy = 200;
     const int maxHealthPlayer = 200;
     const int maxShieldPlayer = 200;
     const int halfScreen = 2;
 
-    void updateEnemy(int & Health);
+    void UpdateEnemy(int &Health);
 
-    void updateSelf(int & Health, int & Shield);
+    void UpdateProtagonist(int &Health, int &Shield);
 
     void draw(RenderWindow &window);
 

@@ -1,6 +1,6 @@
 #include "Bar.h"
 
-LifeBar::LifeBar() {
+Bar::Bar() {
     texture1.loadFromFile("IMG/EnemyBar.png");
     playerBarHealth.setTexture(texture1);
 
@@ -18,14 +18,14 @@ LifeBar::LifeBar() {
     playerBarBlackShield.setFillColor(Color(0, 0, 0));
 }
 
-void LifeBar::updateEnemy(int & Health) {
-    healthBarOffset = {(maxHealthEnemy - Health)+1.2, 10};
+void Bar::UpdateEnemy(int &Health) {
+    healthBarOffset = {static_cast<float>((maxHealthEnemy - Health)+1.2), 10};
     if ((Health > 0) && (Health < maxHealthEnemy)) {
         enemyBarBlack.setSize(healthBarOffset);
     }
 }
 
-void LifeBar::updateSelf(int & Health, int & Shield) {
+void Bar::UpdateProtagonist(int &Health, int &Shield) {
     if ((Health > 0) && (Health < maxHealthPlayer)) {
         healthBarOffset = {(maxHealthPlayer - Health)-6, 10};
         playerBarBlackHP.setSize(healthBarOffset);
@@ -36,7 +36,7 @@ void LifeBar::updateSelf(int & Health, int & Shield) {
     }
 }
 
-void LifeBar::draw(RenderWindow &window) {
+void Bar::draw(RenderWindow &window) {
     Vector2f center = window.getView().getCenter();
     Vector2f size = window.getView().getSize();
 
