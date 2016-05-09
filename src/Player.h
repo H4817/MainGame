@@ -9,25 +9,36 @@ using namespace std;
 struct Player : public Entity {
 public:
     enum {
-        left, right, up, down, leftUp, rightUp, leftDown, rightDown, stay
+        MOVE, SLIDE, STAY
     } state;
-    bool isMOVE = false;
     float rotation;
     PlayerProperties playerProperties;
     int playerScore;
-    int health = playerProperties.HEALTH;
+    int health;
     const Vector2f ImageSize = {79, 99};
+
+
+    Vector2f acceleration;
+    Vector2f m_temp;
+    Vector2f velocity;
+    const Vector2f velocityLimit = {20, 20};
+    float distance;
+
+
 
     Player(Image &image, MapObjects &objects, Level &lev, Vector2f Position, Vector2i Size, String Name);
 
-    //void CreateThrustAnimation(const float & time);
-
-    void control();
+    void control(const float & time);
 
     void rotation_GG(Vector2f pos);
 
     void checkCollisionWithMap(float Dx, float Dy, MapObjects &objects);
 
     void update(float time, MapObjects &objects);
+
+private:
+ //   Texture m_shipTexture;
+   // Sprite m_shipWithoutThrust;
+   // Sprite m_shipWithThrust;
 
 };

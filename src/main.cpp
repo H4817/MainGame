@@ -19,7 +19,6 @@ struct Application {
     Shield shield;
     Thrust thrust;
     Aim aim;
-   // Reward reward;
 };
 
 Application g_application;
@@ -142,8 +141,6 @@ void AppendEnemies(vector<Object> &easyOpponent, ImageAssets &imagesStruct, Easy
         g_application.entities.push_back(new Enemy(imagesStruct.easyEnemyImage, objects, g_application.lvl,
                                                    {easyOpponent[i].rect.left, easyOpponent[i].rect.top},
                                                    easyEnemy.SIZE, playerPosition.pos, "easyEnemy"));
-        //cout <<g_application.playerProperties.position.x << "xxxxxx" << g_application.playerProperties.position.y << endl;
-        //cout << playerPosition.pos.x<< playerPosition.pos.y << endl;
     }
 }
 
@@ -164,10 +161,6 @@ void Draw(RenderWindow &window, Player &protagonist, PlayerProperties &playerPro
         g_application.shield.Draw(window, protagonist.position);
     }
         g_application.lifeBar.draw(window);
-    if (protagonist.isMOVE) {
-       // window.draw(protagonist.thrust);
-        //g_application.thrust.Draw(window, protagonist.position, protagonist.rotation);
-    }
     g_application.aim.Draw(window);
     window.display();
 }

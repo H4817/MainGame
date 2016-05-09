@@ -7,8 +7,15 @@ void getPlayerCoordinateForView(Vector2f position, PlayerProperties &playerPrope
 Player::Player(Image &image, MapObjects &objects, Level &lev, Vector2f Position, Vector2i Size, String Name) : Entity(
         image, Position, Size,
         Name) {
+   // m_shipTexture.loadFromFile("IMG/8888.png");
+    //m_shipWithThrust.setTexture(m_shipTexture);
+   // m_shipWithoutThrust = sprite;
+    acceleration = {0, 0};
+    velocity = {0, 0};
+    distance = 0;
+    health = playerProperties.HEALTH;
     playerScore = 0;
-    state = stay;
+    state = STAY;
     objects.obj = lev.GetAllObjects();
     if (name == "player") {
         sprite.setPosition(size.x, size.y);
@@ -16,58 +23,35 @@ Player::Player(Image &image, MapObjects &objects, Level &lev, Vector2f Position,
     }
 }
 
-void Player::control() {
-    bool pressBut = false;
-    if (Keyboard::isKeyPressed(Keyboard::A)) {
-        state = left;
-        speed = playerProperties.SPEED;
-        pressBut = true;
-    }
-    if (Keyboard::isKeyPressed(Keyboard::D)) {
-        state = right;
-        speed = playerProperties.SPEED;
-        pressBut = true;
-    }
-    if (Keyboard::isKeyPressed(Keyboard::W)) {
-        if (pressBut) {
-            if (state == right) {
-                state = rightUp;
-                speed = playerProperties.SPEED;
-            }
-            if (state == left) {
-                state = leftUp;
-                speed = playerProperties.SPEED;
-            }
-        }
-        else {
-            state = up;
-            speed = playerProperties.SPEED;
+void Player::control(const float &time) {
+    if (Keyboard::isKeyPressed(Keyboard::W) || Keyboard::isKeyPressed(Keyboard::Up)) {
+      //  sprite = m_shipWithThrust;
+        state = MOVE;
+        distance = sqrt((m_temp.x - position.x) * (m_temp.x - position.x) + (m_temp.y - position.y) * (m_temp.y -
+                                                                                                       position.y));
+        if (distance > 2 && (velocity.x < velocityLimit.x && velocity.y < velocityLimit.y)) {
+            velocity += {0.003 * time * (m_temp.x - position.x) / distance,
+                         0.003 * time * (m_temp.y - position.y) / distance};
         }
     }
-    if (Keyboard::isKeyPressed(Keyboard::S)) {
-        if (pressBut) {
-            if (state == right) {
-                state = rightDown;
-                speed = playerProperties.SPEED;
-            }
-            if (state == left) {
-                state = leftDown;
-                speed = playerProperties.SPEED;
-            }
-        }
-        else {
-            state = down;
-            speed = playerProperties.SPEED;
-        }
+    else if (state == MOVE || state == SLIDE) {
+       // sprite = m_shipWithoutThrust;
+        state = SLIDE;
+        velocity.x *= 0.99;
+        velocity.y *= 0.99;
     }
-    else {
-       // state = stay;
+    else if (velocity.x == 0 && velocity.y == 0) {
+        state == STAY;
     }
+        position.x += velocity.x;
+        position.y += velocity.y;
+
 }
 
 void Player::rotation_GG(Vector2f pos) {
     float dX = pos.x - position.x;
     float dY = pos.y - position.y;
+    m_temp = pos;
     rotation = (atan2(dY, dX)) * parameters.ANGLE / M_PI;
 }
 
@@ -94,59 +78,16 @@ void Player::checkCollisionWithMap(float Dx, float Dy, MapObjects &objects) {
     }
 }
 
-/*void Player::CreateThrustAnimation(const float &time) {
-    m_frameCounter += 0.034 * time;
-    thrust.setTextureRect(IntRect(0, 42.66666 * int(m_frameCounter), 43, 43));
-    //thrust.setPosition(position.x + size.x / 2, position.y + size.y / 2);
-    //thrust.setPosition(m_playerPos.x + 31.6, m_playerPos.y + 39.6);
-    //thrust.setPosition(m_playerPos.x - 50, m_playerPos.y - 23); // 39.5  22.77
-    thrust.setPosition(m_playerPos.x - 39.5, m_playerPos.y - 22.77);
-    thrust.setRotation(rotation);
-    if (m_frameCounter > 24)
-        m_frameCounter -= 24;
-}*/
 
 void Player::update(float time, MapObjects &objects) {
     sprite.setRotation(rotation);
-    control();
-    switch (state) {
-        case right:
-            boost = {speed, 0};
-            isMOVE = true;
-            break;
-        case rightUp:
-            boost = {speed, -speed};
-            isMOVE = true;
-            break;
-        case rightDown:
-            boost = {speed, speed};
-            isMOVE = true;
-            break;
-        case left:
-            boost = {-speed, 0};
-            isMOVE = true;
-            break;
-        case leftUp:
-            boost = {-speed, -speed};
-            isMOVE = true;
-            break;
-        case leftDown:
-            boost = {-speed, speed};
-            isMOVE = true;
-            break;
-        case up:
-            boost = {0, -speed};
-            isMOVE = true;
-            break;
-        case down:
-            boost = {0, speed};
-            isMOVE = true;
-            break;
-        case stay:
-            boost = {boost.x / 2, boost.y / 2};
-            isMOVE = false;
-            break;
+    control(time);
+    /*if (state == STAY || state == SLIDE) {
+        sprite = m_shipWithoutThrust;
     }
+    else {
+        sprite = m_shipWithThrust;
+    }*/
     position.x += boost.x * time;
     checkCollisionWithMap(boost.x, 0, objects);
     position.y += boost.y * time;
@@ -161,7 +102,6 @@ void Player::update(float time, MapObjects &objects) {
     if (!isMove) {
         speed = 0;
     }
-    //CreateThrustAnimation(time);
     if (alive) {
         getPlayerCoordinateForView(position, playerProperties);
     }
