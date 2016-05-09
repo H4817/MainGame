@@ -77,9 +77,9 @@ void GetMousePosition(RenderWindow &window, PlayerPosition &playerPosition) {
 
 void InitializeImages(ImageAssets &imagesStruct) {
     g_application.lvl.LoadFromFile("Assets/map.tmx");
-    imagesStruct.bulletImage.loadFromFile("IMG/PlasmaBullet.png");
+    imagesStruct.bulletImage.loadFromFile("IMG/RedPlasmaBullet.png");
     imagesStruct.heroImage.loadFromFile("IMG/8888.png");
-    imagesStruct.easyEnemyImage.loadFromFile("IMG/EasyEnemy.png");
+    imagesStruct.easyEnemyImage.loadFromFile("IMG/EasyEnemyYellowThrust1.png");
 }
 
 Object InitializePlayer() {
@@ -112,8 +112,8 @@ void ProcessDamage(Player &protagonist, PlayerBullet &playerBullet, EasyEnemy &e
         }
         if (it->getRect().intersects(protagonist.getRect())) {
             if (it->name == "easyEnemy") {
-                it->boost.x -= it->boost.x;
-                it->boost.y -= it->boost.y;
+                it->boost.x = 0;
+                it->boost.y = 0;
                 if (playerProperties.shield > 0 && g_application.playerShieldIsActive) {
                     playerProperties.shield -= easyEnemy.DAMAGE;
                 }
