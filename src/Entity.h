@@ -3,6 +3,7 @@
 #include "level.h"
 #include <list>
 #include "resource.h"
+//#include "Animation.h"
 
 
 using namespace sf;
@@ -10,9 +11,9 @@ using namespace std;
 
 struct Entity {
 public:
+    //Animation animation;
     EasyEnemy easyEnemy;
     Parameters parameters;
-    PlayerProperties playerProperties;
     int healthEasyEnemy = 200;
     float speed;
     float moveTimer;
@@ -28,5 +29,6 @@ public:
     String name;
     Entity(Image &image, Vector2f Position, Vector2i Size, String Name);
     FloatRect getRect();
+    //bool isCollide(Entity *a,Entity *b);
     virtual void update(float time, MapObjects & objects) = 0;
 };

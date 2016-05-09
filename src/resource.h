@@ -1,20 +1,14 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-
 using namespace sf;
 using namespace std;
-
 
 struct PlayerProperties {
     const Vector2i SIZE = {79, 99};
     const int HEALTH = 200;
     int shield = 200;
     const float SPEED = 0.2;
-    Vector2f position;
-};
-
-struct _Reward_ {
     Vector2f position;
 };
 
@@ -38,4 +32,5 @@ struct EasyEnemy {
 
 struct MapObjects {
     std::vector<Object> obj;
+    Vector2f playerPosition;
 };

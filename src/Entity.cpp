@@ -18,3 +18,11 @@ Entity::Entity(Image &image, Vector2f Position, Vector2i Size, String Name) {
 FloatRect Entity::getRect() {
     return FloatRect(position.x, position.y, size.x, size.y);
 }
+
+/*bool Entity::isCollide(Entity *a,Entity *b)
+{
+  return (b->x - a->x)*(b->x - a->x)+
+         (b->y - a->y)*(b->y - a->y)<
+         (a->R + b->R)*(a->R + b->R);
+}*/
+

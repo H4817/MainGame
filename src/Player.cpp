@@ -60,7 +60,9 @@ void Player::control() {
             speed = playerProperties.SPEED;
         }
     }
-    isMOVE = false;
+    else {
+       // state = stay;
+    }
 }
 
 void Player::rotation_GG(Vector2f pos) {
@@ -91,6 +93,18 @@ void Player::checkCollisionWithMap(float Dx, float Dy, MapObjects &objects) {
         }
     }
 }
+
+/*void Player::CreateThrustAnimation(const float &time) {
+    m_frameCounter += 0.034 * time;
+    thrust.setTextureRect(IntRect(0, 42.66666 * int(m_frameCounter), 43, 43));
+    //thrust.setPosition(position.x + size.x / 2, position.y + size.y / 2);
+    //thrust.setPosition(m_playerPos.x + 31.6, m_playerPos.y + 39.6);
+    //thrust.setPosition(m_playerPos.x - 50, m_playerPos.y - 23); // 39.5  22.77
+    thrust.setPosition(m_playerPos.x - 39.5, m_playerPos.y - 22.77);
+    thrust.setRotation(rotation);
+    if (m_frameCounter > 24)
+        m_frameCounter -= 24;
+}*/
 
 void Player::update(float time, MapObjects &objects) {
     sprite.setRotation(rotation);
@@ -129,6 +143,7 @@ void Player::update(float time, MapObjects &objects) {
             isMOVE = true;
             break;
         case stay:
+            boost = {boost.x / 2, boost.y / 2};
             isMOVE = false;
             break;
     }
@@ -136,6 +151,7 @@ void Player::update(float time, MapObjects &objects) {
     checkCollisionWithMap(boost.x, 0, objects);
     position.y += boost.y * time;
     playerProperties.position = position;
+    objects.playerPosition = position;
     checkCollisionWithMap(0, boost.y, objects);
     sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
 
@@ -145,6 +161,7 @@ void Player::update(float time, MapObjects &objects) {
     if (!isMove) {
         speed = 0;
     }
+    //CreateThrustAnimation(time);
     if (alive) {
         getPlayerCoordinateForView(position, playerProperties);
     }
