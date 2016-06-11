@@ -3,6 +3,7 @@
 #include "level.h"
 #include <list>
 #include "resource.h"
+#include <math.h>
 //#include "Animation.h"
 
 
@@ -12,6 +13,7 @@ using namespace std;
 struct Entity {
 public:
     //Animation animation;
+    const double m_PI = 3.14159265359;
     Vector2f velocity;
     EasyEnemy easyEnemy;
     Parameters parameters;

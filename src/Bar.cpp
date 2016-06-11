@@ -19,8 +19,8 @@ Bar::Bar() {
 }
 
 void Bar::UpdateEnemy(int &Health) {
-    healthBarOffset = {static_cast<float>((maxHealthEnemy - Health)+1.2), 10};
     if ((Health > 0) && (Health < maxHealthEnemy)) {
+        healthBarOffset = {static_cast<float>((maxHealthEnemy - Health)+1.1), 10};
         enemyBarBlack.setSize(healthBarOffset);
     }
 }

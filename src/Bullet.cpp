@@ -10,7 +10,7 @@ Bullet::Bullet(Image &image, MapObjects &objects, Level &lvl, Vector2f Position,
     speed = 0.03;
     Entity::temp = temp;
     boost = {position.x, position.y};
-    rotation = (atan2(temp.y - position.y, temp.x - position.x)) * parameters.ANGLE / M_PI;
+    rotation = (atan2(temp.y - position.y, temp.x - position.x)) * parameters.ANGLE / m_PI;
     playerPos = Position;
     sprite.setOrigin(IMAGE_SIZE.x / 2, IMAGE_SIZE.y / 2);
 }
@@ -28,6 +28,6 @@ void Bullet::update(float time, MapObjects &objects) {
         }
     }
     sprite.setRotation(rotation);
-    sprite.setPosition(position.x + 39.5 * (cos(rotation * M_PI / 180)) + size.x / 2, position.y + 49.5 * (sin(rotation * M_PI / 180)) + size.y / 2);
+    sprite.setPosition(position.x + 39.5 * (cos(rotation * m_PI / 180)) + size.x / 2, position.y + 49.5 * (sin(rotation * m_PI / 180)) + size.y / 2);
 
 }

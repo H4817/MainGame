@@ -51,7 +51,7 @@ void Player::rotation_GG(Vector2f pos) {
     float dX = pos.x - position.x;
     float dY = pos.y - position.y;
     m_temp = pos;
-    rotation = static_cast<float>((atan2(dY, dX)) * parameters.ANGLE / M_PI);
+    rotation = static_cast<float>((atan2(dY, dX)) * parameters.ANGLE / m_PI);
 }
 
 void Player::checkCollisionWithMap(float Dx, float Dy, MapObjects &objects) {

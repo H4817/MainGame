@@ -1,5 +1,7 @@
 #include "Enemy.h"
 #include <stdio.h>
+#include <cmath>
+#include <stdlib.h>
 
 Enemy::Enemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f &temp,
              String Name) : Entity(
@@ -77,7 +79,7 @@ void Enemy::update(float time, MapObjects &objects) {
         else if (m_isAggro) {
             m_rotation = static_cast<float>(
                     (atan2(m_playerCoordinates->y - position.y, m_playerCoordinates->x - position.x)) *
-                    parameters.ANGLE / M_PI);
+                    parameters.ANGLE / m_PI);
 
             if (distance > 250) {
                 velocity += {static_cast<float>(0.002 * time * (m_playerCoordinates->x - position.x) / distance),

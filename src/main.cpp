@@ -5,6 +5,7 @@
 #include "shield.h"
 #include "Thrust.h"
 #include "aim.h"
+#include "particle.h"
 
 struct Application {
     bool playerShieldIsActive = false;
@@ -51,22 +52,54 @@ float RunTimer() {
 }
 
 void ProcessEvents(RenderWindow &window, Player &protagonist, ImageAssets &imagesStruct, PlayerPosition &playerPosition,
-                   PlayerBullet &playerBullet, MapObjects &objects) {
+                   PlayerBullet &playerBullet, MapObjects &objects, PlayerProperties &playerProperties,
+                   ParticleSystem &particleSystem, pair<float, float> &XYgrv, pair<float, float> &XYpos) {
     sf::Event event;
     while (window.pollEvent(event)) {
 
-        if (event.type == Event::Closed) {
+        if (event.type == Event::Closed || event.key.code == sf::Keyboard::Escape) {
             window.close();
         }
-        if (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::R) {
+        if( sf::Keyboard::isKeyPressed( sf::Keyboard::A ) )
+            particleSystem.setPosition( --XYpos.first, XYpos.second );
+        if( sf::Keyboard::isKeyPressed( sf::Keyboard::D ) )
+            particleSystem.setPosition( ++XYpos.first, XYpos.second );
+        if( sf::Keyboard::isKeyPressed( sf::Keyboard::W ) )
+            particleSystem.setPosition( XYpos.first, --XYpos.second );
+        if( sf::Keyboard::isKeyPressed( sf::Keyboard::S ) )
+            particleSystem.setPosition( XYpos.first, ++XYpos.second );
+        if( sf::Keyboard::isKeyPressed( sf::Keyboard::Left ) )
+            particleSystem.setGravity( --XYgrv.first * 0.1f, XYgrv.second * 0.1f);
+        if( sf::Keyboard::isKeyPressed( sf::Keyboard::Right ) )
+            particleSystem.setGravity( ++XYgrv.first * 0.1f, XYgrv.second * 0.1f );
+        if( sf::Keyboard::isKeyPressed( sf::Keyboard::Up ) )
+            particleSystem.setGravity( XYgrv.first * 0.1f, --XYgrv.second * 0.1f );
+        if( sf::Keyboard::isKeyPressed( sf::Keyboard::Down ) )
+            particleSystem.setGravity( XYgrv.first * 0.1f, ++XYgrv.second * 0.1f );
+        if( sf::Keyboard::isKeyPressed( sf::Keyboard::G ) )
+            particleSystem.setGravity( 0.0f, 0.0f );
+        if( sf::Keyboard::isKeyPressed( sf::Keyboard::P ) )
+            particleSystem.setPosition( 320.0f, 240.0f );
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+            particleSystem.fuel(200/* * window.getFrameTime() */);
+        if (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::R && playerProperties.shield > 0) {
             g_application.entities.push_back(
                     new Bullet(imagesStruct.bulletImage, objects, g_application.lvl, protagonist.position,
                                playerBullet.SIZE, playerPosition.pos, "Bullet"));
+            playerProperties.shield -= 2;
+            g_application.bar.UpdateProtagonist(protagonist.health, playerProperties.shield);
         }
         if (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::F) {
             g_application.playerShieldIsActive = !g_application.playerShieldIsActive;
         }
     }
+    particleSystem.remove();
+    particleSystem.update();
+    particleSystem.render();
+   /* window.clear();
+    window.draw( particleSystem.getSprite() );
+    window.display();*/
+
 }
 
 void GetMousePosition(RenderWindow &window, PlayerPosition &playerPosition) {
@@ -113,11 +146,14 @@ void ProcessDamage(Player &protagonist, PlayerBullet &playerBullet, EasyEnemy &e
             if (it->name == "easyEnemy") {
                 it->boost.x = 0;
                 it->boost.y = 0;
+                it->healthEasyEnemy -= (easyEnemy.DAMAGE + abs(static_cast<long>(it->velocity.x + it->velocity.y) / 2));
                 if (playerProperties.shield > 0 && g_application.playerShieldIsActive) {
-                    playerProperties.shield -= (easyEnemy.DAMAGE + (it->velocity.x + it->velocity.y) / 2);
+                    playerProperties.shield -= (easyEnemy.DAMAGE +
+                                                abs(static_cast<long>(it->velocity.x + it->velocity.y) / 2));
                 }
                 else {
-                    protagonist.health -= (easyEnemy.DAMAGE + (it->velocity.x + it->velocity.y) / 2);
+                    protagonist.health -= (easyEnemy.DAMAGE +
+                                           abs(static_cast<long>(it->velocity.x + it->velocity.y) / 2));
                 }
             }
             else if (it->name == "ShieldReward") {
@@ -148,7 +184,7 @@ void CheckExistenceProtagonist(Player &protagonist, RenderWindow &window) {
         window.close();
 }
 
-void Draw(RenderWindow &window, Player &protagonist, PlayerProperties &playerProperties) {
+void Draw(RenderWindow &window, Player &protagonist, PlayerProperties &playerProperties, ParticleSystem &particleSystem) {
     window.clear();
     g_application.lvl.Draw(window);
     for (auto it : g_application.entities) {
@@ -160,6 +196,7 @@ void Draw(RenderWindow &window, Player &protagonist, PlayerProperties &playerPro
     }
     g_application.bar.draw(window);
     g_application.aim.Draw(window);
+    window.draw( particleSystem.getSprite() );
     window.display();
 }
 
@@ -171,10 +208,11 @@ int main() {
     PlayerProperties playerProperties;
     Parameters parameters;
     MapObjects objects;
-    sf::RenderWindow window(sf::VideoMode(parameters.WINDOW_SIZE_X, parameters.WINDOW_SIZE_Y), "Game");
+    sf::RenderWindow window(sf::VideoMode(parameters.WINDOW_SIZE.first, parameters.WINDOW_SIZE.second), "Game");
     window.setMouseCursorVisible(false);
-    window.setFramerateLimit(60);
-    g_application.view.reset(sf::FloatRect(0, 0, parameters.WINDOW_SIZE_X, parameters.WINDOW_SIZE_Y));
+    // window.setFramerateLimit(60);
+    window.setVerticalSyncEnabled(true);
+    g_application.view.reset(sf::FloatRect(0, 0, parameters.WINDOW_SIZE.first, parameters.WINDOW_SIZE.second));
     ImageAssets imageAssets;
     PlayerPosition playerPosition;
     InitializeImages(imageAssets);
@@ -182,10 +220,21 @@ int main() {
     std::vector<Object> easyOpponent = g_application.lvl.GetObjects("easyEnemy");
     Player protagonist(imageAssets.heroImage, objects, g_application.lvl, {player.rect.left, player.rect.top},
                        playerProperties.SIZE, "player");
+    ParticleSystem particleSystem(parameters.WINDOW_SIZE.first, parameters.WINDOW_SIZE.second);
+    particleSystem.setDissolve(true);
+    particleSystem.setDissolutionRate(1);
+    particleSystem.setShape(Shape::CIRCLE);
+
+    particleSystem.fuel(1000);
+
+    pair<float, float> XYpos = {320.0f, 240.0f};
+    pair<float, float> XYgrv = {0.0f, 0.0f};
+
     while (window.isOpen()) {
         GetMousePosition(window, playerPosition);
         float time_ms = RunTimer();
-        ProcessEvents(window, protagonist, imageAssets, playerPosition, playerBullet, objects);
+        ProcessEvents(window, protagonist, imageAssets, playerPosition, playerBullet, objects, playerProperties,
+                      particleSystem, XYgrv, XYpos);
 
         protagonist.rotation_GG(playerPosition.pos);
         protagonist.update(time_ms, objects);
@@ -197,7 +246,7 @@ int main() {
             AppendEnemies(easyOpponent, imageAssets, easyEnemy, objects, playerPosition, protagonist);
             isEnemyCreated = true;
         }
-        Draw(window, protagonist, playerProperties);
+        Draw(window, protagonist, playerProperties, particleSystem);
     }
     return 0;
 }

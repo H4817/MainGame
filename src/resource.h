@@ -13,8 +13,7 @@ struct PlayerProperties {
 };
 
 struct Parameters {
-    const unsigned WINDOW_SIZE_X = 1680;
-    const unsigned WINDOW_SIZE_Y = 1050;
+    const pair<unsigned, unsigned> WINDOW_SIZE = {1680, 1050};
     const unsigned ANGLE = 180;
     const std::pair<int, int> MAP_SIZE = {3120, 3028};
 };
