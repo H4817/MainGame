@@ -1,7 +1,4 @@
 #include "Enemy.h"
-#include <stdio.h>
-#include <cmath>
-#include <stdlib.h>
 
 Enemy::Enemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f &temp,
              String Name) : Entity(
@@ -14,7 +11,6 @@ Enemy::Enemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, V
     if (name == "easyEnemy") {
         speed = 0.003;
         boost = {position.x, position.y};
-        temp1 = temp;
         sprite.setTextureRect(IntRect(0, 0, size.x, size.y));
     }
     m_explosionTexture.loadFromFile("IMG/Exp_type_B1.png");
@@ -22,26 +18,21 @@ Enemy::Enemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, V
     m_healthRewardTexture.loadFromFile("IMG/healthReward.png");
 }
 
-
 void Enemy::checkCollisionWithMap(float Dx, float Dy, MapObjects &objects) {
     for (int i = 0; i < objects.obj.size(); i++) {
-        if (getRect().intersects(objects.obj[i].rect)) {
+        if (RetRect().intersects(objects.obj[i].rect)) {
             if (objects.obj[i].name == "solid") {
                 if (Dy > 0) {
                     position.y = objects.obj[i].rect.top - size.y;
-                  //  boost.y = -easyEnemy.speed.y;
                 }
                 if (Dy < 0) {
                     position.y = objects.obj[i].rect.top + objects.obj[i].rect.height;
-                    //boost.y = easyEnemy.speed.y;
                 }
                 if (Dx > 0) {
                     position.x = objects.obj[i].rect.left - size.x;
-                   // boost.x = -easyEnemy.speed.x;
                 }
                 if (Dx < 0) {
                     position.x = objects.obj[i].rect.left + objects.obj[i].rect.width;
-                   // boost.x = easyEnemy.speed.x;
                 }
             }
         }
@@ -66,7 +57,7 @@ void Enemy::ExplosionAnimation(const float &time) {
     sprite.setTextureRect(IntRect(96 * int(m_frameCounter), 0, 96, 96));
 }
 
-void Enemy::update(float time, MapObjects &objects) {
+void Enemy::Update(float time, MapObjects &objects) {
 
     SetRightPosition(position);
     if (name == "easyEnemy") {
@@ -79,8 +70,7 @@ void Enemy::update(float time, MapObjects &objects) {
         else if (m_isAggro) {
             m_rotation = static_cast<float>(
                     (atan2(m_playerCoordinates->y - position.y, m_playerCoordinates->x - position.x)) *
-                    parameters.ANGLE / m_PI);
-
+                    parameters.ANGLE / M_PI);
             if (distance > 250) {
                 velocity += {static_cast<float>(0.002 * time * (m_playerCoordinates->x - position.x) / distance),
                              static_cast<float>(0.002 * time * (m_playerCoordinates->y - position.y) / distance)};
@@ -93,10 +83,8 @@ void Enemy::update(float time, MapObjects &objects) {
             checkCollisionWithMap(boost.x, boost.y, objects);
             position.x += velocity.x;
             position.y += velocity.y;
-            //position += (*m_playerCoordinates - boost) * speed;
             sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
         }
-
         if (healthEasyEnemy <= 0) {
             name = "explosion";
         }

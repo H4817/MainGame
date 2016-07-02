@@ -5,7 +5,7 @@ Shield::Shield() {
     shield.setTexture(texture1);
 }
 
-void Shield::Draw(RenderWindow & window, Vector2f position) {
-    shield.setPosition(position.x - 35, position.y - 25);
+void Shield::Draw(sf::RenderWindow & window, sf::Vector2f position) {
+    shield.setPosition(position.x - OFFSET.x, position.y - OFFSET.y);
     window.draw(shield);
 }

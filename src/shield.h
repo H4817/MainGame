@@ -1,12 +1,12 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-using namespace sf;
-
 class Shield {
 public:
-    Texture texture1;
-    Sprite shield;
     Shield();
-    void Draw(RenderWindow & window, Vector2f position);
+    void Draw(sf::RenderWindow & window, sf::Vector2f position);
+private:
+    const sf::Vector2i OFFSET = {35, 25};
+    sf::Texture texture1;
+    sf::Sprite shield;
 };
