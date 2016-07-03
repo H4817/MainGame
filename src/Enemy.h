@@ -14,15 +14,13 @@ public:
     void CreateNewReward();
     void ExplosionAnimation(const float &time);
 private:
+    const size_t EASY_ENEMY_MAX_HEALTH = 200;
     bool m_isAggro;
     float distance;
     float m_frameCounter;
-    //pair <int, int> * m_playerCoordinates;
     Vector2f *m_playerCoordinates;
     Texture m_explosionTexture;
     Texture m_shieldRewardTexture;
     Texture m_healthRewardTexture;
     float m_rotation;
-    bool isMove;
-    Vector2f playerPos;
 };

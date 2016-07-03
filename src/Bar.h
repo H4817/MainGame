@@ -5,11 +5,11 @@ class Bar {
 public:
     Bar();
 
-    void UpdateEnemy(int &Health);
+    void UpdateEnemy(size_t Health);
 
-    void UpdateProtagonist(int &Health, int &Shield);
+    void UpdateProtagonist(size_t Health, size_t Shield);
 
-    void draw(sf::RenderWindow &window);
+    void Draw(sf::RenderWindow &window);
 
 private:
     const size_t ENEMY_MAX_HEALTH = 200;

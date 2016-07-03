@@ -64,7 +64,7 @@ void Enemy::Update(float time, MapObjects &objects) {
         distance = sqrt((m_playerCoordinates->x - position.x) * (m_playerCoordinates->x - position.x) +
                         (m_playerCoordinates->y - position.y) * (m_playerCoordinates->y -
                                                                  position.y));
-        if (!m_isAggro && (distance < 700 || healthEasyEnemy != 200)) {
+        if (!m_isAggro && (distance < 700 || healthEasyEnemy != EASY_ENEMY_MAX_HEALTH)) {
             m_isAggro = true;
         }
         else if (m_isAggro) {

@@ -18,14 +18,14 @@ Bar::Bar() {
     playerBarBlackShield.setFillColor(sf::Color(0, 0, 0));
 }
 
-void Bar::UpdateEnemy(int &Health) {
+void Bar::UpdateEnemy(size_t Health) {
     if ((Health > 0) && (Health < ENEMY_MAX_HEALTH)) {
-        healthBarOffset = {static_cast<float>((ENEMY_MAX_HEALTH - Health)+1.1), 10};
+        healthBarOffset = {static_cast<float>((ENEMY_MAX_HEALTH - Health)), 10};
         enemyBarBlack.setSize(healthBarOffset);
     }
 }
 
-void Bar::UpdateProtagonist(int &Health, int &Shield) {
+void Bar::UpdateProtagonist(size_t Health, size_t Shield) {
     if ((Health > 0) && (Health < PLAYER_MAX_HEALTH)) {
         healthBarOffset = {(PLAYER_MAX_HEALTH - Health)-6, 10};
         playerBarBlackHP.setSize(healthBarOffset);
@@ -36,7 +36,7 @@ void Bar::UpdateProtagonist(int &Health, int &Shield) {
     }
 }
 
-void Bar::draw(sf::RenderWindow &window) {
+void Bar::Draw(sf::RenderWindow &window) {
     sf::Vector2f center = window.getView().getCenter();
     sf::Vector2f size = window.getView().getSize();
 
