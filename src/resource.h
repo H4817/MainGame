@@ -1,12 +1,18 @@
 #pragma once
+
 #include <SFML/Graphics.hpp>
+
+struct PlayerBullet {
+    const sf::Vector2i SIZE = {54, 25};
+    const size_t DAMAGE = 10;
+};
 
 struct PlayerProperties {
     const sf::Vector2i SIZE = {79, 99};
     const size_t HEALTH = 200;
     int shield = 200;
     const float SPEED = 0.2;
-    sf::Vector2f position;
+    PlayerBullet playerBullet;
 };
 
 struct Parameters {
@@ -15,7 +21,7 @@ struct Parameters {
     const std::pair<size_t, size_t> MAP_SIZE = {3120, 3028};
 };
 
-struct PlayerBullet {
+struct EasyEnemyBullet {
     const sf::Vector2i SIZE = {54, 25};
     const size_t DAMAGE = 10;
 };
@@ -24,6 +30,12 @@ struct EasyEnemy {
     size_t health = 200;
     const sf::Vector2i SIZE = {72, 66};
     const size_t COLLISION_DAMAGE = 2;
+    const size_t AGGRO_DISTANCE = 700;
+    EasyEnemyBullet easyEnemyBullet;
+};
+
+struct EnemiesHandler {
+    EasyEnemy easyEnemy;
 };
 
 struct MapObjects {

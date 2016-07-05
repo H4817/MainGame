@@ -1,11 +1,11 @@
 #include "Player.h"
 
-void getPlayerCoordinateForView(Vector2f position, PlayerProperties &playerProperties);
+void getPlayerCoordinateForView(Vector2f position);
 
 Player::Player(Image &image, MapObjects &objects, Level &lev, Vector2f Position, Vector2i Size, String Name) : Entity(
         image, Position, Size,
         Name) {
-    health = playerProperties.HEALTH;
+    health = MAX_HP;
     state = STAY;
     objects.obj = lev.GetAllObjects();
     if (name == "player") {
@@ -71,11 +71,9 @@ void Player::Update(float time, MapObjects &objects) {
     position.x += boost.x * time;
     checkCollisionWithMap(boost.x, 0, objects);
     position.y += boost.y * time;
-    playerProperties.position = position;
     objects.playerPosition = position;
     checkCollisionWithMap(0, boost.y, objects);
     sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
-
     if (health <= 0) {
         alive = false;
     }
@@ -83,6 +81,6 @@ void Player::Update(float time, MapObjects &objects) {
         speed = 0;
     }
     if (alive) {
-        getPlayerCoordinateForView(position, playerProperties);
+        getPlayerCoordinateForView(position);
     }
 }

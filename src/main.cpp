@@ -19,6 +19,8 @@ struct Application {
     Bar bar;
     Shield shield;
     Aim aim;
+    EnemiesHandler enemiesHandler;
+    PlayerProperties playerProperties;
 };
 
 struct PlayerPosition {
@@ -32,7 +34,7 @@ struct ImageAssets {
     Image enemyBulletImage;
 };
 
-void getPlayerCoordinateForView(Vector2f position, PlayerProperties &playerProperties) {
+void getPlayerCoordinateForView(Vector2f position) {
     Vector2f centerPosition = {position.x, position.y};
     if (position.x < MAP_WIDTH.x) centerPosition.x = MAP_WIDTH.x;
     if (position.x > MAP_WIDTH.y) centerPosition.x = MAP_WIDTH.y;
@@ -49,19 +51,19 @@ float RunTimer(Application &application) {
 }
 
 void ProcessEvents(RenderWindow &window, Player &protagonist, ImageAssets &imagesStruct, PlayerPosition &playerPosition,
-                   PlayerBullet &playerBullet, MapObjects &objects, PlayerProperties &playerProperties,
-                   Application &application) {
+                   MapObjects &objects, Application &application) {
     sf::Event event;
     while (window.pollEvent(event)) {
         if (event.type == Event::Closed || event.key.code == sf::Keyboard::Escape) {
             window.close();
         }
-        if (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::R && playerProperties.shield > 0) {
+        if (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::R &&
+            application.playerProperties.shield > 0) {
             application.entities.push_back(
                     new Bullet(imagesStruct.bulletImage, objects, application.lvl, protagonist.position,
-                               playerBullet.SIZE, playerPosition.pos, "Bullet"));
-            playerProperties.shield -= 2;
-            application.bar.UpdateProtagonist(protagonist.health, playerProperties.shield);
+                               application.playerProperties.playerBullet.SIZE, playerPosition.pos, "Bullet"));
+            application.playerProperties.shield -= 2;
+            application.bar.UpdateProtagonist(protagonist.health, application.playerProperties.shield);
         }
         if (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::F) {
             application.playerShieldIsActive = !application.playerShieldIsActive;
@@ -91,72 +93,83 @@ bool IsAliveEntity(Entity *entity) {
     return !entity->alive;
 }
 
-void ProcessEntities(float &time_ms, MapObjects &objects, Application &application, ImageAssets &imagesStruct, Player &protagonist) {
+void ProcessEntities(float &time_ms, MapObjects &objects, Application &application, ImageAssets &imagesStruct,
+                     Player &protagonist) {
+    sf::Clock clock;
+    sf::Time elapsed = clock.restart();
     auto new_end = std::remove_if(application.entities.begin(), application.entities.end(), IsAliveEntity);
     application.entities.erase(new_end, application.entities.end());
     for (auto it : application.entities) {
-        if (it->name == "easyEnemy")
+        elapsed = clock.getElapsedTime();
+        if (it->name == "easyEnemy" &&
+            ((abs(protagonist.position.x - it->position.x)) < application.enemiesHandler.easyEnemy.AGGRO_DISTANCE &&
+             (abs(protagonist.position.y - it->position.y)) < application.enemiesHandler.easyEnemy.AGGRO_DISTANCE) &&
+            elapsed.asMicroseconds() > 30) {
             application.entities.push_back(
                     new Bullet(imagesStruct.enemyBulletImage, objects, application.lvl, it->position,
                                {54, 25}, protagonist.position, "EnemyBullet"));
+        }
+
         it->Update(time_ms, objects);
     }
 }
 
-void ProcessDamage(Player &protagonist, PlayerBullet &playerBullet, EasyEnemy &easyEnemy,
-                   PlayerProperties &playerProperties, Application &application) {
+void ProcessDamage(Player &protagonist, Application &application) {
     for (auto it : application.entities) {
         for (auto at : application.entities) {
             if (it->RetRect().intersects(at->RetRect()) &&
                 ((at->name == "Bullet") && (it->name == "easyEnemy"))) {
-                it->healthEasyEnemy -= playerBullet.DAMAGE;
+                it->healthEasyEnemy -= application.playerProperties.playerBullet.DAMAGE;
                 at->alive = false;
                 application.bar.UpdateEnemy(it->healthEasyEnemy);
             }
         }
         if (it->RetRect().intersects(protagonist.RetRect())) {
             if (it->name == "EnemyBullet") {
-                if (playerProperties.shield > 0 && application.playerShieldIsActive) {
-                    playerProperties.shield -= 0.00000001;
+                if (application.playerProperties.shield > 0 && application.playerShieldIsActive) {
+                    application.playerProperties.shield -= 40;
                 }
                 else {
-                    protagonist.health -= 0.0000001;
+                    protagonist.health -= 40;
                 }
+                it->alive = false;
             }
             if (it->name == "easyEnemy") {
                 it->boost.x = 0;
                 it->boost.y = 0;
-                it->healthEasyEnemy -= (easyEnemy.COLLISION_DAMAGE +
+                it->healthEasyEnemy -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
                                         abs(static_cast<long>(it->velocity.x + it->velocity.y) / 2));
-                if (playerProperties.shield > 0 && application.playerShieldIsActive) {
-                    playerProperties.shield -= (easyEnemy.COLLISION_DAMAGE +
-                                                abs(static_cast<long>(it->velocity.x + it->velocity.y) / 2));
+                if (application.playerProperties.shield > 0 && application.playerShieldIsActive) {
+                    application.playerProperties.shield -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
+                                                            abs(static_cast<long>(it->velocity.x + it->velocity.y) /
+                                                                2));
                 }
                 else {
-                    protagonist.health -= (easyEnemy.COLLISION_DAMAGE +
+                    protagonist.health -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
                                            abs(static_cast<long>(it->velocity.x + it->velocity.y) / 2));
                 }
                 application.bar.UpdateEnemy(it->healthEasyEnemy);
             }
             else if (it->name == "ShieldReward") {
-                playerProperties.shield += 30;
+                application.playerProperties.shield += 30;
                 it->alive = false;
             }
             else if (it->name == "HealthReward") {
                 protagonist.health += 30;
                 it->alive = false;
             }
-            application.bar.UpdateProtagonist(protagonist.health, playerProperties.shield);
+            application.bar.UpdateProtagonist(protagonist.health, application.playerProperties.shield);
         }
     }
 }
 
-void AppendEnemies(vector<Object> &easyOpponent, ImageAssets &imagesStruct, EasyEnemy &easyEnemy,
+void AppendEnemies(vector<Object> &easyOpponent, ImageAssets &imagesStruct,
                    MapObjects &objects, PlayerPosition &playerPosition, Player &protagonist, Application &application) {
     for (int i = 0; i < easyOpponent.size(); i++) {
         application.entities.push_back(new Enemy(imagesStruct.easyEnemyImage, objects, application.lvl,
                                                  {easyOpponent[i].rect.left, easyOpponent[i].rect.top},
-                                                 easyEnemy.SIZE, playerPosition.pos, "easyEnemy"));
+                                                 application.enemiesHandler.easyEnemy.SIZE, playerPosition.pos,
+                                                 "easyEnemy"));
     }
 }
 
@@ -165,14 +178,14 @@ void CheckExistenceProtagonist(Player &protagonist, RenderWindow &window) {
         window.close();
 }
 
-void Draw(RenderWindow &window, Player &protagonist, PlayerProperties &playerProperties, Application &application) {
+void Draw(RenderWindow &window, Player &protagonist, Application &application) {
     window.clear();
     application.lvl.Draw(window);
     for (auto it : application.entities) {
         window.draw((it)->sprite);
     }
     window.draw(protagonist.sprite);
-    if (application.playerShieldIsActive && playerProperties.shield > 0) {
+    if (application.playerShieldIsActive && application.playerProperties.shield > 0) {
         application.shield.Draw(window, protagonist.position);
     }
     application.bar.Draw(window);
@@ -181,9 +194,6 @@ void Draw(RenderWindow &window, Player &protagonist, PlayerProperties &playerPro
 }
 
 int main() {
-    EasyEnemy easyEnemy;
-    PlayerBullet playerBullet;
-    PlayerProperties playerProperties;
     Parameters parameters;
     MapObjects objects;
     Application application;
@@ -198,20 +208,19 @@ int main() {
     Object player = InitializePlayer(application);
     std::vector<Object> easyOpponent = application.lvl.GetObjects("easyEnemy");
     Player protagonist(imageAssets.heroImage, objects, application.lvl, {player.rect.left, player.rect.top},
-                       playerProperties.SIZE, "player");
-    AppendEnemies(easyOpponent, imageAssets, easyEnemy, objects, playerPosition, protagonist, application);
+                       application.playerProperties.SIZE, "player");
+    AppendEnemies(easyOpponent, imageAssets, objects, playerPosition, protagonist, application);
     while (window.isOpen()) {
         GetMousePosition(window, playerPosition);
         float time_ms = RunTimer(application);
-        ProcessEvents(window, protagonist, imageAssets, playerPosition, playerBullet, objects, playerProperties,
-                      application);
+        ProcessEvents(window, protagonist, imageAssets, playerPosition, objects, application);
         protagonist.rotation_GG(playerPosition.pos);
         protagonist.Update(time_ms, objects);
         ProcessEntities(time_ms, objects, application, imageAssets, protagonist);
-        ProcessDamage(protagonist, playerBullet, easyEnemy, playerProperties, application);
+        ProcessDamage(protagonist, application);
         CheckExistenceProtagonist(protagonist, window);
         window.setView(view);
-        Draw(window, protagonist, playerProperties, application);
+        Draw(window, protagonist, application);
     }
     return 0;
 }

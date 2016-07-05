@@ -18,8 +18,8 @@ public:
     void Update(float time, MapObjects &objects);
 
 private:
+    const size_t MAX_HP = 200;
     float rotation;
-    PlayerProperties playerProperties;
     const sf::Vector2f ImageSize = {79, 99};
     sf::Vector2f m_temp;
     float distance;
