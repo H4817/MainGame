@@ -28,14 +28,23 @@ struct EasyEnemyBullet {
 
 struct EasyEnemy {
     size_t health = 200;
-    const sf::Vector2i SIZE = {72, 66};
+    const sf::Vector2i SIZE = {80, 67};
     const size_t COLLISION_DAMAGE = 2;
     const size_t AGGRO_DISTANCE = 700;
     EasyEnemyBullet easyEnemyBullet;
 };
 
+struct MediumEnemy {
+    size_t health = 300;
+    const sf::Vector2i SIZE = {117, 100};
+    const size_t COLLISION_DAMAGE = 3;
+    const size_t AGGRO_DISTANCE = 900;
+    EasyEnemyBullet easyEnemyBullet;
+};
+
 struct EnemiesHandler {
     EasyEnemy easyEnemy;
+    MediumEnemy mediumEnemy;
 };
 
 struct MapObjects {

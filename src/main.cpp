@@ -11,6 +11,11 @@ namespace {
     sf::View view;
 }
 
+struct EnemiesContainer {
+    std::vector<Object> easyOpponent;
+    std::vector<Object> mediumOpponent;
+};
+
 struct Application {
     bool playerShieldIsActive = false;
     Clock clock;
@@ -20,6 +25,7 @@ struct Application {
     Shield shield;
     Aim aim;
     EnemiesHandler enemiesHandler;
+    EnemiesContainer enemiesContainer;
     PlayerProperties playerProperties;
 };
 
@@ -30,6 +36,7 @@ struct PlayerPosition {
 struct ImageAssets {
     Image heroImage;
     Image easyEnemyImage;
+    Image mediumEnemyImage;
     Image bulletImage;
     Image enemyBulletImage;
 };
@@ -82,6 +89,7 @@ void InitializeImages(ImageAssets &imagesStruct, Application &application) {
     imagesStruct.enemyBulletImage.loadFromFile("IMG/RedPlasmaBullet.png");
     imagesStruct.heroImage.loadFromFile("IMG/8888.png");
     imagesStruct.easyEnemyImage.loadFromFile("IMG/EasyEnemyYellowThrust1.png");
+    imagesStruct.mediumEnemyImage.loadFromFile("IMG/MediumEnemyWithGreenThrust.png");
 }
 
 Object InitializePlayer(Application &application) {
@@ -101,7 +109,7 @@ void ProcessEntities(float &time_ms, MapObjects &objects, Application &applicati
     application.entities.erase(new_end, application.entities.end());
     for (auto it : application.entities) {
         elapsed = clock.getElapsedTime();
-        if (it->name == "easyEnemy" &&
+        if ((it->name == "easyEnemy" || it->name == "mediumEnemy") &&
             ((abs(protagonist.position.x - it->position.x)) < application.enemiesHandler.easyEnemy.AGGRO_DISTANCE &&
              (abs(protagonist.position.y - it->position.y)) < application.enemiesHandler.easyEnemy.AGGRO_DISTANCE) &&
             elapsed.asMicroseconds() > 30) {
@@ -109,7 +117,6 @@ void ProcessEntities(float &time_ms, MapObjects &objects, Application &applicati
                     new Bullet(imagesStruct.enemyBulletImage, objects, application.lvl, it->position,
                                {54, 25}, protagonist.position, "EnemyBullet"));
         }
-
         it->Update(time_ms, objects);
     }
 }
@@ -118,10 +125,10 @@ void ProcessDamage(Player &protagonist, Application &application) {
     for (auto it : application.entities) {
         for (auto at : application.entities) {
             if (it->RetRect().intersects(at->RetRect()) &&
-                ((at->name == "Bullet") && (it->name == "easyEnemy"))) {
-                it->healthEasyEnemy -= application.playerProperties.playerBullet.DAMAGE;
+                ((at->name == "Bullet") && (it->name == "easyEnemy" || it->name == "mediumEnemy"))) {
+                it->enemyHealth -= application.playerProperties.playerBullet.DAMAGE;
                 at->alive = false;
-                application.bar.UpdateEnemy(it->healthEasyEnemy);
+                application.bar.UpdateEnemy(it->enemyHealth);
             }
         }
         if (it->RetRect().intersects(protagonist.RetRect())) {
@@ -134,10 +141,10 @@ void ProcessDamage(Player &protagonist, Application &application) {
                 }
                 it->alive = false;
             }
-            if (it->name == "easyEnemy") {
+            if (it->name == "easyEnemy" || it->name == "mediumEnemy") {
                 it->boost.x = 0;
                 it->boost.y = 0;
-                it->healthEasyEnemy -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
+                it->enemyHealth -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
                                         abs(static_cast<long>(it->velocity.x + it->velocity.y) / 2));
                 if (application.playerProperties.shield > 0 && application.playerShieldIsActive) {
                     application.playerProperties.shield -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
@@ -148,7 +155,7 @@ void ProcessDamage(Player &protagonist, Application &application) {
                     protagonist.health -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
                                            abs(static_cast<long>(it->velocity.x + it->velocity.y) / 2));
                 }
-                application.bar.UpdateEnemy(it->healthEasyEnemy);
+                application.bar.UpdateEnemy(it->enemyHealth);
             }
             else if (it->name == "ShieldReward") {
                 application.playerProperties.shield += 30;
@@ -163,13 +170,21 @@ void ProcessDamage(Player &protagonist, Application &application) {
     }
 }
 
-void AppendEnemies(vector<Object> &easyOpponent, ImageAssets &imagesStruct,
+void AppendEnemies(ImageAssets &imagesStruct,
                    MapObjects &objects, PlayerPosition &playerPosition, Player &protagonist, Application &application) {
-    for (int i = 0; i < easyOpponent.size(); i++) {
-        application.entities.push_back(new Enemy(imagesStruct.easyEnemyImage, objects, application.lvl,
-                                                 {easyOpponent[i].rect.left, easyOpponent[i].rect.top},
-                                                 application.enemiesHandler.easyEnemy.SIZE, playerPosition.pos,
-                                                 "easyEnemy"));
+    for (int i = 0; i < application.enemiesContainer.easyOpponent.size(); i++) {
+        application.entities.push_back(new CEasyEnemy(imagesStruct.easyEnemyImage, objects, application.lvl,
+                                                      {application.enemiesContainer.easyOpponent[i].rect.left,
+                                                       application.enemiesContainer.easyOpponent[i].rect.top},
+                                                      application.enemiesHandler.easyEnemy.SIZE, playerPosition.pos,
+                                                      "easyEnemy"));
+    }
+    for (int i = 0; i < application.enemiesContainer.mediumOpponent.size(); i++) {
+        application.entities.push_back(new CMediumEnemy(imagesStruct.mediumEnemyImage, objects, application.lvl,
+                                                        {application.enemiesContainer.mediumOpponent[i].rect.left,
+                                                         application.enemiesContainer.mediumOpponent[i].rect.top},
+                                                        application.enemiesHandler.mediumEnemy.SIZE, playerPosition.pos,
+                                                        "mediumEnemy"));
     }
 }
 
@@ -206,10 +221,11 @@ int main() {
     PlayerPosition playerPosition;
     InitializeImages(imageAssets, application);
     Object player = InitializePlayer(application);
-    std::vector<Object> easyOpponent = application.lvl.GetObjects("easyEnemy");
+    application.enemiesContainer.easyOpponent = application.lvl.GetObjects("easyEnemy");
+    application.enemiesContainer.mediumOpponent = application.lvl.GetObjects("mediumEnemy");
     Player protagonist(imageAssets.heroImage, objects, application.lvl, {player.rect.left, player.rect.top},
                        application.playerProperties.SIZE, "player");
-    AppendEnemies(easyOpponent, imageAssets, objects, playerPosition, protagonist, application);
+    AppendEnemies(imageAssets, objects, playerPosition, protagonist, application);
     while (window.isOpen()) {
         GetMousePosition(window, playerPosition);
         float time_ms = RunTimer(application);

@@ -13,7 +13,7 @@ public:
     Entity(Image &image, Vector2f Position, Vector2i Size, String Name);
     Vector2f velocity;
     Parameters parameters;
-    int healthEasyEnemy = 200;
+    int enemyHealth = 200;
     float speed;
     Vector2f boost;
     Vector2f position;
@@ -28,3 +28,4 @@ public:
     void SetRightPosition(Vector2f & position);
     virtual void Update(float time, MapObjects &objects) = 0;
 };
+

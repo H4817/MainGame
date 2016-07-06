@@ -1,24 +1,22 @@
 #include "Enemy.h"
 
-Enemy::Enemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f &temp,
-             String Name) : Entity(
+CEasyEnemy::CEasyEnemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f &temp,
+                       String Name) : Entity(
         image, Position, Size, Name) {
     m_isAggro = false;
     m_playerCoordinates = &objects.playerPosition;
     objects.obj = lvl.GetObjects("solid");
     m_frameCounter = 0;
     sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
-    if (name == "easyEnemy") {
-        speed = 0.003;
-        boost = {position.x, position.y};
-        sprite.setTextureRect(IntRect(0, 0, size.x, size.y));
-    }
+    speed = 0.003;
+    boost = {position.x, position.y};
+    sprite.setTextureRect(IntRect(0, 0, size.x, size.y));
     m_explosionTexture.loadFromFile("IMG/Exp_type_B1.png");
     m_shieldRewardTexture.loadFromFile("IMG/shieldReward.png");
     m_healthRewardTexture.loadFromFile("IMG/healthReward.png");
 }
 
-void Enemy::checkCollisionWithMap(float Dx, float Dy, MapObjects &objects) {
+void CEasyEnemy::checkCollisionWithMap(float Dx, float Dy, MapObjects &objects) {
     for (int i = 0; i < objects.obj.size(); i++) {
         if (RetRect().intersects(objects.obj[i].rect)) {
             if (objects.obj[i].name == "solid") {
@@ -39,7 +37,7 @@ void Enemy::checkCollisionWithMap(float Dx, float Dy, MapObjects &objects) {
     }
 }
 
-void Enemy::CreateNewReward() {
+void CEasyEnemy::CreateNewReward() {
     sprite.setTextureRect(IntRect(0, 0, 40, 37));
     if (rand() % 2 == 0) {
         sprite.setTexture(m_healthRewardTexture);
@@ -51,20 +49,20 @@ void Enemy::CreateNewReward() {
     }
 }
 
-void Enemy::ExplosionAnimation(const float &time) {
+void CEasyEnemy::ExplosionAnimation(const float &time) {
     m_frameCounter += 0.054 * time;
     sprite.setTexture(m_explosionTexture);
     sprite.setTextureRect(IntRect(96 * int(m_frameCounter), 0, 96, 96));
 }
 
-void Enemy::Update(float time, MapObjects &objects) {
+void CEasyEnemy::Update(float time, MapObjects &objects) {
 
     SetRightPosition(position);
-    if (name == "easyEnemy") {
+    if (name == "easyEnemy" || name == "mediumEnemy") {
         distance = sqrt((m_playerCoordinates->x - position.x) * (m_playerCoordinates->x - position.x) +
                         (m_playerCoordinates->y - position.y) * (m_playerCoordinates->y -
                                                                  position.y));
-        if (!m_isAggro && (distance < 700 || healthEasyEnemy != EASY_ENEMY_MAX_HEALTH)) {
+        if (!m_isAggro && (distance < 700 || enemyHealth != MAX_HEALTH)) {
             m_isAggro = true;
         }
         else if (m_isAggro) {
@@ -85,7 +83,7 @@ void Enemy::Update(float time, MapObjects &objects) {
             position.y += velocity.y;
             sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
         }
-        if (healthEasyEnemy <= 0) {
+        if (enemyHealth <= 0) {
             name = "explosion";
         }
     }
@@ -95,5 +93,37 @@ void Enemy::Update(float time, MapObjects &objects) {
             CreateNewReward();
         }
     }
+}
+
+
+/* -------------------------------------------------------- */
+
+CMediumEnemy::CMediumEnemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size,
+                           Vector2f &temp, String Name) : CEasyEnemy(image, objects, lvl, Position, Size, temp, Name) {
+    enemyHealth = 500;
+    m_isAggro = false;
+    m_playerCoordinates = &objects.playerPosition;
+    objects.obj = lvl.GetObjects("solid");
+    m_frameCounter = 0;
+    sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
+    speed = 0.003;
+    boost = {position.x, position.y};
+    sprite.setTextureRect(IntRect(0, 0, size.x, size.y));
+}
+
+void CMediumEnemy::checkCollisionWithMap(float Dx, float Dy, MapObjects &objects) {
+    CEasyEnemy::checkCollisionWithMap(Dx, Dy, objects);
+}
+
+void CMediumEnemy::Update(float time, MapObjects &objects) {
+    CEasyEnemy::Update(time, objects);
+}
+
+void CMediumEnemy::CreateNewReward() {
+    CEasyEnemy::CreateNewReward();
+}
+
+void CMediumEnemy::ExplosionAnimation(const float &time) {
+    CEasyEnemy::ExplosionAnimation(time);
 }
 

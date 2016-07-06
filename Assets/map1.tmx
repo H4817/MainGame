@@ -20036,12 +20036,12 @@
  </layer>
  <objectgroup name="Слой объектов 1">
   <object id="3" name="player" x="1236" y="404" width="248" height="154"/>
-  <object id="5" name="easyEnemy" x="2617.15" y="981.152" width="55" height="50"/>
+  <object id="5" name="mediumEnemy" x="2617.15" y="981.152" width="55" height="50"/>
   <object id="9" name="easyEnemy" x="2868.27" y="1504.97" width="99" height="79"/>
   <object id="10" name="easyEnemy" x="966.606" y="1797.58" width="184.545" height="123.879"/>
   <object id="11" name="easyEnemy" x="2102.21" y="1967.64" width="99" height="79"/>
-  <object id="12" name="easyEnemy" x="2720.52" y="384.485" width="99" height="79"/>
-  <object id="13" name="easyEnemy" x="162.818" y="1310.06" width="99" height="79"/>
+  <object id="12" name="mediumEnemy" x="2720.52" y="384.485" width="99" height="79"/>
+  <object id="13" name="mediumEnemy" x="162.818" y="1310.06" width="99" height="79"/>
   <object id="14" name="easyEnemy" x="465.485" y="2671.27" width="99" height="79"/>
   <object id="15" name="easyEnemy" x="2727.3" y="2671.88" width="99" height="79"/>
   <object id="16" name="easyEnemy" x="1678.33" y="2697.33" width="99" height="79"/>
