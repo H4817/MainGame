@@ -38,6 +38,7 @@ struct ImageAssets {
     Image easyEnemyImage;
     Image mediumEnemyImage;
     Image bulletImage;
+    Image rocketImage;
     Image enemyBulletImage;
 };
 
@@ -86,6 +87,7 @@ void GetMousePosition(RenderWindow &window, PlayerPosition &playerPosition) {
 void InitializeImages(ImageAssets &imagesStruct, Application &application) {
     application.lvl.LoadFromFile("Assets/map1.tmx");
     imagesStruct.bulletImage.loadFromFile("IMG/PlasmaBullet.png");
+    imagesStruct.rocketImage.loadFromFile("IMG/rocket1.png");
     imagesStruct.enemyBulletImage.loadFromFile("IMG/RedPlasmaBullet.png");
     imagesStruct.heroImage.loadFromFile("IMG/8888.png");
     imagesStruct.easyEnemyImage.loadFromFile("IMG/EasyEnemyYellowThrust1.png");
@@ -114,7 +116,7 @@ void ProcessEntities(float &time_ms, MapObjects &objects, Application &applicati
              (abs(protagonist.position.y - it->position.y)) < application.enemiesHandler.easyEnemy.AGGRO_DISTANCE) &&
             elapsed.asMicroseconds() > 30) {
             application.entities.push_back(
-                    new Bullet(imagesStruct.enemyBulletImage, objects, application.lvl, it->position,
+                    new Rocket(imagesStruct.rocketImage, objects, application.lvl, it->position,
                                {54, 25}, protagonist.position, "EnemyBullet"));
         }
         it->Update(time_ms, objects);
@@ -134,10 +136,11 @@ void ProcessDamage(Player &protagonist, Application &application) {
         if (it->RetRect().intersects(protagonist.RetRect())) {
             if (it->name == "EnemyBullet") {
                 if (application.playerProperties.shield > 0 && application.playerShieldIsActive) {
-                    application.playerProperties.shield -= 40;
+                    application.playerProperties.shield -=
+                            application.enemiesHandler.easyEnemy.easyEnemyBullet.DAMAGE / 2;
                 }
                 else {
-                    protagonist.health -= 40;
+                    protagonist.health -= application.enemiesHandler.easyEnemy.easyEnemyBullet.DAMAGE;
                 }
                 it->alive = false;
             }
@@ -145,7 +148,7 @@ void ProcessDamage(Player &protagonist, Application &application) {
                 it->boost.x = 0;
                 it->boost.y = 0;
                 it->enemyHealth -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
-                                        abs(static_cast<long>(it->velocity.x + it->velocity.y) / 2));
+                                    abs(static_cast<long>(it->velocity.x + it->velocity.y) / 2));
                 if (application.playerProperties.shield > 0 && application.playerShieldIsActive) {
                     application.playerProperties.shield -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
                                                             abs(static_cast<long>(it->velocity.x + it->velocity.y) /

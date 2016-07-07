@@ -56,7 +56,6 @@ void CEasyEnemy::ExplosionAnimation(const float &time) {
 }
 
 void CEasyEnemy::Update(float time, MapObjects &objects) {
-
     SetRightPosition(position);
     if (name == "easyEnemy" || name == "mediumEnemy") {
         distance = sqrt((m_playerCoordinates->x - position.x) * (m_playerCoordinates->x - position.x) +
@@ -100,13 +99,13 @@ void CEasyEnemy::Update(float time, MapObjects &objects) {
 
 CMediumEnemy::CMediumEnemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size,
                            Vector2f &temp, String Name) : CEasyEnemy(image, objects, lvl, Position, Size, temp, Name) {
-    enemyHealth = 500;
+    enemyHealth = 300;
     m_isAggro = false;
     m_playerCoordinates = &objects.playerPosition;
     objects.obj = lvl.GetObjects("solid");
     m_frameCounter = 0;
     sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
-    speed = 0.003;
+    speed = 0.002;
     boost = {position.x, position.y};
     sprite.setTextureRect(IntRect(0, 0, size.x, size.y));
 }

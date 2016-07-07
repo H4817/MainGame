@@ -1,5 +1,7 @@
 #pragma once
+
 #include <SFML/Graphics.hpp>
+#include "Entity.h"
 
 class Bar {
 public:
@@ -12,9 +14,9 @@ public:
     void Draw(sf::RenderWindow &window);
 
 private:
-    const size_t ENEMY_MAX_HEALTH = 200;
-    const size_t PLAYER_MAX_HEALTH = 200;
-    const size_t SHIELD_CAPACITY = 200;
+
+    PlayerProperties playerProperties;
+    EnemiesHandler enemiesHandler;
 
     sf::RectangleShape enemyBarBlack;
     sf::RectangleShape playerBarBlackHP;

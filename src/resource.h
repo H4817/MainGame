@@ -4,13 +4,13 @@
 
 struct PlayerBullet {
     const sf::Vector2i SIZE = {54, 25};
-    const size_t DAMAGE = 10;
+    const size_t DAMAGE = 15;
 };
 
 struct PlayerProperties {
     const sf::Vector2i SIZE = {79, 99};
     const size_t HEALTH = 200;
-    int shield = 200;
+    int shield = 400;
     const float SPEED = 0.2;
     PlayerBullet playerBullet;
 };
@@ -23,7 +23,7 @@ struct Parameters {
 
 struct EasyEnemyBullet {
     const sf::Vector2i SIZE = {54, 25};
-    const size_t DAMAGE = 10;
+    const size_t DAMAGE = 20;
 };
 
 struct EasyEnemy {
