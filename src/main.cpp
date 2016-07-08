@@ -103,6 +103,11 @@ bool IsAliveEntity(Entity *entity) {
     return !entity->alive;
 }
 
+bool IsAggro(const Vector2f &protagonistPosition, const Vector2f &enemyPosition, const size_t &distance) {
+    return ((abs(protagonistPosition.x - enemyPosition.x)) < distance &&
+            (abs(protagonistPosition.y - enemyPosition.y)) < distance);
+}
+
 void ProcessEntities(float &time_ms, MapObjects &objects, Application &application, ImageAssets &imagesStruct,
                      Player &protagonist) {
     sf::Clock clock;
@@ -111,16 +116,28 @@ void ProcessEntities(float &time_ms, MapObjects &objects, Application &applicati
     application.entities.erase(new_end, application.entities.end());
     for (auto it : application.entities) {
         elapsed = clock.getElapsedTime();
-        if ((it->name == "easyEnemy" || it->name == "mediumEnemy") &&
-            ((abs(protagonist.position.x - it->position.x)) < application.enemiesHandler.easyEnemy.AGGRO_DISTANCE &&
-             (abs(protagonist.position.y - it->position.y)) < application.enemiesHandler.easyEnemy.AGGRO_DISTANCE) &&
+        if ((it->name == "easyEnemy") &&
+            IsAggro(protagonist.position, it->position, application.enemiesHandler.easyEnemy.AGGRO_DISTANCE) &&
             elapsed.asMicroseconds() > 30) {
             application.entities.push_back(
-                    new Rocket(imagesStruct.rocketImage, objects, application.lvl, it->position,
-                               {54, 25}, protagonist.position, "EnemyBullet"));
+                    new Bullet(imagesStruct.enemyBulletImage, objects, application.lvl, it->position,
+                               application.enemiesHandler.easyEnemy.easyEnemyBullet.SIZE,
+                               protagonist.position,
+                               "EnemyBullet"));
+        }
+        else if ((it->name == "mediumEnemy") &&
+                 IsAggro(protagonist.position, it->position, application.enemiesHandler.mediumEnemy.AGGRO_DISTANCE) &&
+                 elapsed.asMicroseconds() > 40) {
+            application.entities.push_back(new Rocket(imagesStruct.rocketImage, objects, application.lvl, it->position,
+                                                      application.enemiesHandler.mediumEnemy.simpleRocket.SIZE,
+                                                      protagonist.position, "EnemyRocket"));
         }
         it->Update(time_ms, objects);
     }
+}
+
+bool IsShieldActive(const Application &application) {
+    return application.playerShieldIsActive && application.playerProperties.shield > 0;
 }
 
 void ProcessDamage(Player &protagonist, Application &application) {
@@ -135,7 +152,7 @@ void ProcessDamage(Player &protagonist, Application &application) {
         }
         if (it->RetRect().intersects(protagonist.RetRect())) {
             if (it->name == "EnemyBullet") {
-                if (application.playerProperties.shield > 0 && application.playerShieldIsActive) {
+                if (IsShieldActive(application)) {
                     application.playerProperties.shield -=
                             application.enemiesHandler.easyEnemy.easyEnemyBullet.DAMAGE / 2;
                 }
@@ -144,7 +161,17 @@ void ProcessDamage(Player &protagonist, Application &application) {
                 }
                 it->alive = false;
             }
-            if (it->name == "easyEnemy" || it->name == "mediumEnemy") {
+            else if (it->name == "EnemyRocket") {
+                if (IsShieldActive(application)) {
+                    application.playerProperties.shield -=
+                            application.enemiesHandler.mediumEnemy.simpleRocket.DAMAGE / 2;
+                }
+                else {
+                    protagonist.health -= application.enemiesHandler.mediumEnemy.simpleRocket.DAMAGE;
+                }
+                it->name = "explosion";
+            }
+            else if (it->name == "easyEnemy" || it->name == "mediumEnemy") {
                 it->boost.x = 0;
                 it->boost.y = 0;
                 it->enemyHealth -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +

@@ -21,15 +21,15 @@ void Player::control(const float &time) {
         distance = sqrt((m_temp.x - position.x) * (m_temp.x - position.x) + (m_temp.y - position.y) * (m_temp.y -
                                                                                                        position.y));
         if (distance > 2 ) {
-            velocity += {static_cast<float>(0.003 * time * (m_temp.x - position.x) / distance),
-                         static_cast<float>(0.003 * time * (m_temp.y - position.y) / distance)};
+            velocity += {static_cast<float>(ACCELERATION * time * (m_temp.x - position.x) / distance),
+                         static_cast<float>(ACCELERATION * time * (m_temp.y - position.y) / distance)};
 
         }
     }
     else if (state == MOVE || state == SLIDE) {
         state = SLIDE;
-        velocity.x *= 0.99;
-        velocity.y *= 0.99;
+        velocity.x *= DECELERATION;
+        velocity.y *= DECELERATION;
     }
     position.x += velocity.x;
     position.y += velocity.y;

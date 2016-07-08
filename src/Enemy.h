@@ -28,6 +28,8 @@ public:
     virtual void ExplosionAnimation(const float &time);
 
 protected:
+    const double ACCELERATION = 0.003;
+    const double DECELERATION = 0.985;
     const size_t MAX_HEALTH = 200;
     bool m_isAggro;
     float distance;

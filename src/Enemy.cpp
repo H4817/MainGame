@@ -8,7 +8,6 @@ CEasyEnemy::CEasyEnemy(Image &image, MapObjects &objects, Level &lvl, Vector2f P
     objects.obj = lvl.GetObjects("solid");
     m_frameCounter = 0;
     sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
-    speed = 0.003;
     boost = {position.x, position.y};
     sprite.setTextureRect(IntRect(0, 0, size.x, size.y));
     m_explosionTexture.loadFromFile("IMG/Exp_type_B1.png");
@@ -69,12 +68,12 @@ void CEasyEnemy::Update(float time, MapObjects &objects) {
                     (atan2(m_playerCoordinates->y - position.y, m_playerCoordinates->x - position.x)) *
                     parameters.ANGLE / M_PI);
             if (distance > 250) {
-                velocity += {static_cast<float>(0.002 * time * (m_playerCoordinates->x - position.x) / distance),
-                             static_cast<float>(0.002 * time * (m_playerCoordinates->y - position.y) / distance)};
+                velocity += {static_cast<float>(ACCELERATION * time * (m_playerCoordinates->x - position.x) / distance),
+                             static_cast<float>(ACCELERATION * time * (m_playerCoordinates->y - position.y) / distance)};
             }
             else {
-                velocity.x *= 0.985;
-                velocity.y *= 0.985;
+                velocity.x *= DECELERATION;
+                velocity.y *= DECELERATION;
             }
             sprite.setRotation(m_rotation);
             checkCollisionWithMap(boost.x, boost.y, objects);
@@ -94,9 +93,6 @@ void CEasyEnemy::Update(float time, MapObjects &objects) {
     }
 }
 
-
-/* -------------------------------------------------------- */
-
 CMediumEnemy::CMediumEnemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size,
                            Vector2f &temp, String Name) : CEasyEnemy(image, objects, lvl, Position, Size, temp, Name) {
     enemyHealth = 300;
@@ -105,7 +101,6 @@ CMediumEnemy::CMediumEnemy(Image &image, MapObjects &objects, Level &lvl, Vector
     objects.obj = lvl.GetObjects("solid");
     m_frameCounter = 0;
     sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
-    speed = 0.002;
     boost = {position.x, position.y};
     sprite.setTextureRect(IntRect(0, 0, size.x, size.y));
 }

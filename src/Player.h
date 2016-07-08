@@ -20,6 +20,8 @@ public:
 private:
     const size_t MAX_HP = 200;
     float rotation;
+    const double ACCELERATION = 0.003;
+    const double DECELERATION = 0.997;
     const sf::Vector2f ImageSize = {79, 99};
     sf::Vector2f m_temp;
     float distance;

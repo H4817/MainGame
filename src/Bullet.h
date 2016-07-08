@@ -31,7 +31,7 @@ private:
     float m_frameCounter;
     Vector2f playerPos;
     const size_t distance = 1200;
-    const Vector2f IMAGE_SIZE = {50, 14};
+    const Vector2f IMAGE_SIZE = {49, 14};
     float rotation;
     Texture m_explosionTexture;
 };
