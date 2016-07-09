@@ -27,11 +27,11 @@ void Bar::UpdateEnemy(size_t Health) {
 
 void Bar::UpdateProtagonist(size_t Health, size_t Shield) {
     if ((Health > 0) && (Health < playerProperties.HEALTH)) {
-        healthBarOffset = {(playerProperties.HEALTH - Health) - 6, 10};
+        healthBarOffset = {(playerProperties.HEALTH - Health), 10};
         playerBarBlackHP.setSize(healthBarOffset);
     }
     if ((Shield > 0) && (Shield < playerProperties.shield)) {
-        shieldBarOffset = {(playerProperties.shield - Shield) - 6, 10};
+        shieldBarOffset = {(playerProperties.shield - Shield), 10};
         playerBarBlackShield.setSize(shieldBarOffset);
     }
 }

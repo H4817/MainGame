@@ -6,7 +6,8 @@ bool IsOutsideOfDistance(const Vector2f &playerPos, const Vector2f &position, si
 
 struct Bullet : public Entity {
 public:
-    Bullet(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f temp, String Name);
+    Bullet(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f targetPosition,
+           String Name);
 
     void Update(float time, MapObjects &objects);
 
@@ -23,15 +24,27 @@ public:
 
     void Update(float time, MapObjects &objects);
 
-private:
+protected:
 
     void ExplosionAnimation(const float &time);
 
-private:
+protected:
     float m_frameCounter;
     Vector2f playerPos;
     const size_t distance = 1200;
     const Vector2f IMAGE_SIZE = {49, 14};
     float rotation;
     Texture m_explosionTexture;
+};
+
+class SmartRocket : public Rocket {
+public:
+    SmartRocket(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f temp,
+                String Name);
+
+    void Update(float time, MapObjects &objects);
+
+private:
+    const double ACCELERATION = 0.002;
+    Vector2f *m_playerCoordinates;
 };

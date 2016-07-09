@@ -1,4 +1,4 @@
-#include "Enemy.h"
+#include "Enemies.h"
 
 CEasyEnemy::CEasyEnemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f &temp,
                        String Name) : Entity(
@@ -40,10 +40,12 @@ void CEasyEnemy::CreateNewReward() {
     sprite.setTextureRect(IntRect(0, 0, 40, 37));
     if (rand() % 2 == 0) {
         sprite.setTexture(m_healthRewardTexture);
+        sprite.setTextureRect(IntRect(0, 0, 28, 24));
         name = "HealthReward";
     }
     else {
         sprite.setTexture(m_shieldRewardTexture);
+        sprite.setTextureRect(IntRect(0, 0, 28, 24));
         name = "ShieldReward";
     }
 }

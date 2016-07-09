@@ -1,6 +1,6 @@
 #include "Player.h"
 #include "Bullet.h"
-#include "Enemy.h"
+#include "Enemies.h"
 #include "Bar.h"
 #include "shield.h"
 #include "aim.h"
@@ -16,6 +16,16 @@ struct EnemiesContainer {
     std::vector<Object> mediumOpponent;
 };
 
+struct ImageAssets {
+    Image heroImage;
+    Image easyEnemyImage;
+    Image mediumEnemyImage;
+    Image bulletImage;
+    Image rocketImage;
+    Image smartRocketImage;
+    Image enemyBulletImage;
+};
+
 struct Application {
     bool playerShieldIsActive = false;
     Clock clock;
@@ -27,20 +37,14 @@ struct Application {
     EnemiesHandler enemiesHandler;
     EnemiesContainer enemiesContainer;
     PlayerProperties playerProperties;
+    ImageAssets imageAssets;
+    MapObjects objects;
 };
 
 struct PlayerPosition {
     Vector2f pos;
 };
 
-struct ImageAssets {
-    Image heroImage;
-    Image easyEnemyImage;
-    Image mediumEnemyImage;
-    Image bulletImage;
-    Image rocketImage;
-    Image enemyBulletImage;
-};
 
 void getPlayerCoordinateForView(Vector2f position) {
     Vector2f centerPosition = {position.x, position.y};
@@ -58,8 +62,8 @@ float RunTimer(Application &application) {
     return time_ms;
 }
 
-void ProcessEvents(RenderWindow &window, Player &protagonist, ImageAssets &imagesStruct, PlayerPosition &playerPosition,
-                   MapObjects &objects, Application &application) {
+void ProcessEvents(RenderWindow &window, Player &protagonist, PlayerPosition &playerPosition,
+                   Application &application) {
     sf::Event event;
     while (window.pollEvent(event)) {
         if (event.type == Event::Closed || event.key.code == sf::Keyboard::Escape) {
@@ -68,7 +72,8 @@ void ProcessEvents(RenderWindow &window, Player &protagonist, ImageAssets &image
         if (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::R &&
             application.playerProperties.shield > 0) {
             application.entities.push_back(
-                    new Bullet(imagesStruct.bulletImage, objects, application.lvl, protagonist.position,
+                    new Bullet(application.imageAssets.bulletImage, application.objects, application.lvl,
+                               protagonist.position,
                                application.playerProperties.playerBullet.SIZE, playerPosition.pos, "Bullet"));
             application.playerProperties.shield -= 2;
             application.bar.UpdateProtagonist(protagonist.health, application.playerProperties.shield);
@@ -84,14 +89,15 @@ void GetMousePosition(RenderWindow &window, PlayerPosition &playerPosition) {
     playerPosition.pos = window.mapPixelToCoords(pixelPos);
 }
 
-void InitializeImages(ImageAssets &imagesStruct, Application &application) {
+void InitializeImages(Application &application) {
     application.lvl.LoadFromFile("Assets/map1.tmx");
-    imagesStruct.bulletImage.loadFromFile("IMG/PlasmaBullet.png");
-    imagesStruct.rocketImage.loadFromFile("IMG/rocket1.png");
-    imagesStruct.enemyBulletImage.loadFromFile("IMG/RedPlasmaBullet.png");
-    imagesStruct.heroImage.loadFromFile("IMG/8888.png");
-    imagesStruct.easyEnemyImage.loadFromFile("IMG/EasyEnemyYellowThrust1.png");
-    imagesStruct.mediumEnemyImage.loadFromFile("IMG/MediumEnemyWithGreenThrust.png");
+    application.imageAssets.bulletImage.loadFromFile("IMG/PlasmaBullet.png");
+    application.imageAssets.rocketImage.loadFromFile("IMG/rocket1.png");
+    application.imageAssets.smartRocketImage.loadFromFile("IMG/SmartRocket.png");
+    application.imageAssets.enemyBulletImage.loadFromFile("IMG/RedPlasmaBullet.png");
+    application.imageAssets.heroImage.loadFromFile("IMG/8888.png");
+    application.imageAssets.easyEnemyImage.loadFromFile("IMG/EasyEnemyYellowThrust1.png");
+    application.imageAssets.mediumEnemyImage.loadFromFile("IMG/MediumEnemyWithGreenThrust.png");
 }
 
 Object InitializePlayer(Application &application) {
@@ -108,31 +114,36 @@ bool IsAggro(const Vector2f &protagonistPosition, const Vector2f &enemyPosition,
             (abs(protagonistPosition.y - enemyPosition.y)) < distance);
 }
 
-void ProcessEntities(float &time_ms, MapObjects &objects, Application &application, ImageAssets &imagesStruct,
-                     Player &protagonist) {
+void AppendEnemiesBullets(Application &application, Entity *it, Player &protagonist, sf::Time elapsed) {
+    if ((it->name == "easyEnemy") &&
+        IsAggro(protagonist.position, it->position, application.enemiesHandler.easyEnemy.AGGRO_DISTANCE) &&
+        elapsed.asMicroseconds() > 30) {
+        application.entities.push_back(
+                new Bullet(application.imageAssets.enemyBulletImage, application.objects, application.lvl, it->position,
+                           application.enemiesHandler.easyEnemy.easyEnemyBullet.SIZE,
+                           protagonist.position,
+                           "EnemyBullet"));
+    }
+    else if ((it->name == "mediumEnemy") &&
+             IsAggro(protagonist.position, it->position, application.enemiesHandler.mediumEnemy.AGGRO_DISTANCE) &&
+             elapsed.asMicroseconds() > 40) {
+        application.entities.push_back(
+                new SmartRocket(application.imageAssets.smartRocketImage, application.objects, application.lvl,
+                                it->position,
+                                application.enemiesHandler.mediumEnemy.smartRocket.SIZE,
+                                protagonist.position, "EnemyRocket"));
+    }
+}
+
+void ProcessEntities(float &time_ms, Application &application, Player &protagonist) {
     sf::Clock clock;
     sf::Time elapsed = clock.restart();
     auto new_end = std::remove_if(application.entities.begin(), application.entities.end(), IsAliveEntity);
     application.entities.erase(new_end, application.entities.end());
     for (auto it : application.entities) {
         elapsed = clock.getElapsedTime();
-        if ((it->name == "easyEnemy") &&
-            IsAggro(protagonist.position, it->position, application.enemiesHandler.easyEnemy.AGGRO_DISTANCE) &&
-            elapsed.asMicroseconds() > 30) {
-            application.entities.push_back(
-                    new Bullet(imagesStruct.enemyBulletImage, objects, application.lvl, it->position,
-                               application.enemiesHandler.easyEnemy.easyEnemyBullet.SIZE,
-                               protagonist.position,
-                               "EnemyBullet"));
-        }
-        else if ((it->name == "mediumEnemy") &&
-                 IsAggro(protagonist.position, it->position, application.enemiesHandler.mediumEnemy.AGGRO_DISTANCE) &&
-                 elapsed.asMicroseconds() > 40) {
-            application.entities.push_back(new Rocket(imagesStruct.rocketImage, objects, application.lvl, it->position,
-                                                      application.enemiesHandler.mediumEnemy.simpleRocket.SIZE,
-                                                      protagonist.position, "EnemyRocket"));
-        }
-        it->Update(time_ms, objects);
+        AppendEnemiesBullets(application, it, protagonist, elapsed);
+        it->Update(time_ms, application.objects);
     }
 }
 
@@ -164,10 +175,10 @@ void ProcessDamage(Player &protagonist, Application &application) {
             else if (it->name == "EnemyRocket") {
                 if (IsShieldActive(application)) {
                     application.playerProperties.shield -=
-                            application.enemiesHandler.mediumEnemy.simpleRocket.DAMAGE / 2;
+                            application.enemiesHandler.mediumEnemy.smartRocket.DAMAGE / 2;
                 }
                 else {
-                    protagonist.health -= application.enemiesHandler.mediumEnemy.simpleRocket.DAMAGE;
+                    protagonist.health -= application.enemiesHandler.mediumEnemy.smartRocket.DAMAGE;
                 }
                 it->name = "explosion";
             }
@@ -200,21 +211,22 @@ void ProcessDamage(Player &protagonist, Application &application) {
     }
 }
 
-void AppendEnemies(ImageAssets &imagesStruct,
-                   MapObjects &objects, PlayerPosition &playerPosition, Player &protagonist, Application &application) {
+void AppendEnemies(PlayerPosition &playerPosition, Player &protagonist, Application &application) {
     for (int i = 0; i < application.enemiesContainer.easyOpponent.size(); i++) {
-        application.entities.push_back(new CEasyEnemy(imagesStruct.easyEnemyImage, objects, application.lvl,
-                                                      {application.enemiesContainer.easyOpponent[i].rect.left,
-                                                       application.enemiesContainer.easyOpponent[i].rect.top},
-                                                      application.enemiesHandler.easyEnemy.SIZE, playerPosition.pos,
-                                                      "easyEnemy"));
+        application.entities.push_back(
+                new CEasyEnemy(application.imageAssets.easyEnemyImage, application.objects, application.lvl,
+                               {application.enemiesContainer.easyOpponent[i].rect.left,
+                                application.enemiesContainer.easyOpponent[i].rect.top},
+                               application.enemiesHandler.easyEnemy.SIZE, playerPosition.pos,
+                               "easyEnemy"));
     }
     for (int i = 0; i < application.enemiesContainer.mediumOpponent.size(); i++) {
-        application.entities.push_back(new CMediumEnemy(imagesStruct.mediumEnemyImage, objects, application.lvl,
-                                                        {application.enemiesContainer.mediumOpponent[i].rect.left,
-                                                         application.enemiesContainer.mediumOpponent[i].rect.top},
-                                                        application.enemiesHandler.mediumEnemy.SIZE, playerPosition.pos,
-                                                        "mediumEnemy"));
+        application.entities.push_back(
+                new CMediumEnemy(application.imageAssets.mediumEnemyImage, application.objects, application.lvl,
+                                 {application.enemiesContainer.mediumOpponent[i].rect.left,
+                                  application.enemiesContainer.mediumOpponent[i].rect.top},
+                                 application.enemiesHandler.mediumEnemy.SIZE, playerPosition.pos,
+                                 "mediumEnemy"));
     }
 }
 
@@ -240,29 +252,28 @@ void Draw(RenderWindow &window, Player &protagonist, Application &application) {
 
 int main() {
     Parameters parameters;
-    MapObjects objects;
     Application application;
     sf::RenderWindow window(sf::VideoMode(parameters.WINDOW_SIZE.first, parameters.WINDOW_SIZE.second), "Game");
     window.setMouseCursorVisible(false);
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
     view.reset(sf::FloatRect(0, 0, parameters.WINDOW_SIZE.first, parameters.WINDOW_SIZE.second));
-    ImageAssets imageAssets;
     PlayerPosition playerPosition;
-    InitializeImages(imageAssets, application);
+    InitializeImages(application);
     Object player = InitializePlayer(application);
     application.enemiesContainer.easyOpponent = application.lvl.GetObjects("easyEnemy");
     application.enemiesContainer.mediumOpponent = application.lvl.GetObjects("mediumEnemy");
-    Player protagonist(imageAssets.heroImage, objects, application.lvl, {player.rect.left, player.rect.top},
+    Player protagonist(application.imageAssets.heroImage, application.objects, application.lvl,
+                       {player.rect.left, player.rect.top},
                        application.playerProperties.SIZE, "player");
-    AppendEnemies(imageAssets, objects, playerPosition, protagonist, application);
+    AppendEnemies(playerPosition, protagonist, application);
     while (window.isOpen()) {
         GetMousePosition(window, playerPosition);
         float time_ms = RunTimer(application);
-        ProcessEvents(window, protagonist, imageAssets, playerPosition, objects, application);
+        ProcessEvents(window, protagonist, playerPosition, application);
         protagonist.rotation_GG(playerPosition.pos);
-        protagonist.Update(time_ms, objects);
-        ProcessEntities(time_ms, objects, application, imageAssets, protagonist);
+        protagonist.Update(time_ms, application.objects);
+        ProcessEntities(time_ms, application, protagonist);
         ProcessDamage(protagonist, application);
         CheckExistenceProtagonist(protagonist, window);
         window.setView(view);
