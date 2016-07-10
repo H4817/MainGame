@@ -26,7 +26,9 @@ public:
 
 protected:
 
-    void ExplosionAnimation(const float &time);
+    virtual void ExplosionAnimation(const float &time);
+
+    virtual void CreateExplosion(const float &time);
 
 protected:
     float m_frameCounter;
@@ -45,6 +47,11 @@ public:
     void Update(float time, MapObjects &objects);
 
 private:
-    const double ACCELERATION = 0.002;
+    void CreateExplosion(const float &time);
+
+    void ExplosionAnimation(const float &time);
+
+private:
+    const double ACCELERATION = 0.005;
     Vector2f *m_playerCoordinates;
 };

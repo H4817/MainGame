@@ -10,7 +10,7 @@ struct PlayerBullet {
 struct PlayerProperties {
     const sf::Vector2i SIZE = {79, 99};
     const size_t HEALTH = 200;
-    int shield = 400;
+    int shield = 4000;
     const float SPEED = 0.2;
     PlayerBullet playerBullet;
 };
@@ -49,13 +49,21 @@ struct MediumEnemy {
     const sf::Vector2i SIZE = {117, 100};
     const size_t COLLISION_DAMAGE = 3;
     const size_t AGGRO_DISTANCE = 900;
-//    SimpleRocket simpleRocket;
+    SimpleRocket simpleRocket;
+};
+
+struct HardEnemy {
+    size_t health = 500;
+    const sf::Vector2i SIZE = {150, 150};
+    const size_t COLLISION_DAMAGE = 3;
+    const size_t AGGRO_DISTANCE = 1100;
     _SmartRocket smartRocket;
 };
 
 struct EnemiesHandler {
     EasyEnemy easyEnemy;
     MediumEnemy mediumEnemy;
+    HardEnemy hardEnemy;
 };
 
 struct MapObjects {

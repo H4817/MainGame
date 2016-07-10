@@ -5,7 +5,6 @@ CEasyEnemy::CEasyEnemy(Image &image, MapObjects &objects, Level &lvl, Vector2f P
         image, Position, Size, Name) {
     m_isAggro = false;
     m_playerCoordinates = &objects.playerPosition;
-    objects.obj = lvl.GetObjects("solid");
     m_frameCounter = 0;
     sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
     boost = {position.x, position.y};
@@ -58,10 +57,9 @@ void CEasyEnemy::ExplosionAnimation(const float &time) {
 
 void CEasyEnemy::Update(float time, MapObjects &objects) {
     SetRightPosition(position);
-    if (name == "easyEnemy" || name == "mediumEnemy") {
+    if (name != "explosion") {
         distance = sqrt((m_playerCoordinates->x - position.x) * (m_playerCoordinates->x - position.x) +
-                        (m_playerCoordinates->y - position.y) * (m_playerCoordinates->y -
-                                                                 position.y));
+                        (m_playerCoordinates->y - position.y) * (m_playerCoordinates->y - position.y));
         if (!m_isAggro && (distance < 700 || enemyHealth != MAX_HEALTH)) {
             m_isAggro = true;
         }
@@ -71,7 +69,8 @@ void CEasyEnemy::Update(float time, MapObjects &objects) {
                     parameters.ANGLE / M_PI);
             if (distance > 250) {
                 velocity += {static_cast<float>(ACCELERATION * time * (m_playerCoordinates->x - position.x) / distance),
-                             static_cast<float>(ACCELERATION * time * (m_playerCoordinates->y - position.y) / distance)};
+                             static_cast<float>(ACCELERATION * time * (m_playerCoordinates->y - position.y) /
+                                                distance)};
             }
             else {
                 velocity.x *= DECELERATION;
@@ -87,7 +86,7 @@ void CEasyEnemy::Update(float time, MapObjects &objects) {
             name = "explosion";
         }
     }
-    else if (name == "explosion") {
+    else {
         ExplosionAnimation(time);
         if (m_frameCounter > 64) {
             CreateNewReward();
@@ -97,29 +96,24 @@ void CEasyEnemy::Update(float time, MapObjects &objects) {
 
 CMediumEnemy::CMediumEnemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size,
                            Vector2f &temp, String Name) : CEasyEnemy(image, objects, lvl, Position, Size, temp, Name) {
-    enemyHealth = 300;
+    enemyHealth = static_cast<int>(enemiesHandler.mediumEnemy.health);
     m_isAggro = false;
     m_playerCoordinates = &objects.playerPosition;
-    objects.obj = lvl.GetObjects("solid");
     m_frameCounter = 0;
     sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
     boost = {position.x, position.y};
     sprite.setTextureRect(IntRect(0, 0, size.x, size.y));
 }
 
-void CMediumEnemy::checkCollisionWithMap(float Dx, float Dy, MapObjects &objects) {
-    CEasyEnemy::checkCollisionWithMap(Dx, Dy, objects);
-}
-
-void CMediumEnemy::Update(float time, MapObjects &objects) {
-    CEasyEnemy::Update(time, objects);
-}
-
-void CMediumEnemy::CreateNewReward() {
-    CEasyEnemy::CreateNewReward();
-}
-
-void CMediumEnemy::ExplosionAnimation(const float &time) {
-    CEasyEnemy::ExplosionAnimation(time);
+CStrongEnemy::CStrongEnemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size,
+                           Vector2f &temp, String Name) : CMediumEnemy(image, objects, lvl, Position, Size, temp,
+                                                                       Name) {
+    enemyHealth = static_cast<int>(enemiesHandler.hardEnemy.health);
+    m_isAggro = false;
+    m_playerCoordinates = &objects.playerPosition;
+    m_frameCounter = 0;
+    sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
+    boost = {position.x, position.y};
+    sprite.setTextureRect(IntRect(0, 0, size.x, size.y));
 }
 

@@ -33,8 +33,15 @@ Rocket::Rocket(Image &image, MapObjects &objects, Level &lvl, Vector2f Position,
     rotation = (atan2(temp.y - position.y, temp.x - position.x)) * parameters.ANGLE / M_PI;
     playerPos = Position;
     sprite.setOrigin(IMAGE_SIZE.x / 2, IMAGE_SIZE.y / 2);
-    m_explosionTexture.loadFromFile("IMG/Exp_type_C1.png");
+    m_explosionTexture.loadFromFile("IMG/Exp_type_A1.png");
     m_frameCounter = 0;
+}
+
+void Rocket::CreateExplosion(const float &time) {
+    ExplosionAnimation(time);
+    if (m_frameCounter >= 42) {
+        alive = false;
+    }
 }
 
 void Rocket::Update(float time, MapObjects &objects) {
@@ -48,16 +55,13 @@ void Rocket::Update(float time, MapObjects &objects) {
                            position.y + 49.5 * (sin(rotation * M_PI / 180)) + size.y / 2);
     }
     else {
-        ExplosionAnimation(time);
-        if (m_frameCounter >= 49) {
-            alive = false;
-        }
+        CreateExplosion(time);
     }
 }
 
 void Rocket::ExplosionAnimation(const float &time) {
     m_frameCounter += 0.054 * time;
-    sprite.setTextureRect(IntRect(128 * int(m_frameCounter), 0, 124, 124));
+    sprite.setTextureRect(IntRect(128 * int(m_frameCounter), 0, 128, 128));
     sprite.setTexture(m_explosionTexture);
 }
 
@@ -91,9 +95,19 @@ void SmartRocket::Update(float time, MapObjects &objects) {
         }
     }
     else {
-        ExplosionAnimation(time);
-        if (m_frameCounter >= 49) {
-            alive = false;
-        }
+        CreateExplosion(time);
     }
+}
+
+void SmartRocket::CreateExplosion(const float &time) {
+    ExplosionAnimation(time);
+    if (m_frameCounter >= 49) {
+        alive = false;
+    }
+}
+
+void SmartRocket::ExplosionAnimation(const float &time) {
+    m_frameCounter += 0.054 * time;
+    sprite.setTextureRect(IntRect(128 * int(m_frameCounter), 0, 124, 124));
+    sprite.setTexture(m_explosionTexture);
 }

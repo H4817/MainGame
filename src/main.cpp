@@ -14,12 +14,14 @@ namespace {
 struct EnemiesContainer {
     std::vector<Object> easyOpponent;
     std::vector<Object> mediumOpponent;
+    std::vector<Object> strongOpponent;
 };
 
 struct ImageAssets {
     Image heroImage;
     Image easyEnemyImage;
     Image mediumEnemyImage;
+    Image strongEnemyImage;
     Image bulletImage;
     Image rocketImage;
     Image smartRocketImage;
@@ -98,6 +100,7 @@ void InitializeImages(Application &application) {
     application.imageAssets.heroImage.loadFromFile("IMG/8888.png");
     application.imageAssets.easyEnemyImage.loadFromFile("IMG/EasyEnemyYellowThrust1.png");
     application.imageAssets.mediumEnemyImage.loadFromFile("IMG/MediumEnemyWithGreenThrust.png");
+    application.imageAssets.strongEnemyImage.loadFromFile("IMG/StrongEnemyWithGreenThrust.png");
 }
 
 Object InitializePlayer(Application &application) {
@@ -117,22 +120,43 @@ bool IsAggro(const Vector2f &protagonistPosition, const Vector2f &enemyPosition,
 void AppendEnemiesBullets(Application &application, Entity *it, Player &protagonist, sf::Time elapsed) {
     if ((it->name == "easyEnemy") &&
         IsAggro(protagonist.position, it->position, application.enemiesHandler.easyEnemy.AGGRO_DISTANCE) &&
-        elapsed.asMicroseconds() > 30) {
+        elapsed.asMicroseconds() > 50) {
         application.entities.push_back(
                 new Bullet(application.imageAssets.enemyBulletImage, application.objects, application.lvl, it->position,
                            application.enemiesHandler.easyEnemy.easyEnemyBullet.SIZE,
                            protagonist.position,
                            "EnemyBullet"));
     }
+
     else if ((it->name == "mediumEnemy") &&
              IsAggro(protagonist.position, it->position, application.enemiesHandler.mediumEnemy.AGGRO_DISTANCE) &&
-             elapsed.asMicroseconds() > 40) {
+             elapsed.asMicroseconds() > 41) {
         application.entities.push_back(
-                new SmartRocket(application.imageAssets.smartRocketImage, application.objects, application.lvl,
-                                it->position,
-                                application.enemiesHandler.mediumEnemy.smartRocket.SIZE,
-                                protagonist.position, "EnemyRocket"));
+                new Rocket(application.imageAssets.rocketImage, application.objects, application.lvl,
+                           it->position, application.enemiesHandler.mediumEnemy.simpleRocket.SIZE,
+                           protagonist.position, "EnemyRocket"));
     }
+
+    else if ((it->name == "strongEnemy") &&
+             IsAggro(protagonist.position, it->position, application.enemiesHandler.hardEnemy.AGGRO_DISTANCE)) {
+        if (elapsed.asMicroseconds() > 41) {
+            application.entities.push_back(
+                    new Bullet(application.imageAssets.enemyBulletImage, application.objects, application.lvl,
+                               it->position,
+                               application.enemiesHandler.easyEnemy.easyEnemyBullet.SIZE,
+                               protagonist.position,
+                               "EnemyBullet"));
+        }
+
+        if (elapsed.asMicroseconds() > 51) {
+            application.entities.push_back(
+                    new SmartRocket(application.imageAssets.smartRocketImage, application.objects, application.lvl,
+                                    it->position, application.enemiesHandler.hardEnemy.smartRocket.SIZE,
+                                    protagonist.position, "EnemySmartRocket"));
+        }
+
+    }
+
 }
 
 void ProcessEntities(float &time_ms, Application &application, Player &protagonist) {
@@ -155,7 +179,8 @@ void ProcessDamage(Player &protagonist, Application &application) {
     for (auto it : application.entities) {
         for (auto at : application.entities) {
             if (it->RetRect().intersects(at->RetRect()) &&
-                ((at->name == "Bullet") && (it->name == "easyEnemy" || it->name == "mediumEnemy"))) {
+                ((at->name == "Bullet") &&
+                 (it->name == "easyEnemy" || it->name == "mediumEnemy" || it->name == "strongEnemy"))) {
                 it->enemyHealth -= application.playerProperties.playerBullet.DAMAGE;
                 at->alive = false;
                 application.bar.UpdateEnemy(it->enemyHealth);
@@ -172,17 +197,17 @@ void ProcessDamage(Player &protagonist, Application &application) {
                 }
                 it->alive = false;
             }
-            else if (it->name == "EnemyRocket") {
+            else if (it->name == "EnemyRocket" || it->name == "EnemySmartRocket") {
                 if (IsShieldActive(application)) {
                     application.playerProperties.shield -=
-                            application.enemiesHandler.mediumEnemy.smartRocket.DAMAGE / 2;
+                            application.enemiesHandler.mediumEnemy.simpleRocket.DAMAGE / 2;
                 }
                 else {
-                    protagonist.health -= application.enemiesHandler.mediumEnemy.smartRocket.DAMAGE;
+                    protagonist.health -= application.enemiesHandler.mediumEnemy.simpleRocket.DAMAGE;
                 }
                 it->name = "explosion";
             }
-            else if (it->name == "easyEnemy" || it->name == "mediumEnemy") {
+            else if (it->name == "easyEnemy" || it->name == "mediumEnemy" || it->name == "strongEnemy") {
                 it->boost.x = 0;
                 it->boost.y = 0;
                 it->enemyHealth -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
@@ -212,6 +237,7 @@ void ProcessDamage(Player &protagonist, Application &application) {
 }
 
 void AppendEnemies(PlayerPosition &playerPosition, Player &protagonist, Application &application) {
+
     for (int i = 0; i < application.enemiesContainer.easyOpponent.size(); i++) {
         application.entities.push_back(
                 new CEasyEnemy(application.imageAssets.easyEnemyImage, application.objects, application.lvl,
@@ -220,6 +246,7 @@ void AppendEnemies(PlayerPosition &playerPosition, Player &protagonist, Applicat
                                application.enemiesHandler.easyEnemy.SIZE, playerPosition.pos,
                                "easyEnemy"));
     }
+
     for (int i = 0; i < application.enemiesContainer.mediumOpponent.size(); i++) {
         application.entities.push_back(
                 new CMediumEnemy(application.imageAssets.mediumEnemyImage, application.objects, application.lvl,
@@ -228,6 +255,16 @@ void AppendEnemies(PlayerPosition &playerPosition, Player &protagonist, Applicat
                                  application.enemiesHandler.mediumEnemy.SIZE, playerPosition.pos,
                                  "mediumEnemy"));
     }
+
+    for (int i = 0; i < application.enemiesContainer.strongOpponent.size(); i++) {
+        application.entities.push_back(
+                new CStrongEnemy(application.imageAssets.strongEnemyImage, application.objects, application.lvl,
+                                 {application.enemiesContainer.strongOpponent[i].rect.left,
+                                  application.enemiesContainer.strongOpponent[i].rect.top},
+                                 application.enemiesHandler.hardEnemy.SIZE, playerPosition.pos,
+                                 "strongEnemy"));
+    }
+
 }
 
 void CheckExistenceProtagonist(Player &protagonist, RenderWindow &window) {
@@ -263,6 +300,7 @@ int main() {
     Object player = InitializePlayer(application);
     application.enemiesContainer.easyOpponent = application.lvl.GetObjects("easyEnemy");
     application.enemiesContainer.mediumOpponent = application.lvl.GetObjects("mediumEnemy");
+    application.enemiesContainer.strongOpponent = application.lvl.GetObjects("hardEnemy");
     Player protagonist(application.imageAssets.heroImage, application.objects, application.lvl,
                        {player.rect.left, player.rect.top},
                        application.playerProperties.SIZE, "player");

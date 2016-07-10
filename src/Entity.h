@@ -4,6 +4,7 @@
 #include <list>
 #include "resource.h"
 #include <math.h>
+#include <memory>
 
 using namespace sf;
 using namespace std;
