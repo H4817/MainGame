@@ -79,9 +79,10 @@ SmartRocket::SmartRocket(Image &image, MapObjects &objects, Level &lvl, Vector2f
 }
 
 void SmartRocket::Update(float time, MapObjects &objects) {
-    if (name !="explosion") {
-        rotation = static_cast<float>((atan2(m_playerCoordinates->y - position.y, m_playerCoordinates->x - position.x)) *
-                                      parameters.ANGLE / M_PI);
+    if (name != "explosion") {
+        rotation = static_cast<float>(
+                (atan2(m_playerCoordinates->y - position.y, m_playerCoordinates->x - position.x)) *
+                parameters.ANGLE / M_PI);
         if (!IsOutsideOfDistance(playerPos, position, distance)) {
             velocity += {static_cast<float>(ACCELERATION * time * (m_playerCoordinates->x - position.x) / distance),
                          static_cast<float>(ACCELERATION * time * (m_playerCoordinates->y - position.y) / distance)};

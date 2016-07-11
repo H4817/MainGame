@@ -3,8 +3,7 @@
 void getPlayerCoordinateForView(Vector2f position);
 
 Player::Player(Image &image, MapObjects &objects, Level &lev, Vector2f Position, Vector2i Size, String Name) : Entity(
-        image, Position, Size,
-        Name) {
+        image, Position, Size, Name) {
     health = MAX_HP;
     state = STAY;
     objects.obj = lev.GetAllObjects();

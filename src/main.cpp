@@ -4,6 +4,7 @@
 #include "Bar.h"
 #include "shield.h"
 #include "aim.h"
+#include <memory>
 
 namespace {
     const Vector2f MAP_WIDTH = {850, 2370};
@@ -60,7 +61,7 @@ void getPlayerCoordinateForView(Vector2f position) {
 float RunTimer(Application &application) {
     float time_ms = application.clock.getElapsedTime().asMicroseconds();
     application.clock.restart();
-    time_ms = static_cast<float> (time_ms * 0.001);
+    time_ms /= 800;
     return time_ms;
 }
 
@@ -117,56 +118,61 @@ bool IsAggro(const Vector2f &protagonistPosition, const Vector2f &enemyPosition,
             (abs(protagonistPosition.y - enemyPosition.y)) < distance);
 }
 
-void AppendEnemiesBullets(Application &application, Entity *it, Player &protagonist, sf::Time elapsed) {
+void AppendEnemiesBullets(Application &application, Entity *it, Player &protagonist, float &localTime) {
     if ((it->name == "easyEnemy") &&
         IsAggro(protagonist.position, it->position, application.enemiesHandler.easyEnemy.AGGRO_DISTANCE) &&
-        elapsed.asMicroseconds() > 50) {
+        localTime >= 35000 && localTime <= 50000) {
         application.entities.push_back(
                 new Bullet(application.imageAssets.enemyBulletImage, application.objects, application.lvl, it->position,
                            application.enemiesHandler.easyEnemy.easyEnemyBullet.SIZE,
-                           protagonist.position,
-                           "EnemyBullet"));
+                           protagonist.position, "EnemyBullet"));
+        localTime += 15000;
     }
 
     else if ((it->name == "mediumEnemy") &&
              IsAggro(protagonist.position, it->position, application.enemiesHandler.mediumEnemy.AGGRO_DISTANCE) &&
-             elapsed.asMicroseconds() > 41) {
+             localTime >= 70000 && localTime <= 86000) {
         application.entities.push_back(
                 new Rocket(application.imageAssets.rocketImage, application.objects, application.lvl,
                            it->position, application.enemiesHandler.mediumEnemy.simpleRocket.SIZE,
                            protagonist.position, "EnemyRocket"));
+        localTime += 16000;
     }
 
     else if ((it->name == "strongEnemy") &&
              IsAggro(protagonist.position, it->position, application.enemiesHandler.hardEnemy.AGGRO_DISTANCE)) {
-        if (elapsed.asMicroseconds() > 41) {
+
+        if (localTime >= 50000 && localTime <= 70000) {
             application.entities.push_back(
                     new Bullet(application.imageAssets.enemyBulletImage, application.objects, application.lvl,
-                               it->position,
-                               application.enemiesHandler.easyEnemy.easyEnemyBullet.SIZE,
-                               protagonist.position,
-                               "EnemyBullet"));
+                               it->position, application.enemiesHandler.easyEnemy.easyEnemyBullet.SIZE,
+                               protagonist.position, "EnemyBullet"));
+            localTime += 20000;
         }
 
-        if (elapsed.asMicroseconds() > 51) {
+        if (localTime >= 86000 && localTime <= 100000) {
             application.entities.push_back(
                     new SmartRocket(application.imageAssets.smartRocketImage, application.objects, application.lvl,
                                     it->position, application.enemiesHandler.hardEnemy.smartRocket.SIZE,
                                     protagonist.position, "EnemySmartRocket"));
+            localTime += 14000;
         }
 
+    }
+
+    if (localTime > 100000) {
+        localTime = 0.f;
     }
 
 }
 
 void ProcessEntities(float &time_ms, Application &application, Player &protagonist) {
-    sf::Clock clock;
-    sf::Time elapsed = clock.restart();
     auto new_end = std::remove_if(application.entities.begin(), application.entities.end(), IsAliveEntity);
     application.entities.erase(new_end, application.entities.end());
+    static float localTime = 0.f;
     for (auto it : application.entities) {
-        elapsed = clock.getElapsedTime();
-        AppendEnemiesBullets(application, it, protagonist, elapsed);
+        localTime += time_ms;
+        AppendEnemiesBullets(application, it, protagonist, localTime);
         it->Update(time_ms, application.objects);
     }
 }

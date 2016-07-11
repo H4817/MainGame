@@ -20,7 +20,7 @@ include_directories("${PROJECT_BINARY_DIR}")
 
 # Define sources and executable
 set(EXECUTABLE_NAME "Game")
-add_executable(${EXECUTABLE_NAME} src/main.cpp src/Entity.cpp src/Enemies.cpp src/Player.cpp src/Bullet.cpp src/Bar.cpp src/shield.cpp src/Thrust.cpp src/aim.cpp TinyXML/tinyxml.cpp TinyXML/tinystr.cpp TinyXML/tinyxmlerror.cpp TinyXML/tinyxmlparser.cpp src/EnemyBullet.cpp src/EnemyBullet.h)
+add_executable(${EXECUTABLE_NAME} src/main.cpp src/Entity.cpp src/Enemies.cpp src/Player.cpp src/Bullet.cpp src/Bar.cpp src/shield.cpp src/Thrust.cpp src/aim.cpp TinyXML/tinyxml.cpp TinyXML/tinystr.cpp TinyXML/tinyxmlerror.cpp TinyXML/tinyxmlparser.cpp)
 
 
 # Detect and add SFML

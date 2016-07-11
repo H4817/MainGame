@@ -1,8 +1,7 @@
 #include "Enemies.h"
 
 CEasyEnemy::CEasyEnemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f &temp,
-                       String Name) : Entity(
-        image, Position, Size, Name) {
+                       String Name) : Entity(image, Position, Size, Name) {
     m_isAggro = false;
     m_playerCoordinates = &objects.playerPosition;
     m_frameCounter = 0;
@@ -57,7 +56,7 @@ void CEasyEnemy::ExplosionAnimation(const float &time) {
 
 void CEasyEnemy::Update(float time, MapObjects &objects) {
     SetRightPosition(position);
-    if (name != "explosion") {
+    if (name == "easyEnemy" || name == "mediumEnemy" || name == "strongEnemy") {
         distance = sqrt((m_playerCoordinates->x - position.x) * (m_playerCoordinates->x - position.x) +
                         (m_playerCoordinates->y - position.y) * (m_playerCoordinates->y - position.y));
         if (!m_isAggro && (distance < 700 || enemyHealth != MAX_HEALTH)) {
@@ -86,7 +85,7 @@ void CEasyEnemy::Update(float time, MapObjects &objects) {
             name = "explosion";
         }
     }
-    else {
+    else if (name == "explosion") {
         ExplosionAnimation(time);
         if (m_frameCounter > 64) {
             CreateNewReward();
@@ -104,6 +103,22 @@ CMediumEnemy::CMediumEnemy(Image &image, MapObjects &objects, Level &lvl, Vector
     boost = {position.x, position.y};
     sprite.setTextureRect(IntRect(0, 0, size.x, size.y));
 }
+
+void CMediumEnemy::checkCollisionWithMap(float Dx, float Dy, MapObjects &objects) {
+        CEasyEnemy::checkCollisionWithMap(Dx, Dy, objects);
+    }
+
+void CMediumEnemy::Update(float time, MapObjects &objects) {
+        CEasyEnemy::Update(time, objects);
+    }
+
+void CMediumEnemy::CreateNewReward() {
+        CEasyEnemy::CreateNewReward();
+    }
+
+void CMediumEnemy::ExplosionAnimation(const float &time) {
+        CEasyEnemy::ExplosionAnimation(time);
+    }
 
 CStrongEnemy::CStrongEnemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size,
                            Vector2f &temp, String Name) : CMediumEnemy(image, objects, lvl, Position, Size, temp,
