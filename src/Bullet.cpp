@@ -7,7 +7,6 @@ bool IsOutsideOfDistance(const Vector2f &playerPos, const Vector2f &position, si
 
 Bullet::Bullet(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f targetPosition,
                String Name) : Entity(image, Position, Size, Name) {
-    speed = 0.03;
     Entity::temp = targetPosition;
     boost = {position.x, position.y};
     rotation = (atan2(targetPosition.y - position.y, targetPosition.x - position.x)) * parameters.ANGLE / M_PI;
@@ -16,18 +15,18 @@ Bullet::Bullet(Image &image, MapObjects &objects, Level &lvl, Vector2f Position,
 }
 
 void Bullet::Update(float time, MapObjects &objects) {
-    position += (temp - boost) * speed;
+    velocity.x = cos(rotation * DEG_TO_RAD) * 20;
+    velocity.y = sin(rotation * DEG_TO_RAD) * 20;
     if (IsOutsideOfDistance(playerPos, position, distance)) {
         alive = false;
     }
+    position += velocity;
     sprite.setRotation(rotation);
-    sprite.setPosition(position.x + 39.5 * (cos(rotation * M_PI / 180)) + size.x / 2,
-                       position.y + 49.5 * (sin(rotation * M_PI / 180)) + size.y / 2);
+    sprite.setPosition(position);
 }
 
 Rocket::Rocket(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f temp,
                String Name) : Entity(image, Position, Size, Name) {
-    speed = 0.01;
     Entity::temp = temp;
     boost = {position.x, position.y};
     rotation = (atan2(temp.y - position.y, temp.x - position.x)) * parameters.ANGLE / M_PI;
@@ -46,13 +45,14 @@ void Rocket::CreateExplosion(const float &time) {
 
 void Rocket::Update(float time, MapObjects &objects) {
     if (name != "explosion") {
-        position += (temp - boost) * speed;
+        velocity.x = cos(rotation * DEG_TO_RAD) * 10;
+        velocity.y = sin(rotation * DEG_TO_RAD) * 10;
         if (IsOutsideOfDistance(playerPos, position, distance)) {
             name = "explosion";
         }
+        position += velocity;
         sprite.setRotation(rotation);
-        sprite.setPosition(position.x + 39.5 * (cos(rotation * M_PI / 180)) + size.x / 2,
-                           position.y + 49.5 * (sin(rotation * M_PI / 180)) + size.y / 2);
+        sprite.setPosition(position);
     }
     else {
         CreateExplosion(time);

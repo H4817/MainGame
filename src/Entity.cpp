@@ -18,22 +18,22 @@ FloatRect Entity::RetRect() {
 }
 
 void Entity::SetRightPosition(Vector2f &position) {
-    if (position.x <= 20) {
-        position.x = 20;
-        velocity.x = 0;
+    if (position.x < 20) {
+        position.x = parameters.MAP_SIZE.first;
+        velocity.x *= 0.7;
     }
-    if (position.y <= 10) {
-        position.y = 10;
-        velocity.y = 0;
+    if (position.y < 10) {
+        position.y = parameters.MAP_SIZE.second;
+        velocity.y *= 0.7;
     }
 
-    if (position.x >= parameters.MAP_SIZE.first) {
-        position.x = parameters.MAP_SIZE.first;
-        velocity.x = 0;
+    if (position.x > parameters.MAP_SIZE.first) {
+        position.x = 20;
+        velocity.x *= 0.7;
     }
-    if (position.y >= parameters.MAP_SIZE.second) {
-        velocity.y = 0;
-        position.y = parameters.MAP_SIZE.second;
+    if (position.y > parameters.MAP_SIZE.second) {
+        velocity.y *= 0.7;
+        position.y = 10;
     }
 }
 

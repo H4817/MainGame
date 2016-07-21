@@ -4,8 +4,6 @@
 
 class IEnemy {
 public:
-    virtual void checkCollisionWithMap(float Dx, float Dy, MapObjects &objects) = 0;
-
     virtual void Update(float time, MapObjects &objects) = 0;
 
     virtual void CreateNewReward() = 0;
@@ -16,10 +14,8 @@ public:
 class CEasyEnemy : public Entity, public IEnemy {
 public:
 
-    CEasyEnemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f &temp,
+    CEasyEnemy(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size, Vector2f &temp,
                String Name);
-
-    virtual void checkCollisionWithMap(float Dx, float Dy, MapObjects &objects);
 
     virtual void Update(float time, MapObjects &objects);
 
@@ -44,10 +40,9 @@ protected:
 
 class CMediumEnemy : public CEasyEnemy {
 public:
-    CMediumEnemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f &temp,
+    CMediumEnemy(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size, Vector2f &temp,
                  String Name);
 
-    void checkCollisionWithMap(float Dx, float Dy, MapObjects &objects);
 
     void Update(float time, MapObjects &objects);
 
@@ -58,6 +53,6 @@ public:
 
 class CStrongEnemy : public CMediumEnemy {
 public:
-    CStrongEnemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f &temp,
+    CStrongEnemy(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size, Vector2f &temp,
                  String Name);
 };

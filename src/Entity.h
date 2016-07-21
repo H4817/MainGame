@@ -16,6 +16,7 @@ public:
     Parameters parameters;
     int enemyHealth = 200;
     float speed;
+    const float DEG_TO_RAD = 0.017453f;
     Vector2f boost;
     Vector2f position;
     Vector2f temp;

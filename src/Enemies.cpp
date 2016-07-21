@@ -1,6 +1,6 @@
 #include "Enemies.h"
 
-CEasyEnemy::CEasyEnemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f &temp,
+CEasyEnemy::CEasyEnemy(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size, Vector2f &temp,
                        String Name) : Entity(image, Position, Size, Name) {
     m_isAggro = false;
     m_playerCoordinates = &objects.playerPosition;
@@ -11,27 +11,6 @@ CEasyEnemy::CEasyEnemy(Image &image, MapObjects &objects, Level &lvl, Vector2f P
     m_explosionTexture.loadFromFile("IMG/Exp_type_B1.png");
     m_shieldRewardTexture.loadFromFile("IMG/shieldReward.png");
     m_healthRewardTexture.loadFromFile("IMG/healthReward.png");
-}
-
-void CEasyEnemy::checkCollisionWithMap(float Dx, float Dy, MapObjects &objects) {
-    for (int i = 0; i < objects.obj.size(); i++) {
-        if (RetRect().intersects(objects.obj[i].rect)) {
-            if (objects.obj[i].name == "solid") {
-                if (Dy > 0) {
-                    position.y = objects.obj[i].rect.top - size.y;
-                }
-                if (Dy < 0) {
-                    position.y = objects.obj[i].rect.top + objects.obj[i].rect.height;
-                }
-                if (Dx > 0) {
-                    position.x = objects.obj[i].rect.left - size.x;
-                }
-                if (Dx < 0) {
-                    position.x = objects.obj[i].rect.left + objects.obj[i].rect.width;
-                }
-            }
-        }
-    }
 }
 
 void CEasyEnemy::CreateNewReward() {
@@ -59,7 +38,7 @@ void CEasyEnemy::Update(float time, MapObjects &objects) {
     if (name == "easyEnemy" || name == "mediumEnemy" || name == "strongEnemy") {
         distance = sqrt((m_playerCoordinates->x - position.x) * (m_playerCoordinates->x - position.x) +
                         (m_playerCoordinates->y - position.y) * (m_playerCoordinates->y - position.y));
-        if (!m_isAggro && (distance < 700 || enemyHealth != MAX_HEALTH)) {
+        if (!m_isAggro && (distance < 800 || enemyHealth != MAX_HEALTH)) {
             m_isAggro = true;
         }
         else if (m_isAggro) {
@@ -76,7 +55,6 @@ void CEasyEnemy::Update(float time, MapObjects &objects) {
                 velocity.y *= DECELERATION;
             }
             sprite.setRotation(m_rotation);
-            checkCollisionWithMap(boost.x, boost.y, objects);
             position.x += velocity.x;
             position.y += velocity.y;
             sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
@@ -93,8 +71,8 @@ void CEasyEnemy::Update(float time, MapObjects &objects) {
     }
 }
 
-CMediumEnemy::CMediumEnemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size,
-                           Vector2f &temp, String Name) : CEasyEnemy(image, objects, lvl, Position, Size, temp, Name) {
+CMediumEnemy::CMediumEnemy(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size,
+                           Vector2f &temp, String Name) : CEasyEnemy(image, objects, Position, Size, temp, Name) {
     enemyHealth = static_cast<int>(enemiesHandler.mediumEnemy.health);
     m_isAggro = false;
     m_playerCoordinates = &objects.playerPosition;
@@ -104,24 +82,20 @@ CMediumEnemy::CMediumEnemy(Image &image, MapObjects &objects, Level &lvl, Vector
     sprite.setTextureRect(IntRect(0, 0, size.x, size.y));
 }
 
-void CMediumEnemy::checkCollisionWithMap(float Dx, float Dy, MapObjects &objects) {
-        CEasyEnemy::checkCollisionWithMap(Dx, Dy, objects);
-    }
-
 void CMediumEnemy::Update(float time, MapObjects &objects) {
-        CEasyEnemy::Update(time, objects);
-    }
+    CEasyEnemy::Update(time, objects);
+}
 
 void CMediumEnemy::CreateNewReward() {
-        CEasyEnemy::CreateNewReward();
-    }
+    CEasyEnemy::CreateNewReward();
+}
 
 void CMediumEnemy::ExplosionAnimation(const float &time) {
-        CEasyEnemy::ExplosionAnimation(time);
-    }
+    CEasyEnemy::ExplosionAnimation(time);
+}
 
-CStrongEnemy::CStrongEnemy(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size,
-                           Vector2f &temp, String Name) : CMediumEnemy(image, objects, lvl, Position, Size, temp,
+CStrongEnemy::CStrongEnemy(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size,
+                           Vector2f &temp, String Name) : CMediumEnemy(image, objects, Position, Size, temp,
                                                                        Name) {
     enemyHealth = static_cast<int>(enemiesHandler.hardEnemy.health);
     m_isAggro = false;

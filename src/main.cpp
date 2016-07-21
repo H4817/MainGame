@@ -246,7 +246,7 @@ void AppendEnemies(PlayerPosition &playerPosition, Player &protagonist, Applicat
 
     for (int i = 0; i < application.enemiesContainer.easyOpponent.size(); i++) {
         application.entities.push_back(
-                new CEasyEnemy(application.imageAssets.easyEnemyImage, application.objects, application.lvl,
+                new CEasyEnemy(application.imageAssets.easyEnemyImage, application.objects,
                                {application.enemiesContainer.easyOpponent[i].rect.left,
                                 application.enemiesContainer.easyOpponent[i].rect.top},
                                application.enemiesHandler.easyEnemy.SIZE, playerPosition.pos,
@@ -255,7 +255,7 @@ void AppendEnemies(PlayerPosition &playerPosition, Player &protagonist, Applicat
 
     for (int i = 0; i < application.enemiesContainer.mediumOpponent.size(); i++) {
         application.entities.push_back(
-                new CMediumEnemy(application.imageAssets.mediumEnemyImage, application.objects, application.lvl,
+                new CMediumEnemy(application.imageAssets.mediumEnemyImage, application.objects,
                                  {application.enemiesContainer.mediumOpponent[i].rect.left,
                                   application.enemiesContainer.mediumOpponent[i].rect.top},
                                  application.enemiesHandler.mediumEnemy.SIZE, playerPosition.pos,
@@ -264,7 +264,7 @@ void AppendEnemies(PlayerPosition &playerPosition, Player &protagonist, Applicat
 
     for (int i = 0; i < application.enemiesContainer.strongOpponent.size(); i++) {
         application.entities.push_back(
-                new CStrongEnemy(application.imageAssets.strongEnemyImage, application.objects, application.lvl,
+                new CStrongEnemy(application.imageAssets.strongEnemyImage, application.objects,
                                  {application.enemiesContainer.strongOpponent[i].rect.left,
                                   application.enemiesContainer.strongOpponent[i].rect.top},
                                  application.enemiesHandler.hardEnemy.SIZE, playerPosition.pos,
@@ -274,8 +274,11 @@ void AppendEnemies(PlayerPosition &playerPosition, Player &protagonist, Applicat
 }
 
 void CheckExistenceProtagonist(Player &protagonist, RenderWindow &window) {
-    if (!protagonist.alive)
+    if (!protagonist.alive) {
         window.close();
+        cout << "game over\n";
+    }
+
 }
 
 void Draw(RenderWindow &window, Player &protagonist, Application &application) {
