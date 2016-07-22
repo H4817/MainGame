@@ -6,7 +6,7 @@ bool IsOutsideOfDistance(const Vector2f &playerPos, const Vector2f &position, si
 
 struct Bullet : public Entity {
 public:
-    Bullet(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f targetPosition,
+    Bullet(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size, Vector2f targetPosition,
            String Name);
 
     void Update(float time, MapObjects &objects);
@@ -20,7 +20,7 @@ private:
 
 class Rocket : public Entity {
 public:
-    Rocket(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f temp, String Name);
+    Rocket(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size, Vector2f temp, String Name);
 
     void Update(float time, MapObjects &objects);
 
@@ -41,7 +41,7 @@ protected:
 
 class SmartRocket : public Rocket {
 public:
-    SmartRocket(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f temp,
+    SmartRocket(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size, Vector2f temp,
                 String Name);
 
     void Update(float time, MapObjects &objects);

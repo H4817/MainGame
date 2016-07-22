@@ -5,7 +5,7 @@ bool IsOutsideOfDistance(const Vector2f &playerPos, const Vector2f &position, si
            (position.y > playerPos.y + distance || position.y < playerPos.y - distance);
 }
 
-Bullet::Bullet(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f targetPosition,
+Bullet::Bullet(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size, Vector2f targetPosition,
                String Name) : Entity(image, Position, Size, Name) {
     Entity::temp = targetPosition;
     boost = {position.x, position.y};
@@ -25,7 +25,7 @@ void Bullet::Update(float time, MapObjects &objects) {
     sprite.setPosition(position);
 }
 
-Rocket::Rocket(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f temp,
+Rocket::Rocket(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size, Vector2f temp,
                String Name) : Entity(image, Position, Size, Name) {
     Entity::temp = temp;
     boost = {position.x, position.y};
@@ -65,8 +65,8 @@ void Rocket::ExplosionAnimation(const float &time) {
     sprite.setTexture(m_explosionTexture);
 }
 
-SmartRocket::SmartRocket(Image &image, MapObjects &objects, Level &lvl, Vector2f Position, Vector2i Size, Vector2f temp,
-                         String Name) : Rocket(image, objects, lvl, Position, Size, temp, Name) {
+SmartRocket::SmartRocket(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size, Vector2f temp,
+                         String Name) : Rocket(image, objects, Position, Size, temp, Name) {
     speed = 0.01;
     Entity::temp = temp;
     boost = {position.x, position.y};

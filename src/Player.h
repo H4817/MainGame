@@ -18,7 +18,7 @@ public:
     void Update(float time, MapObjects &objects);
 
 private:
-    const size_t MAX_HP = 200;
+    const size_t MAX_HP = 20000;
     float rotation;
     const double ACCELERATION = 0.003;
     const double DECELERATION = 0.997;

@@ -2,6 +2,7 @@
 #include "Bullet.h"
 #include "Enemies.h"
 #include "Bar.h"
+#include "Asteroid.h"
 #include "shield.h"
 #include "aim.h"
 #include <memory>
@@ -27,6 +28,7 @@ struct ImageAssets {
     Image rocketImage;
     Image smartRocketImage;
     Image enemyBulletImage;
+    Image asteroid;
 };
 
 struct Application {
@@ -75,7 +77,7 @@ void ProcessEvents(RenderWindow &window, Player &protagonist, PlayerPosition &pl
         if (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::R &&
             application.playerProperties.shield > 0) {
             application.entities.push_back(
-                    new Bullet(application.imageAssets.bulletImage, application.objects, application.lvl,
+                    new Bullet(application.imageAssets.bulletImage, application.objects,
                                protagonist.position,
                                application.playerProperties.playerBullet.SIZE, playerPosition.pos, "Bullet"));
             application.playerProperties.shield -= 2;
@@ -102,6 +104,7 @@ void InitializeImages(Application &application) {
     application.imageAssets.easyEnemyImage.loadFromFile("IMG/EasyEnemyYellowThrust1.png");
     application.imageAssets.mediumEnemyImage.loadFromFile("IMG/MediumEnemyWithGreenThrust.png");
     application.imageAssets.strongEnemyImage.loadFromFile("IMG/StrongEnemyWithGreenThrust.png");
+    application.imageAssets.asteroid.loadFromFile("IMG/Asteroids/1.png");
 }
 
 Object InitializePlayer(Application &application) {
@@ -123,7 +126,7 @@ void AppendEnemiesBullets(Application &application, Entity *it, Player &protagon
         IsAggro(protagonist.position, it->position, application.enemiesHandler.easyEnemy.AGGRO_DISTANCE) &&
         localTime >= 35000 && localTime <= 50000) {
         application.entities.push_back(
-                new Bullet(application.imageAssets.enemyBulletImage, application.objects, application.lvl, it->position,
+                new Bullet(application.imageAssets.enemyBulletImage, application.objects, it->position,
                            application.enemiesHandler.easyEnemy.easyEnemyBullet.SIZE,
                            protagonist.position, "EnemyBullet"));
         localTime += 15000;
@@ -133,7 +136,7 @@ void AppendEnemiesBullets(Application &application, Entity *it, Player &protagon
              IsAggro(protagonist.position, it->position, application.enemiesHandler.mediumEnemy.AGGRO_DISTANCE) &&
              localTime >= 70000 && localTime <= 86000) {
         application.entities.push_back(
-                new Rocket(application.imageAssets.rocketImage, application.objects, application.lvl,
+                new Rocket(application.imageAssets.rocketImage, application.objects,
                            it->position, application.enemiesHandler.mediumEnemy.simpleRocket.SIZE,
                            protagonist.position, "EnemyRocket"));
         localTime += 16000;
@@ -144,17 +147,17 @@ void AppendEnemiesBullets(Application &application, Entity *it, Player &protagon
 
         if (localTime >= 50000 && localTime <= 70000) {
             application.entities.push_back(
-                    new Bullet(application.imageAssets.enemyBulletImage, application.objects, application.lvl,
+                    new Bullet(application.imageAssets.enemyBulletImage, application.objects,
                                it->position, application.enemiesHandler.easyEnemy.easyEnemyBullet.SIZE,
                                protagonist.position, "EnemyBullet"));
             localTime += 20000;
         }
 
         if (localTime >= 86000 && localTime <= 100000) {
-            application.entities.push_back(
-                    new SmartRocket(application.imageAssets.smartRocketImage, application.objects, application.lvl,
+/*            application.entities.push_back(
+                    new SmartRocket(application.imageAssets.smartRocketImage, application.objects,
                                     it->position, application.enemiesHandler.hardEnemy.smartRocket.SIZE,
-                                    protagonist.position, "EnemySmartRocket"));
+                                    protagonist.position, "EnemySmartRocket"));*/
             localTime += 14000;
         }
 
@@ -281,6 +284,12 @@ void CheckExistenceProtagonist(Player &protagonist, RenderWindow &window) {
 
 }
 
+void AppendAsteroids (size_t amount, Application &application) {
+    for (size_t i = 0; i < amount; ++i) {
+        application.entities.push_back(new Asteroid(application.imageAssets.asteroid, {100, 100}, {65, 64}, "Asteroid"));
+    }
+}
+
 void Draw(RenderWindow &window, Player &protagonist, Application &application) {
     window.clear();
     application.lvl.Draw(window);
@@ -307,9 +316,10 @@ int main() {
     PlayerPosition playerPosition;
     InitializeImages(application);
     Object player = InitializePlayer(application);
-    application.enemiesContainer.easyOpponent = application.lvl.GetObjects("easyEnemy");
+    AppendAsteroids(10, application);
+/*    application.enemiesContainer.easyOpponent = application.lvl.GetObjects("easyEnemy");
     application.enemiesContainer.mediumOpponent = application.lvl.GetObjects("mediumEnemy");
-    application.enemiesContainer.strongOpponent = application.lvl.GetObjects("hardEnemy");
+    application.enemiesContainer.strongOpponent = application.lvl.GetObjects("hardEnemy");*/
     Player protagonist(application.imageAssets.heroImage, application.objects, application.lvl,
                        {player.rect.left, player.rect.top},
                        application.playerProperties.SIZE, "player");

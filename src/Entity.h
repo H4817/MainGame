@@ -28,6 +28,7 @@ public:
     String name;
     FloatRect RetRect();
     void SetRightPosition(Vector2f & position);
+    bool IsCharacter();
     virtual void Update(float time, MapObjects &objects) = 0;
 };
 

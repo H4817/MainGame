@@ -17,23 +17,31 @@ FloatRect Entity::RetRect() {
     return FloatRect(position.x, position.y, size.x, size.y);
 }
 
+bool Entity::IsCharacter() {
+    return (name == "player" || name == "easyEnemy" || name == "mediumEnemy" || name == "strongEnemy");
+}
+
 void Entity::SetRightPosition(Vector2f &position) {
     if (position.x < 20) {
         position.x = parameters.MAP_SIZE.first;
-        velocity.x *= 0.7;
+        if (IsCharacter())
+            velocity.x *= 0.7;
     }
     if (position.y < 10) {
         position.y = parameters.MAP_SIZE.second;
-        velocity.y *= 0.7;
+        if (IsCharacter())
+            velocity.y *= 0.7;
     }
 
     if (position.x > parameters.MAP_SIZE.first) {
         position.x = 20;
-        velocity.x *= 0.7;
+        if (IsCharacter())
+            velocity.x *= 0.7;
     }
     if (position.y > parameters.MAP_SIZE.second) {
         velocity.y *= 0.7;
-        position.y = 10;
+        if (IsCharacter())
+            position.y = 10;
     }
 }
 
