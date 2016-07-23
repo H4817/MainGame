@@ -4,22 +4,48 @@
 Asteroid::Asteroid(Image &image, Vector2f Position, Vector2i Size, String Name) : Entity(image,
                                                                                          Position, Size,
                                                                                          Name) {
+    isExplosion = false;
+    m_frameCounter = 0;
     velocity = {rand() % 8 - 4, rand() % 8 - 4};
-    health = 200;
     sprite.setOrigin(IMAGE_SIZE.x / 2, IMAGE_SIZE.y / 2);
-    m_explosionTexture.loadFromFile("IMG/Exp_type_A1.png");
+    m_explosionTexture.loadFromFile("IMG/Exp_type_B1.png");
 }
 
 void Asteroid::Animation(float time) {
 
+    if (name == "explosion") {
+        if (!isExplosion) {
+            m_frameCounter = 0;
+            isExplosion = true;
+        }
+        m_frameCounter += 0.0004 * time;
+        sprite.setTexture(m_explosionTexture);
+        sprite.setTextureRect(IntRect(96 * int(m_frameCounter), 0, 96, 96));
+        if (m_frameCounter > 64)
+            alive = false;
+    }
+
+    else {
+        m_frameCounter += 0.054 * time;
+        sprite.setTextureRect(IntRect(64 * int(m_frameCounter), 0, 64, 64));
+        if (m_frameCounter > 16)
+            m_frameCounter = 0;
+    }
+
+
+
+//    ExplosionAnimation(time);
+//    if (m_frameCounter > 64) {
+//        CreateNewReward();
+//    }
 }
 
 void Asteroid::Update(float time, MapObjects &objects) {
-    if (health <= 0) {
-        alive = false;
+    Animation(time);
+    if (name != "explosion") {
+        SetRightPosition(position);
+        position += velocity;
+        sprite.setPosition(position);
     }
-    SetRightPosition(position);
-//    Animation(time);
-    position += velocity;
-    sprite.setPosition(position);
+
 }

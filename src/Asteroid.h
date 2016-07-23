@@ -11,8 +11,9 @@ public:
     void Animation(float time);
 
 private:
+    bool isExplosion;
+    float m_frameCounter;
     Texture m_explosionTexture;
-    int health;
     const Vector2f IMAGE_SIZE = {65, 64};
 };
 

@@ -44,6 +44,7 @@ struct Application {
     PlayerProperties playerProperties;
     ImageAssets imageAssets;
     MapObjects objects;
+    Parameters parameters;
 };
 
 struct PlayerPosition {
@@ -104,7 +105,7 @@ void InitializeImages(Application &application) {
     application.imageAssets.easyEnemyImage.loadFromFile("IMG/EasyEnemyYellowThrust1.png");
     application.imageAssets.mediumEnemyImage.loadFromFile("IMG/MediumEnemyWithGreenThrust.png");
     application.imageAssets.strongEnemyImage.loadFromFile("IMG/StrongEnemyWithGreenThrust.png");
-    application.imageAssets.asteroid.loadFromFile("IMG/Asteroids/1.png");
+    application.imageAssets.asteroid.loadFromFile("IMG/Asteroids/strip_rock_type_B.png");
 }
 
 Object InitializePlayer(Application &application) {
@@ -154,10 +155,10 @@ void AppendEnemiesBullets(Application &application, Entity *it, Player &protagon
         }
 
         if (localTime >= 86000 && localTime <= 100000) {
-/*            application.entities.push_back(
+            application.entities.push_back(
                     new SmartRocket(application.imageAssets.smartRocketImage, application.objects,
                                     it->position, application.enemiesHandler.hardEnemy.smartRocket.SIZE,
-                                    protagonist.position, "EnemySmartRocket"));*/
+                                    protagonist.position, "EnemySmartRocket"));
             localTime += 14000;
         }
 
@@ -184,16 +185,33 @@ bool IsShieldActive(const Application &application) {
     return application.playerShieldIsActive && application.playerProperties.shield > 0;
 }
 
+bool IsBullet(const string &name) {
+    return (name == "Bullet" || name == "EnemyBullet" || name == "EnemyRocket" || name == "EnemySmartRocket");
+}
+
 void ProcessDamage(Player &protagonist, Application &application) {
     for (auto it : application.entities) {
         for (auto at : application.entities) {
-            if (it->RetRect().intersects(at->RetRect()) &&
-                ((at->name == "Bullet") &&
-                 (it->name == "easyEnemy" || it->name == "mediumEnemy" || it->name == "strongEnemy"))) {
-                it->enemyHealth -= application.playerProperties.playerBullet.DAMAGE;
-                at->alive = false;
-                application.bar.UpdateEnemy(it->enemyHealth);
+            if (it->RetRect().intersects(at->RetRect())) {
+                if (((at->name == "Bullet") &&
+                     (it->name == "easyEnemy" || it->name == "mediumEnemy" || it->name == "strongEnemy"))) {
+                    it->enemyHealth -= application.playerProperties.playerBullet.DAMAGE;
+                    at->alive = false;
+                    application.bar.UpdateEnemy(it->enemyHealth);
+                }
+                else if (at->name == "Asteroid") {
+                    if (it->name != "Asteroid") {
+                        at->name = "explosion";
+                    }
+                    if (IsBullet(it->name)) {
+                        it->alive = false;
+                    }
+//                    if (!IsBullet(it->name))
+//                        it->
+                }
+
             }
+
         }
         if (it->RetRect().intersects(protagonist.RetRect())) {
             if (it->name == "EnemyBullet") {
@@ -284,9 +302,13 @@ void CheckExistenceProtagonist(Player &protagonist, RenderWindow &window) {
 
 }
 
-void AppendAsteroids (size_t amount, Application &application) {
+void AppendAsteroids(size_t amount, Application &application) {
     for (size_t i = 0; i < amount; ++i) {
-        application.entities.push_back(new Asteroid(application.imageAssets.asteroid, {100, 100}, {65, 64}, "Asteroid"));
+        application.entities.push_back(
+                new Asteroid(application.imageAssets.asteroid,
+                             {rand() % (application.parameters.MAP_SIZE.first - 20 + 1) + 20,
+                              rand() % (application.parameters.MAP_SIZE.second - 10 + 1) + 10}, {65, 64},
+                             "Asteroid"));
     }
 }
 
@@ -316,13 +338,14 @@ int main() {
     PlayerPosition playerPosition;
     InitializeImages(application);
     Object player = InitializePlayer(application);
-    AppendAsteroids(10, application);
-/*    application.enemiesContainer.easyOpponent = application.lvl.GetObjects("easyEnemy");
+    AppendAsteroids(100, application);
+    application.enemiesContainer.easyOpponent = application.lvl.GetObjects("easyEnemy");
     application.enemiesContainer.mediumOpponent = application.lvl.GetObjects("mediumEnemy");
-    application.enemiesContainer.strongOpponent = application.lvl.GetObjects("hardEnemy");*/
+    application.enemiesContainer.strongOpponent = application.lvl.GetObjects("hardEnemy");
     Player protagonist(application.imageAssets.heroImage, application.objects, application.lvl,
                        {player.rect.left, player.rect.top},
                        application.playerProperties.SIZE, "player");
+    application.entities.push_back(&protagonist);
     AppendEnemies(playerPosition, protagonist, application);
     while (window.isOpen()) {
         GetMousePosition(window, playerPosition);
