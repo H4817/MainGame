@@ -22,26 +22,26 @@ bool Entity::IsCharacter() {
 }
 
 void Entity::SetRightPosition(Vector2f &position) {
-    if (position.x < 20) {
+    if (position.x < 0) {
         position.x = parameters.MAP_SIZE.first;
         if (IsCharacter())
-            velocity.x *= 0.7;
+            velocity.x *= 0.2;
     }
-    if (position.y < 10) {
+    if (position.y < 0) {
         position.y = parameters.MAP_SIZE.second;
         if (IsCharacter())
-            velocity.y *= 0.7;
+            velocity.y *= 0.2;
     }
 
     if (position.x > parameters.MAP_SIZE.first) {
-        position.x = 20;
+        position.x = 0;
         if (IsCharacter())
-            velocity.x *= 0.7;
+            velocity.x *= 0.2;
     }
     if (position.y > parameters.MAP_SIZE.second) {
-        velocity.y *= 0.7;
+        position.y = 0;
         if (IsCharacter())
-            position.y = 10;
+            velocity.y *= 0.2;
     }
 }
 

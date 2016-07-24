@@ -2,6 +2,10 @@
 
 CEasyEnemy::CEasyEnemy(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size, Vector2f &temp,
                        String Name) : Entity(image, Position, Size, Name) {
+    health = static_cast<int>(enemiesHandler.easyEnemy.health);
+    MAX_HEALTH = (enemiesHandler.easyEnemy.health);
+    AGGRO_DISTANCE = enemiesHandler.easyEnemy.AGGRO_DISTANCE;
+    min_distance = 550;
     m_isAggro = false;
     m_playerCoordinates = &objects.playerPosition;
     m_frameCounter = 0;
@@ -38,14 +42,14 @@ void CEasyEnemy::Update(float time, MapObjects &objects) {
     if (name == "easyEnemy" || name == "mediumEnemy" || name == "strongEnemy") {
         distance = sqrt((m_playerCoordinates->x - position.x) * (m_playerCoordinates->x - position.x) +
                         (m_playerCoordinates->y - position.y) * (m_playerCoordinates->y - position.y));
-        if (!m_isAggro && (distance < 800 || enemyHealth != MAX_HEALTH)) {
+        if (!m_isAggro && (distance < AGGRO_DISTANCE || health != MAX_HEALTH)) {
             m_isAggro = true;
         }
         else if (m_isAggro) {
             m_rotation = static_cast<float>(
                     (atan2(m_playerCoordinates->y - position.y, m_playerCoordinates->x - position.x)) *
                     parameters.ANGLE / M_PI);
-            if (distance > 250) {
+            if (distance > min_distance) {
                 velocity += {static_cast<float>(ACCELERATION * time * (m_playerCoordinates->x - position.x) / distance),
                              static_cast<float>(ACCELERATION * time * (m_playerCoordinates->y - position.y) /
                                                 distance)};
@@ -59,7 +63,7 @@ void CEasyEnemy::Update(float time, MapObjects &objects) {
             position.y += velocity.y;
             sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
         }
-        if (enemyHealth <= 0) {
+        if (health <= 0) {
             name = "explosion";
         }
     }
@@ -73,7 +77,10 @@ void CEasyEnemy::Update(float time, MapObjects &objects) {
 
 CMediumEnemy::CMediumEnemy(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size,
                            Vector2f &temp, String Name) : CEasyEnemy(image, objects, Position, Size, temp, Name) {
-    enemyHealth = static_cast<int>(enemiesHandler.mediumEnemy.health);
+    health = static_cast<int>(enemiesHandler.mediumEnemy.health);
+    MAX_HEALTH = (enemiesHandler.mediumEnemy.health);
+    AGGRO_DISTANCE = enemiesHandler.mediumEnemy.AGGRO_DISTANCE;
+    min_distance = 650;
     m_isAggro = false;
     m_playerCoordinates = &objects.playerPosition;
     m_frameCounter = 0;
@@ -97,7 +104,10 @@ void CMediumEnemy::ExplosionAnimation(const float &time) {
 CStrongEnemy::CStrongEnemy(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size,
                            Vector2f &temp, String Name) : CMediumEnemy(image, objects, Position, Size, temp,
                                                                        Name) {
-    enemyHealth = static_cast<int>(enemiesHandler.hardEnemy.health);
+    health = static_cast<int>(enemiesHandler.hardEnemy.health);
+    MAX_HEALTH = (enemiesHandler.hardEnemy.health);
+    AGGRO_DISTANCE = enemiesHandler.hardEnemy.AGGRO_DISTANCE;
+    min_distance = 800;
     m_isAggro = false;
     m_playerCoordinates = &objects.playerPosition;
     m_frameCounter = 0;

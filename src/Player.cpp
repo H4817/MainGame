@@ -2,11 +2,10 @@
 
 void getPlayerCoordinateForView(Vector2f position);
 
-Player::Player(Image &image, MapObjects &objects, Level &lev, Vector2f Position, Vector2i Size, String Name) : Entity(
+Player::Player(Image &image, Vector2f Position, Vector2i Size, String Name) : Entity(
         image, Position, Size, Name) {
-    health = MAX_HP;
+    health = static_cast<int>(MAX_HP);
     state = STAY;
-    objects.obj = lev.GetAllObjects();
     if (name == "player") {
         sprite.setPosition(size.x, size.y);
         sprite.setOrigin(ImageSize.x / 2, ImageSize.y / 2);

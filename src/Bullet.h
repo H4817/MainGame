@@ -13,7 +13,7 @@ public:
 
 private:
     Vector2f playerPos;
-    const size_t distance = 2000;
+    const size_t distance = 1700;
     const Vector2f IMAGE_SIZE = {54, 25};
     float rotation;
 };
@@ -52,7 +52,7 @@ private:
     void ExplosionAnimation(const float &time);
 
 private:
-    const size_t distance = 2400;
+    const size_t distance = 1500;
     const double ACCELERATION = 0.005;
     Vector2f *m_playerCoordinates;
 };

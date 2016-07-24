@@ -26,10 +26,12 @@ public:
 protected:
     const double ACCELERATION = 0.003;
     const double DECELERATION = 0.985;
-    const size_t MAX_HEALTH = 200;
     bool m_isAggro;
     float distance;
     float m_frameCounter;
+    size_t min_distance;
+    size_t MAX_HEALTH;
+    size_t AGGRO_DISTANCE;
     Vector2f *m_playerCoordinates;
     Texture m_explosionTexture;
     Texture m_shieldRewardTexture;

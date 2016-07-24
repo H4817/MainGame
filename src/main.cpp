@@ -64,7 +64,7 @@ void getPlayerCoordinateForView(Vector2f position) {
 float RunTimer(Application &application) {
     float time_ms = application.clock.getElapsedTime().asMicroseconds();
     application.clock.restart();
-    time_ms /= 800;
+    time_ms /= 1000;
     return time_ms;
 }
 
@@ -82,7 +82,8 @@ void ProcessEvents(RenderWindow &window, Player &protagonist, PlayerPosition &pl
                                protagonist.position,
                                application.playerProperties.playerBullet.SIZE, playerPosition.pos, "Bullet"));
             application.playerProperties.shield -= 2;
-            application.bar.UpdateProtagonist(protagonist.health, application.playerProperties.shield);
+            application.bar.UpdateProtagonist(static_cast<size_t >(protagonist.health),
+                                              static_cast<size_t >(application.playerProperties.shield));
         }
         if (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::F) {
             application.playerShieldIsActive = !application.playerShieldIsActive;
@@ -105,7 +106,7 @@ void InitializeImages(Application &application) {
     application.imageAssets.easyEnemyImage.loadFromFile("IMG/EasyEnemyYellowThrust1.png");
     application.imageAssets.mediumEnemyImage.loadFromFile("IMG/MediumEnemyWithGreenThrust.png");
     application.imageAssets.strongEnemyImage.loadFromFile("IMG/StrongEnemyWithGreenThrust.png");
-    application.imageAssets.asteroid.loadFromFile("IMG/Asteroids/strip_rock_type_B.png");
+    application.imageAssets.asteroid.loadFromFile("IMG/Asteroids/strip_rock_type_D.png");
 }
 
 Object InitializePlayer(Application &application) {
@@ -189,25 +190,33 @@ bool IsBullet(const string &name) {
     return (name == "Bullet" || name == "EnemyBullet" || name == "EnemyRocket" || name == "EnemySmartRocket");
 }
 
+bool IsEnemy(const string &name) {
+    return (name == "easyEnemy" || name == "mediumEnemy" || name == "strongEnemy");
+}
+
 void ProcessDamage(Player &protagonist, Application &application) {
     for (auto it : application.entities) {
         for (auto at : application.entities) {
             if (it->RetRect().intersects(at->RetRect())) {
+
                 if (((at->name == "Bullet") &&
-                     (it->name == "easyEnemy" || it->name == "mediumEnemy" || it->name == "strongEnemy"))) {
-                    it->enemyHealth -= application.playerProperties.playerBullet.DAMAGE;
+                     (IsEnemy(it->name)))) {
+                    it->health -= application.playerProperties.playerBullet.DAMAGE;
                     at->alive = false;
-                    application.bar.UpdateEnemy(it->enemyHealth);
+                    application.bar.UpdateEnemy(static_cast<size_t >(it->health));
                 }
+
                 else if (at->name == "Asteroid") {
                     if (it->name != "Asteroid") {
+                        if (IsBullet(it->name)) {
+                            it->alive = false;
+                        }
+                        else {
+                            it->health -= 100;
+                        }
+
                         at->name = "explosion";
                     }
-                    if (IsBullet(it->name)) {
-                        it->alive = false;
-                    }
-//                    if (!IsBullet(it->name))
-//                        it->
                 }
 
             }
@@ -237,8 +246,8 @@ void ProcessDamage(Player &protagonist, Application &application) {
             else if (it->name == "easyEnemy" || it->name == "mediumEnemy" || it->name == "strongEnemy") {
                 it->boost.x = 0;
                 it->boost.y = 0;
-                it->enemyHealth -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
-                                    abs(static_cast<long>(it->velocity.x + it->velocity.y) / 2));
+                it->health -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
+                               abs(static_cast<long>(it->velocity.x + it->velocity.y) / 2));
                 if (application.playerProperties.shield > 0 && application.playerShieldIsActive) {
                     application.playerProperties.shield -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
                                                             abs(static_cast<long>(it->velocity.x + it->velocity.y) /
@@ -248,7 +257,7 @@ void ProcessDamage(Player &protagonist, Application &application) {
                     protagonist.health -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
                                            abs(static_cast<long>(it->velocity.x + it->velocity.y) / 2));
                 }
-                application.bar.UpdateEnemy(it->enemyHealth);
+                application.bar.UpdateEnemy(static_cast<size_t>(it->health));
             }
             else if (it->name == "ShieldReward") {
                 application.playerProperties.shield += 30;
@@ -258,7 +267,8 @@ void ProcessDamage(Player &protagonist, Application &application) {
                 protagonist.health += 30;
                 it->alive = false;
             }
-            application.bar.UpdateProtagonist(protagonist.health, application.playerProperties.shield);
+            application.bar.UpdateProtagonist(static_cast<size_t>(protagonist.health),
+                                              static_cast<size_t>(application.playerProperties.shield));
         }
     }
 }
@@ -338,12 +348,11 @@ int main() {
     PlayerPosition playerPosition;
     InitializeImages(application);
     Object player = InitializePlayer(application);
-    AppendAsteroids(100, application);
+    AppendAsteroids(0, application);
     application.enemiesContainer.easyOpponent = application.lvl.GetObjects("easyEnemy");
     application.enemiesContainer.mediumOpponent = application.lvl.GetObjects("mediumEnemy");
     application.enemiesContainer.strongOpponent = application.lvl.GetObjects("hardEnemy");
-    Player protagonist(application.imageAssets.heroImage, application.objects, application.lvl,
-                       {player.rect.left, player.rect.top},
+    Player protagonist(application.imageAssets.heroImage, {player.rect.left, player.rect.top},
                        application.playerProperties.SIZE, "player");
     application.entities.push_back(&protagonist);
     AppendEnemies(playerPosition, protagonist, application);

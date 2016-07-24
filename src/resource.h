@@ -9,14 +9,15 @@ struct PlayerBullet {
 
 struct PlayerProperties {
     const sf::Vector2i SIZE = {79, 99};
-    const size_t HEALTH = 200;
-    int shield = 400;
+    const size_t HEALTH = 30000;
+    int shield = 500;
     const float SPEED = 0.2;
     PlayerBullet playerBullet;
 };
 
 struct Parameters {
-    const std::pair<unsigned, unsigned> WINDOW_SIZE = {1680, 1050};
+    const std::pair<unsigned, unsigned> WINDOW_SIZE = {sf::VideoMode::getDesktopMode().width,
+                                                       sf::VideoMode::getDesktopMode().height};
     const size_t ANGLE = 180;
     const std::pair<size_t, size_t> MAP_SIZE = {3120, 3028};
 };
@@ -48,7 +49,7 @@ struct MediumEnemy {
     size_t health = 300;
     const sf::Vector2i SIZE = {117, 100};
     const size_t COLLISION_DAMAGE = 3;
-    const size_t AGGRO_DISTANCE = 900;
+    const size_t AGGRO_DISTANCE = 1000;
     SimpleRocket simpleRocket;
 };
 
@@ -56,7 +57,7 @@ struct HardEnemy {
     size_t health = 500;
     const sf::Vector2i SIZE = {150, 150};
     const size_t COLLISION_DAMAGE = 3;
-    const size_t AGGRO_DISTANCE = 1100;
+    const size_t AGGRO_DISTANCE = 1500;
     _SmartRocket smartRocket;
 };
 

@@ -5,9 +5,7 @@
 struct Player : public Entity {
 public:
 
-    int health;
-
-    Player(Image &image, MapObjects &objects, Level &lev, sf::Vector2f Position, sf::Vector2i Size, String Name);
+    Player(Image &image, sf::Vector2f Position, sf::Vector2i Size, String Name);
 
     void control(const float &time);
 
@@ -18,9 +16,10 @@ public:
     void Update(float time, MapObjects &objects);
 
 private:
-    const size_t MAX_HP = 20000;
+    PlayerProperties playerProperties;
+    const size_t MAX_HP = playerProperties.HEALTH;
     float rotation;
-    const double ACCELERATION = 0.003;
+    const double ACCELERATION = 0.001;
     const double DECELERATION = 0.997;
     const sf::Vector2f ImageSize = {79, 99};
     sf::Vector2f m_temp;

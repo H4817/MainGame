@@ -18,7 +18,7 @@ void Asteroid::Animation(float time) {
             m_frameCounter = 0;
             isExplosion = true;
         }
-        m_frameCounter += 0.0004 * time;
+        m_frameCounter += 0.054 * time;
         sprite.setTexture(m_explosionTexture);
         sprite.setTextureRect(IntRect(96 * int(m_frameCounter), 0, 96, 96));
         if (m_frameCounter > 64)
@@ -26,18 +26,12 @@ void Asteroid::Animation(float time) {
     }
 
     else {
-        m_frameCounter += 0.054 * time;
+        m_frameCounter += 0.009 * time;
         sprite.setTextureRect(IntRect(64 * int(m_frameCounter), 0, 64, 64));
         if (m_frameCounter > 16)
             m_frameCounter = 0;
     }
 
-
-
-//    ExplosionAnimation(time);
-//    if (m_frameCounter > 64) {
-//        CreateNewReward();
-//    }
 }
 
 void Asteroid::Update(float time, MapObjects &objects) {
