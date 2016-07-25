@@ -7,6 +7,7 @@ bool IsOutsideOfDistance(const Vector2f &playerPos, const Vector2f &position, si
 
 Bullet::Bullet(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size, Vector2f targetPosition,
                String Name) : Entity(image, Position, Size, Name) {
+    speed = 20;
     Entity::temp = targetPosition;
     boost = {position.x, position.y};
     rotation = (atan2(targetPosition.y - position.y, targetPosition.x - position.x)) * parameters.ANGLE / M_PI;
@@ -15,8 +16,8 @@ Bullet::Bullet(Image &image, MapObjects &objects, Vector2f Position, Vector2i Si
 }
 
 void Bullet::Update(float time, MapObjects &objects) {
-    velocity.x = cos(rotation * DEG_TO_RAD) * 20;
-    velocity.y = sin(rotation * DEG_TO_RAD) * 20;
+    velocity.x = cos(rotation * DEG_TO_RAD) * speed;
+    velocity.y = sin(rotation * DEG_TO_RAD) * speed;
     if (IsOutsideOfDistance(playerPos, position, distance)) {
         alive = false;
     }
@@ -27,6 +28,7 @@ void Bullet::Update(float time, MapObjects &objects) {
 
 Rocket::Rocket(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size, Vector2f temp,
                String Name) : Entity(image, Position, Size, Name) {
+    speed = 10;
     Entity::temp = temp;
     boost = {position.x, position.y};
     rotation = (atan2(temp.y - position.y, temp.x - position.x)) * parameters.ANGLE / M_PI;
@@ -45,8 +47,8 @@ void Rocket::CreateExplosion(const float &time) {
 
 void Rocket::Update(float time, MapObjects &objects) {
     if (name != "explosion") {
-        velocity.x = cos(rotation * DEG_TO_RAD) * 10;
-        velocity.y = sin(rotation * DEG_TO_RAD) * 10;
+        velocity.x = cos(rotation * DEG_TO_RAD) * speed;
+        velocity.y = sin(rotation * DEG_TO_RAD) * speed;
         if (IsOutsideOfDistance(playerPos, position, distance)) {
             name = "explosion";
         }
@@ -67,7 +69,7 @@ void Rocket::ExplosionAnimation(const float &time) {
 
 SmartRocket::SmartRocket(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size, Vector2f temp,
                          String Name) : Rocket(image, objects, Position, Size, temp, Name) {
-    speed = 0.01;
+    speed = 5;
     Entity::temp = temp;
     boost = {position.x, position.y};
     rotation = (atan2(temp.y - position.y, temp.x - position.x)) * parameters.ANGLE / M_PI;
@@ -84,12 +86,14 @@ void SmartRocket::Update(float time, MapObjects &objects) {
                 (atan2(m_playerCoordinates->y - position.y, m_playerCoordinates->x - position.x)) *
                 parameters.ANGLE / M_PI);
         if (!IsOutsideOfDistance(playerPos, position, distance)) {
-            velocity += {static_cast<float>(ACCELERATION * time * (m_playerCoordinates->x - position.x) / distance),
-                         static_cast<float>(ACCELERATION * time * (m_playerCoordinates->y - position.y) / distance)};
+
+            velocity.x = cos(rotation * DEG_TO_RAD) * speed;
+            velocity.y = sin(rotation * DEG_TO_RAD) * speed;
+
+            position += velocity;
             sprite.setRotation(rotation);
-            position.x += velocity.x;
-            position.y += velocity.y;
-            sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
+            sprite.setPosition(position);
+
         }
         else {
             name = "explosion";

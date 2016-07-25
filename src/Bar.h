@@ -7,7 +7,7 @@ class Bar {
 public:
     Bar();
 
-    void UpdateEnemy(size_t Health);
+    void UpdateEnemy(size_t Health, const string & name);
 
     void UpdateProtagonist(size_t Health, size_t Shield);
 
@@ -15,13 +15,16 @@ public:
 
 private:
 
+    void SetZeroSize(sf::RectangleShape & rectangleShape);
+
     PlayerProperties playerProperties;
     EnemiesHandler enemiesHandler;
 
-    sf::RectangleShape enemyBarBlack;
-    sf::RectangleShape playerBarBlackHP;
-    sf::RectangleShape playerBarBlackShield;
-
+    sf::RectangleShape blackRectangleForFillingEnemyHP;
+    sf::RectangleShape blackRectangleForFillingPlayerHP;
+    sf::RectangleShape blackRectangleForFillingPlayerShield;
+    const size_t BAR_WIDTH = 191;
+    const size_t Y_OFFSET = 10;
     sf::Image entitiesBar;
     sf::Texture texture1;
     sf::Texture texture2;

@@ -8,7 +8,7 @@
 #include <memory>
 
 namespace {
-    const Vector2f MAP_WIDTH = {850, 2370};
+    const Vector2f MAP_WIDTH = {960, 2270};
     const Vector2f MAP_HEIGHT = {530, 2600};
     sf::View view;
 }
@@ -203,7 +203,7 @@ void ProcessDamage(Player &protagonist, Application &application) {
                      (IsEnemy(it->name)))) {
                     it->health -= application.playerProperties.playerBullet.DAMAGE;
                     at->alive = false;
-                    application.bar.UpdateEnemy(static_cast<size_t >(it->health));
+                    application.bar.UpdateEnemy(static_cast<size_t >(it->health), it->name);
                 }
 
                 else if (at->name == "Asteroid") {
@@ -257,7 +257,7 @@ void ProcessDamage(Player &protagonist, Application &application) {
                     protagonist.health -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
                                            abs(static_cast<long>(it->velocity.x + it->velocity.y) / 2));
                 }
-                application.bar.UpdateEnemy(static_cast<size_t>(it->health));
+                application.bar.UpdateEnemy(static_cast<size_t>(it->health), it->name);
             }
             else if (it->name == "ShieldReward") {
                 application.playerProperties.shield += 30;

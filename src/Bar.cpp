@@ -10,29 +10,69 @@ Bar::Bar() {
     entitiesBar.loadFromFile("IMG/EnemyBar.png");
     entitiesTexture.loadFromImage(entitiesBar);
     enemyBar.setTexture(entitiesTexture);
-    enemyBarBlack.setRotation(180);
-    enemyBarBlack.setFillColor(sf::Color(0, 0, 0));
-    playerBarBlackHP.setRotation(180);
-    playerBarBlackHP.setFillColor(sf::Color(0, 0, 0));
-    playerBarBlackShield.setRotation(180);
-    playerBarBlackShield.setFillColor(sf::Color(0, 0, 0));
+    blackRectangleForFillingEnemyHP.setRotation(180);
+    blackRectangleForFillingEnemyHP.setFillColor(sf::Color(0, 0, 0));
+    blackRectangleForFillingPlayerHP.setRotation(180);
+    blackRectangleForFillingPlayerHP.setFillColor(sf::Color(0, 0, 0));
+    blackRectangleForFillingPlayerShield.setRotation(180);
+    blackRectangleForFillingPlayerShield.setFillColor(sf::Color(0, 0, 0));
 }
 
-void Bar::UpdateEnemy(size_t Health) {
-    if ((Health > 0) && (Health < enemiesHandler.easyEnemy.health)) {
-        healthBarOffset = {static_cast<float>((enemiesHandler.easyEnemy.health - Health)), 10};
-        enemyBarBlack.setSize(healthBarOffset);
+
+void Bar::SetZeroSize(sf::RectangleShape &rectangleShape) {
+    rectangleShape.setSize({BAR_WIDTH, Y_OFFSET});
+}
+
+void Bar::UpdateEnemy(size_t Health, const string &name) {
+    if (name == "easyEnemy") {
+        if ((Health > 0) && (Health <= enemiesHandler.easyEnemy.health)) {
+            healthBarOffset = {
+                    (BAR_WIDTH * (enemiesHandler.easyEnemy.health - Health) / enemiesHandler.easyEnemy.health),
+                    Y_OFFSET};
+            blackRectangleForFillingEnemyHP.setSize(healthBarOffset);
+        }
+        else {
+            SetZeroSize(blackRectangleForFillingEnemyHP);
+        }
+    }
+    else if (name == "mediumEnemy") {
+        if ((Health > 0) && (Health <= enemiesHandler.mediumEnemy.health)) {
+            healthBarOffset = {
+                    (BAR_WIDTH * (enemiesHandler.mediumEnemy.health - Health) / enemiesHandler.mediumEnemy.health),
+                    Y_OFFSET};
+            blackRectangleForFillingEnemyHP.setSize(healthBarOffset);
+        }
+        else {
+            SetZeroSize(blackRectangleForFillingEnemyHP);
+        }
+    }
+    else if (name == "strongEnemy") {
+        if ((Health > 0) && (Health <= enemiesHandler.hardEnemy.health)) {
+            healthBarOffset = {
+                    (BAR_WIDTH * (enemiesHandler.hardEnemy.health - Health) / enemiesHandler.hardEnemy.health),
+                    Y_OFFSET};
+            blackRectangleForFillingEnemyHP.setSize(healthBarOffset);
+        }
+        else {
+            SetZeroSize(blackRectangleForFillingEnemyHP);
+        }
     }
 }
 
 void Bar::UpdateProtagonist(size_t Health, size_t Shield) {
-    if ((Health > 0) && (Health < playerProperties.HEALTH)) {
-        healthBarOffset = {(playerProperties.HEALTH - Health), 10};
-        playerBarBlackHP.setSize(healthBarOffset);
+    if ((Health > 0) && (Health <= playerProperties.HEALTH)) {
+        healthBarOffset = {(BAR_WIDTH * (playerProperties.HEALTH - Health) / playerProperties.HEALTH), Y_OFFSET};
+        blackRectangleForFillingPlayerHP.setSize(healthBarOffset);
     }
-    if ((Shield > 0) && (Shield < playerProperties.shield)) {
-        shieldBarOffset = {(playerProperties.shield - Shield), 10};
-        playerBarBlackShield.setSize(shieldBarOffset);
+    else {
+        SetZeroSize(blackRectangleForFillingPlayerHP);
+    }
+    if ((Shield > 0) && (Shield <= playerProperties.shield)) {
+        shieldBarOffset = {(BAR_WIDTH * (playerProperties.shield - Shield) / playerProperties.shield), Y_OFFSET};
+        blackRectangleForFillingPlayerShield.setSize(shieldBarOffset);
+    }
+    else {
+        SetZeroSize(blackRectangleForFillingPlayerShield);
     }
 }
 
@@ -42,15 +82,15 @@ void Bar::Draw(sf::RenderWindow &window) {
 
     playerBarHealth.setPosition((center.x - size.x / 2), center.y - size.y / 2 + 15);
     playerBarShield.setPosition((center.x - size.x / 2), center.y - size.y / 2 + 45);
-    playerBarBlackHP.setPosition((center.x - size.x / 2) + 200, center.y - size.y / 2 + 30);
-    playerBarBlackShield.setPosition((center.x - size.x / 2) + 200, center.y - size.y / 2 + 60);
-    enemyBarBlack.setPosition((center.x - size.x / 2) + 950, (center.y - size.y / 2) + 1035);
-    enemyBar.setPosition((center.x - size.x / 2) + 750, (center.y - size.y / 2) + 1020);
+    blackRectangleForFillingPlayerHP.setPosition((center.x - size.x / 2) + 200, center.y - size.y / 2 + 30);
+    blackRectangleForFillingPlayerShield.setPosition((center.x - size.x / 2) + 200, center.y - size.y / 2 + 60);
+    blackRectangleForFillingEnemyHP.setPosition((center.x + 100), (center.y + size.y / 2.2f) + 15);
+    enemyBar.setPosition((center.x - 100), (center.y + size.y / 2.2f));
 
     window.draw(playerBarHealth);
     window.draw(playerBarShield);
     window.draw(enemyBar);
-    window.draw(enemyBarBlack);
-    window.draw(playerBarBlackHP);
-    window.draw(playerBarBlackShield);
+    window.draw(blackRectangleForFillingEnemyHP);
+    window.draw(blackRectangleForFillingPlayerHP);
+    window.draw(blackRectangleForFillingPlayerShield);
 }
