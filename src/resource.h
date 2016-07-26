@@ -70,4 +70,5 @@ struct EnemiesHandler {
 struct MapObjects {
     std::vector<Object> obj;
     sf::Vector2f playerPosition;
+    float playerRotation;
 };

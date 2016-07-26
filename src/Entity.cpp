@@ -17,38 +17,37 @@ FloatRect Entity::RetRect() {
     return FloatRect(position.x, position.y, size.x, size.y);
 }
 
+void Entity::ReduceSpeed() {
+    velocity.x *= 0.2;
+    velocity.y *= 0.2;
+}
+
 bool Entity::IsCharacter() {
     return (name == "player" || name == "easyEnemy" || name == "mediumEnemy" || name == "strongEnemy");
 }
 
-void Entity::SetRightPosition(Vector2f &position) {
+void Entity::SetPositionOnAnotherSide(Vector2f &position) {
     if (position.x < 0) {
         position.x = parameters.MAP_SIZE.first;
         if (IsCharacter())
-            velocity.x *= 0.2;
+            ReduceSpeed();
     }
     if (position.y < 0) {
         position.y = parameters.MAP_SIZE.second;
         if (IsCharacter())
-            velocity.y *= 0.2;
+            ReduceSpeed();
     }
 
     if (position.x > parameters.MAP_SIZE.first) {
         position.x = 0;
         if (IsCharacter())
-            velocity.x *= 0.2;
+            ReduceSpeed();
     }
     if (position.y > parameters.MAP_SIZE.second) {
         position.y = 0;
         if (IsCharacter())
-            velocity.y *= 0.2;
+            ReduceSpeed();
     }
 }
 
-/*bool Entity::isCollide(Entity *a,Entity *b)
-{
-  return (b->x - a->x)*(b->x - a->x)+
-         (b->y - a->y)*(b->y - a->y)<
-         (a->R + b->R)*(a->R + b->R);
-}*/
 

@@ -15,6 +15,8 @@ public:
 
     void Update(float time, MapObjects &objects);
 
+    int GetState();
+
 private:
     PlayerProperties playerProperties;
     const size_t MAX_HP = playerProperties.HEALTH;

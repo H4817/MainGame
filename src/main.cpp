@@ -3,6 +3,7 @@
 #include "Enemies.h"
 #include "Bar.h"
 #include "Asteroid.h"
+#include "Thrust.h"
 #include "shield.h"
 #include "aim.h"
 #include <memory>
@@ -45,12 +46,12 @@ struct Application {
     ImageAssets imageAssets;
     MapObjects objects;
     Parameters parameters;
+    Thrust thrust;
 };
 
 struct PlayerPosition {
     Vector2f pos;
 };
-
 
 void getPlayerCoordinateForView(Vector2f position) {
     Vector2f centerPosition = {position.x, position.y};
@@ -102,7 +103,7 @@ void InitializeImages(Application &application) {
     application.imageAssets.rocketImage.loadFromFile("IMG/rocket1.png");
     application.imageAssets.smartRocketImage.loadFromFile("IMG/SmartRocket.png");
     application.imageAssets.enemyBulletImage.loadFromFile("IMG/RedPlasmaBullet.png");
-    application.imageAssets.heroImage.loadFromFile("IMG/8888.png");
+    application.imageAssets.heroImage.loadFromFile("IMG/888.png");
     application.imageAssets.easyEnemyImage.loadFromFile("IMG/EasyEnemyYellowThrust1.png");
     application.imageAssets.mediumEnemyImage.loadFromFile("IMG/MediumEnemyWithGreenThrust.png");
     application.imageAssets.strongEnemyImage.loadFromFile("IMG/StrongEnemyWithGreenThrust.png");
@@ -316,8 +317,8 @@ void AppendAsteroids(size_t amount, Application &application) {
     for (size_t i = 0; i < amount; ++i) {
         application.entities.push_back(
                 new Asteroid(application.imageAssets.asteroid,
-                             {rand() % (application.parameters.MAP_SIZE.first - 20 + 1) + 20,
-                              rand() % (application.parameters.MAP_SIZE.second - 10 + 1) + 10}, {65, 64},
+                             {static_cast<float>(rand() % (application.parameters.MAP_SIZE.first - 20 + 1) + 20),
+                              static_cast<float>(rand() % (application.parameters.MAP_SIZE.second - 10 + 1) + 10)}, {65, 64},
                              "Asteroid"));
     }
 }
@@ -334,6 +335,9 @@ void Draw(RenderWindow &window, Player &protagonist, Application &application) {
     }
     application.bar.Draw(window);
     application.aim.Draw(window);
+    if (protagonist.GetState() == 0) {
+        application.thrust.Draw(window, protagonist.position, application.objects.playerRotation);
+    }
     window.display();
 }
 
@@ -349,9 +353,9 @@ int main() {
     InitializeImages(application);
     Object player = InitializePlayer(application);
     AppendAsteroids(0, application);
-    application.enemiesContainer.easyOpponent = application.lvl.GetObjects("easyEnemy");
-    application.enemiesContainer.mediumOpponent = application.lvl.GetObjects("mediumEnemy");
-    application.enemiesContainer.strongOpponent = application.lvl.GetObjects("hardEnemy");
+//    application.enemiesContainer.easyOpponent = application.lvl.GetObjects("easyEnemy");
+//    application.enemiesContainer.mediumOpponent = application.lvl.GetObjects("mediumEnemy");
+//    application.enemiesContainer.strongOpponent = application.lvl.GetObjects("hardEnemy");
     Player protagonist(application.imageAssets.heroImage, {player.rect.left, player.rect.top},
                        application.playerProperties.SIZE, "player");
     application.entities.push_back(&protagonist);

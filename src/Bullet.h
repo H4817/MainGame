@@ -16,6 +16,7 @@ private:
     const size_t distance = 1700;
     const Vector2f IMAGE_SIZE = {54, 25};
     float rotation;
+    float m_angle;
 };
 
 class Rocket : public Entity {

@@ -9,16 +9,22 @@ Player::Player(Image &image, Vector2f Position, Vector2i Size, String Name) : En
     if (name == "player") {
         sprite.setPosition(size.x, size.y);
         sprite.setOrigin(ImageSize.x / 2, ImageSize.y / 2);
+
+//        sprite.setOrigin(sprite.getGlobalBounds().left + sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().top + sprite.getGlobalBounds().height / 2);
     }
 }
 
+int Player::GetState() {
+    return state;
+}
+
 void Player::control(const float &time) {
-    SetRightPosition(position);
+    SetPositionOnAnotherSide(position);
     if (Keyboard::isKeyPressed(Keyboard::W) || Keyboard::isKeyPressed(Keyboard::Up)) {
         state = MOVE;
         distance = sqrt((m_temp.x - position.x) * (m_temp.x - position.x) + (m_temp.y - position.y) * (m_temp.y -
                                                                                                        position.y));
-        if (distance > 2 ) {
+        if (distance > 2) {
             velocity += {static_cast<float>(ACCELERATION * time * (m_temp.x - position.x) / distance),
                          static_cast<float>(ACCELERATION * time * (m_temp.y - position.y) / distance)};
 
@@ -70,6 +76,7 @@ void Player::Update(float time, MapObjects &objects) {
     checkCollisionWithMap(boost.x, 0, objects);
     position.y += boost.y * time;
     objects.playerPosition = position;
+    objects.playerRotation = rotation;
     checkCollisionWithMap(0, boost.y, objects);
     sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
     if (health <= 0) {

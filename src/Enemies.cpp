@@ -38,7 +38,7 @@ void CEasyEnemy::ExplosionAnimation(const float &time) {
 }
 
 void CEasyEnemy::Update(float time, MapObjects &objects) {
-    SetRightPosition(position);
+    SetPositionOnAnotherSide(position);
     if (name == "easyEnemy" || name == "mediumEnemy" || name == "strongEnemy") {
         distance = sqrt((m_playerCoordinates->x - position.x) * (m_playerCoordinates->x - position.x) +
                         (m_playerCoordinates->y - position.y) * (m_playerCoordinates->y - position.y));

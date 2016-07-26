@@ -6,7 +6,7 @@ using namespace sf;
 struct Thrust {
 public:
     Clock clock;
-    float frameCounter = 0;
+    float frameCounter;
     Texture texture1;
     Sprite thrust;
     Thrust();

@@ -20,15 +20,16 @@ Bar::Bar() {
 
 
 void Bar::SetZeroSize(sf::RectangleShape &rectangleShape) {
-    rectangleShape.setSize({BAR_WIDTH, Y_OFFSET});
+    rectangleShape.setSize({static_cast<float>(BAR_WIDTH), static_cast<float>(Y_OFFSET)});
 }
 
 void Bar::UpdateEnemy(size_t Health, const string &name) {
     if (name == "easyEnemy") {
         if ((Health > 0) && (Health <= enemiesHandler.easyEnemy.health)) {
             healthBarOffset = {
-                    (BAR_WIDTH * (enemiesHandler.easyEnemy.health - Health) / enemiesHandler.easyEnemy.health),
-                    Y_OFFSET};
+                    (static_cast<float>(BAR_WIDTH * (enemiesHandler.easyEnemy.health - Health) /
+                                        enemiesHandler.easyEnemy.health)),
+                    static_cast<float>(Y_OFFSET)};
             blackRectangleForFillingEnemyHP.setSize(healthBarOffset);
         }
         else {
@@ -37,9 +38,10 @@ void Bar::UpdateEnemy(size_t Health, const string &name) {
     }
     else if (name == "mediumEnemy") {
         if ((Health > 0) && (Health <= enemiesHandler.mediumEnemy.health)) {
-            healthBarOffset = {
-                    (BAR_WIDTH * (enemiesHandler.mediumEnemy.health - Health) / enemiesHandler.mediumEnemy.health),
-                    Y_OFFSET};
+            healthBarOffset = {static_cast<float>(
+                                       (BAR_WIDTH * (enemiesHandler.mediumEnemy.health - Health) /
+                                        enemiesHandler.mediumEnemy.health)),
+                               static_cast<float> (Y_OFFSET)};
             blackRectangleForFillingEnemyHP.setSize(healthBarOffset);
         }
         else {
@@ -48,9 +50,10 @@ void Bar::UpdateEnemy(size_t Health, const string &name) {
     }
     else if (name == "strongEnemy") {
         if ((Health > 0) && (Health <= enemiesHandler.hardEnemy.health)) {
-            healthBarOffset = {
-                    (BAR_WIDTH * (enemiesHandler.hardEnemy.health - Health) / enemiesHandler.hardEnemy.health),
-                    Y_OFFSET};
+            healthBarOffset = {static_cast<float> (
+                                       (BAR_WIDTH * (enemiesHandler.hardEnemy.health - Health) /
+                                        enemiesHandler.hardEnemy.health)),
+                               static_cast<float>(Y_OFFSET)};
             blackRectangleForFillingEnemyHP.setSize(healthBarOffset);
         }
         else {
@@ -61,14 +64,17 @@ void Bar::UpdateEnemy(size_t Health, const string &name) {
 
 void Bar::UpdateProtagonist(size_t Health, size_t Shield) {
     if ((Health > 0) && (Health <= playerProperties.HEALTH)) {
-        healthBarOffset = {(BAR_WIDTH * (playerProperties.HEALTH - Health) / playerProperties.HEALTH), Y_OFFSET};
+        healthBarOffset = {
+                static_cast<float>((BAR_WIDTH * (playerProperties.HEALTH - Health) / playerProperties.HEALTH)),
+                static_cast<float >(Y_OFFSET)};
         blackRectangleForFillingPlayerHP.setSize(healthBarOffset);
     }
     else {
         SetZeroSize(blackRectangleForFillingPlayerHP);
     }
     if ((Shield > 0) && (Shield <= playerProperties.shield)) {
-        shieldBarOffset = {(BAR_WIDTH * (playerProperties.shield - Shield) / playerProperties.shield), Y_OFFSET};
+        shieldBarOffset = {static_cast<float>((BAR_WIDTH * (playerProperties.shield - Shield) / playerProperties.shield)),
+                           static_cast<float>(Y_OFFSET)};
         blackRectangleForFillingPlayerShield.setSize(shieldBarOffset);
     }
     else {

@@ -27,8 +27,9 @@ public:
     Sprite sprite;
     String name;
     FloatRect RetRect();
-    void SetRightPosition(Vector2f & position);
+    void SetPositionOnAnotherSide(Vector2f &position);
     bool IsCharacter();
+    void ReduceSpeed();
     virtual void Update(float time, MapObjects &objects) = 0;
 };
 
