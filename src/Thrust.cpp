@@ -3,7 +3,7 @@
 Thrust::Thrust() {
     texture1.loadFromFile("IMG/thrust_green22.png");
     thrust.setTexture(texture1);
-    thrust.setOrigin(43/2, 27/2);
+    thrust.setOrigin(43/2, 43/2);
     frameCounter = 0;
 }
 
@@ -19,7 +19,8 @@ void Thrust::Draw(RenderWindow &window, Vector2f &position, float &rotation) {
         frameCounter += 0.03 * time;
     }
 //    thrust.setPosition(position.x + 35, position.y + 45);
-    thrust.setPosition(position.x + 35, position.y + 45);
+ //   thrust.setPosition(position.x + 40, position.y + 50);
+    thrust.setPosition(position.x + 45, position.y + 56.25);
     thrust.setRotation(rotation);
     window.draw(thrust);
 }
