@@ -28,22 +28,22 @@ bool Entity::IsCharacter() {
 
 void Entity::SetPositionOnAnotherSide(Vector2f &position) {
     if (position.x < 0) {
-        position.x = parameters.MAP_SIZE.first;
+        position.x = parameters.MAP_SIZE.x;
         if (IsCharacter())
             ReduceSpeed();
     }
     if (position.y < 0) {
-        position.y = parameters.MAP_SIZE.second;
+        position.y = parameters.MAP_SIZE.y;
         if (IsCharacter())
             ReduceSpeed();
     }
 
-    if (position.x > parameters.MAP_SIZE.first) {
+    if (position.x > parameters.MAP_SIZE.x) {
         position.x = 0;
         if (IsCharacter())
             ReduceSpeed();
     }
-    if (position.y > parameters.MAP_SIZE.second) {
+    if (position.y > parameters.MAP_SIZE.y) {
         position.y = 0;
         if (IsCharacter())
             ReduceSpeed();

@@ -12,8 +12,8 @@
 
 
 namespace {
-    const Vector2f MAP_WIDTH = {960, 2270};
-    const Vector2f MAP_HEIGHT = {530, 2600};
+    const Vector2f MAP_WIDTH = {960, 1000};
+    const Vector2f MAP_HEIGHT = {530, 700};
     sf::View view;
 }
 
@@ -35,9 +35,9 @@ struct ImageAssets {
 };
 
 struct Application {
+    Level lvl;
     bool playerShieldIsActive = false;
     Clock clock;
-    Level lvl;
     std::list<Entity *> entities;
     Bar bar;
     Shield shield;
@@ -50,6 +50,8 @@ struct Application {
     Parameters parameters;
     Thrust thrust;
     Vector2f playerPosition;
+    size_t level = 0;
+    size_t amountOfEnemies = 0;
 };
 
 void StartGame();
@@ -59,3 +61,7 @@ void MainLoop(RenderWindow &window, Application &application, Player &protagonis
 void GetMapObjects(Application &application);
 
 Player CreatePlayer(Application &application);
+
+void Initialize();
+
+void SetLevel();

@@ -19,7 +19,7 @@ struct Parameters {
     const std::pair<unsigned, unsigned> WINDOW_SIZE = {sf::VideoMode::getDesktopMode().width,
                                                        sf::VideoMode::getDesktopMode().height};
     const size_t ANGLE = 180;
-    const std::pair<size_t, size_t> MAP_SIZE = {3120, 3028};
+    const sf::Vector2i MAP_SIZE = {1920, 1200};
 };
 
 struct EasyEnemyBullet {

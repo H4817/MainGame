@@ -191,7 +191,7 @@ void ProcessDamage(Player &protagonist, Application &application) {
                 }
                 it->name = "explosion";
             }
-            else if (it->name == "easyEnemy" || it->name == "mediumEnemy" || it->name == "strongEnemy") {
+            else if (IsEnemy(it->name)) {
                 it->boost.x = 0;
                 it->boost.y = 0;
                 it->health -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
@@ -230,6 +230,7 @@ void AppendEnemies(Player &protagonist, Application &application) {
                                 application.enemiesContainer.easyOpponent[i].rect.top},
                                application.enemiesHandler.easyEnemy.SIZE, application.playerPosition,
                                "easyEnemy"));
+        ++application.amountOfEnemies;
     }
 
     for (int i = 0; i < application.enemiesContainer.mediumOpponent.size(); i++) {
@@ -239,6 +240,7 @@ void AppendEnemies(Player &protagonist, Application &application) {
                                   application.enemiesContainer.mediumOpponent[i].rect.top},
                                  application.enemiesHandler.mediumEnemy.SIZE, application.playerPosition,
                                  "mediumEnemy"));
+        ++application.amountOfEnemies;
     }
 
     for (int i = 0; i < application.enemiesContainer.strongOpponent.size(); i++) {
@@ -248,6 +250,7 @@ void AppendEnemies(Player &protagonist, Application &application) {
                                   application.enemiesContainer.strongOpponent[i].rect.top},
                                  application.enemiesHandler.hardEnemy.SIZE, application.playerPosition,
                                  "strongEnemy"));
+        ++application.amountOfEnemies;
     }
 
 }
@@ -264,8 +267,8 @@ void AppendAsteroids(size_t amount, Application &application) {
     for (size_t i = 0; i < amount; ++i) {
         application.entities.push_back(
                 new Asteroid(application.imageAssets.asteroid,
-                             {static_cast<float>(rand() % (application.parameters.MAP_SIZE.first - 20 + 1) + 20),
-                              static_cast<float>(rand() % (application.parameters.MAP_SIZE.second - 10 + 1) + 10)},
+                             {static_cast<float>(rand() % (application.parameters.MAP_SIZE.x - 20 + 1) + 20),
+                              static_cast<float>(rand() % (application.parameters.MAP_SIZE.y - 10 + 1) + 10)},
                              {65, 64},
                              "Asteroid"));
     }
@@ -289,6 +292,10 @@ void Draw(RenderWindow &window, Player &protagonist, Application &application) {
     window.display();
 }
 
+bool AllEnemiesDead(const Application &application) {
+    return application.amountOfEnemies == 0;
+}
+
 void MainLoop(RenderWindow &window, Application &application, Player &protagonist) {
 
     while (window.isOpen()) {
@@ -302,6 +309,8 @@ void MainLoop(RenderWindow &window, Application &application, Player &protagonis
         CheckExistenceProtagonist(protagonist, window);
         window.setView(view);
         Draw(window, protagonist, application);
+        if (AllEnemiesDead(application))
+            break;
     }
 
 }
@@ -320,7 +329,7 @@ Player CreatePlayer(Application &application) {
     return protagonist;
 }
 
-void StartGame() {
+void Initialize() {
 
     Application application;
     sf::RenderWindow window(
@@ -331,10 +340,18 @@ void StartGame() {
     view.reset(
             sf::FloatRect(0, 0, application.parameters.WINDOW_SIZE.first, application.parameters.WINDOW_SIZE.second));
     InitializeImages(application);
-    AppendAsteroids(10, application);
+    AppendAsteroids(0, application);
     GetMapObjects(application);
     auto protagonist = CreatePlayer(application);
     AppendEnemies(protagonist, application);
     MainLoop(window, application, protagonist);
+}
+
+void SetLevel() {
+
+}
+
+void StartGame() {
+    Initialize();
 
 }
