@@ -7,6 +7,9 @@ Bar::Bar() {
     texture2.loadFromFile("IMG/BlueBar.png");
     playerBarShield.setTexture(texture2);
 
+    texture3.loadFromFile("IMG/plasma_icon.png");
+    plasmaIcon.setTexture(texture3);
+
     entitiesBar.loadFromFile("IMG/EnemyBar.png");
     entitiesTexture.loadFromImage(entitiesBar);
     enemyBar.setTexture(entitiesTexture);
@@ -82,7 +85,7 @@ void Bar::UpdateProtagonist(size_t Health, size_t Shield) {
     }
 }
 
-void Bar::Draw(sf::RenderWindow &window) {
+void Bar::SetSpritesPosition(sf::RenderWindow &window) {
     sf::Vector2f center = window.getView().getCenter();
     sf::Vector2f size = window.getView().getSize();
 
@@ -92,11 +95,16 @@ void Bar::Draw(sf::RenderWindow &window) {
     blackRectangleForFillingPlayerShield.setPosition((center.x - size.x / 2) + 200, center.y - size.y / 2 + 60);
     blackRectangleForFillingEnemyHP.setPosition((center.x + 100), (center.y + size.y / 2.2f) + 15);
     enemyBar.setPosition((center.x - 100), (center.y + size.y / 2.2f));
+    plasmaIcon.setPosition((center.x - size.x / 2), (center.y + size.y / 2.4f));
+}
 
+void Bar::Draw(sf::RenderWindow &window) {
+    SetSpritesPosition(window);
     window.draw(playerBarHealth);
     window.draw(playerBarShield);
     window.draw(enemyBar);
     window.draw(blackRectangleForFillingEnemyHP);
     window.draw(blackRectangleForFillingPlayerHP);
     window.draw(blackRectangleForFillingPlayerShield);
+    window.draw(plasmaIcon);
 }

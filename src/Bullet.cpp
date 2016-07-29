@@ -13,14 +13,6 @@ Bullet::Bullet(Image &image, MapObjects &objects, Vector2f Position, Vector2i Si
     rotation = (atan2(targetPosition.y - position.y, targetPosition.x - position.x)) * parameters.ANGLE / M_PI;
     playerPos = Position;
     sprite.setOrigin(IMAGE_SIZE.x / 2, IMAGE_SIZE.y / 2);
-//    m_angle = (atan2f(targetPosition.y - position.y, targetPosition.x - position.x));
-//    position = {position.x + ((54 + 25) / 2) * cos(rotation * DEG_TO_RAD),
-//                position.y + ((74 + 25) ) * sin(rotation * DEG_TO_RAD)};
-//    position = {100, 100};
-//    std::cout << position.x << " " << position.y << "\n";
-//    position =  {cos(rotation) * 10, sin(rotation) * 10};
-//    std::cout << position.x << " " << position.y << "\n";
-//    sprite.setPosition(position);
 }
 
 void Bullet::Update(float time, MapObjects &objects) {

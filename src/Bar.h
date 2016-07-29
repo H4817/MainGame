@@ -17,6 +17,8 @@ private:
 
     void SetZeroSize(sf::RectangleShape & rectangleShape);
 
+    void SetSpritesPosition(sf::RenderWindow &window);
+
     PlayerProperties playerProperties;
     EnemiesHandler enemiesHandler;
 
@@ -28,10 +30,12 @@ private:
     sf::Image entitiesBar;
     sf::Texture texture1;
     sf::Texture texture2;
+    sf::Texture texture3;
     sf::Texture entitiesTexture;
     sf::Sprite playerBarHealth;
     sf::Sprite playerBarShield;
     sf::Sprite enemyBar;
+    sf::Sprite plasmaIcon;
     sf::Vector2f healthBarOffset;
     sf::Vector2f shieldBarOffset;
 };

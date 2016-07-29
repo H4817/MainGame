@@ -147,7 +147,7 @@ void ProcessDamage(Player &protagonist, Application &application) {
         for (auto at : application.entities) {
             if (it->RetRect().intersects(at->RetRect())) {
 
-                if (((at->name == "Bullet") &&
+                if (((at->name == "Bullet" ) &&
                      (IsEnemy(it->name)))) {
                     it->health -= application.playerProperties.playerBullet.DAMAGE;
                     at->alive = false;
@@ -221,7 +221,7 @@ void ProcessDamage(Player &protagonist, Application &application) {
     }
 }
 
-void AppendEnemies(Player &protagonist, Application &application) {
+void AppendEnemies(Application &application) {
 
     for (int i = 0; i < application.enemiesContainer.easyOpponent.size(); i++) {
         application.entities.push_back(
@@ -329,29 +329,37 @@ Player CreatePlayer(Application &application) {
     return protagonist;
 }
 
-void Initialize() {
-
-    Application application;
-    sf::RenderWindow window(
+void InitializeWindow(Application &application) {
+    application.window.create(
             sf::VideoMode(application.parameters.WINDOW_SIZE.first, application.parameters.WINDOW_SIZE.second), "Game");
-    window.setMouseCursorVisible(false);
-    window.setFramerateLimit(60);
-    window.setVerticalSyncEnabled(true);
+    application.window.setMouseCursorVisible(false);
+    application.window.setFramerateLimit(60);
+    application.window.setVerticalSyncEnabled(true);
     view.reset(
             sf::FloatRect(0, 0, application.parameters.WINDOW_SIZE.first, application.parameters.WINDOW_SIZE.second));
+}
+
+
+void Initialize(Application &application) {
+    InitializeWindow(application);
     InitializeImages(application);
-    AppendAsteroids(0, application);
+    AppendAsteroids(10, application);
     GetMapObjects(application);
-    auto protagonist = CreatePlayer(application);
-    AppendEnemies(protagonist, application);
+    AppendEnemies(application);
+}
+
+void SetLevel(Application &application) {
+
+}
+
+void Run(RenderWindow &window, Application &application, Player &protagonist) {
     MainLoop(window, application, protagonist);
 }
 
-void SetLevel() {
-
-}
-
 void StartGame() {
-    Initialize();
-
+    Application application;
+    Initialize(application);
+    SetLevel(application);
+    auto protagonist = CreatePlayer(application);
+    Run(application.window, application, protagonist);
 }

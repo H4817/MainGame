@@ -18,8 +18,6 @@ void Thrust::Draw(RenderWindow &window, Vector2f &position, float &rotation) {
         thrust.setTextureRect(IntRect(0, 42.666 * int(frameCounter), 43, 43));
         frameCounter += 0.03 * time;
     }
-//    thrust.setPosition(position.x + 35, position.y + 45);
- //   thrust.setPosition(position.x + 40, position.y + 50);
     thrust.setPosition(position.x + 45, position.y + 56.25);
     thrust.setRotation(rotation);
     window.draw(thrust);

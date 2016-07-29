@@ -12,8 +12,8 @@
 
 
 namespace {
-    const Vector2f MAP_WIDTH = {960, 1000};
-    const Vector2f MAP_HEIGHT = {530, 700};
+    const Vector2f MAP_WIDTH = {960, 2270};
+    const Vector2f MAP_HEIGHT = {530, 2600};
     sf::View view;
 }
 
@@ -52,6 +52,7 @@ struct Application {
     Vector2f playerPosition;
     size_t level = 0;
     size_t amountOfEnemies = 0;
+    RenderWindow window;
 };
 
 void StartGame();
@@ -62,6 +63,10 @@ void GetMapObjects(Application &application);
 
 Player CreatePlayer(Application &application);
 
-void Initialize();
+void Initialize(Application &application);
 
-void SetLevel();
+void SetLevel(Application &application);
+
+void Run(RenderWindow &window, Application &application, Player &protagonist);
+
+void InitializeWindow(Application &application);
