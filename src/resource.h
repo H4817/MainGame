@@ -2,6 +2,11 @@
 
 #include <SFML/Graphics.hpp>
 
+struct SimpleRocket {
+    const sf::Vector2i SIZE = {49, 14};
+    const size_t DAMAGE = 40;
+};
+
 struct PlayerBullet {
     const sf::Vector2i SIZE = {54, 25};
     const size_t DAMAGE = 15;
@@ -13,6 +18,7 @@ struct PlayerProperties {
     int shield = 500;
     const float SPEED = 0.2;
     PlayerBullet playerBullet;
+    SimpleRocket simpleRocket;
 };
 
 struct Parameters {
@@ -25,11 +31,6 @@ struct Parameters {
 struct EasyEnemyBullet {
     const sf::Vector2i SIZE = {54, 25};
     const size_t DAMAGE = 20;
-};
-
-struct SimpleRocket {
-    const sf::Vector2i SIZE = {49, 14};
-    const size_t DAMAGE = 40;
 };
 
 struct _SmartRocket {

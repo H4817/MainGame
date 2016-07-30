@@ -23,18 +23,41 @@ void ProcessEvents(RenderWindow &window, Player &protagonist, Application &appli
         if (event.type == Event::Closed || event.key.code == sf::Keyboard::Escape) {
             window.close();
         }
-        if (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::R &&
-            application.playerProperties.shield > 0) {
-            application.entities.push_back(
-                    new Bullet(application.imageAssets.bulletImage, application.objects, protagonist.position,
-                               application.playerProperties.playerBullet.SIZE, application.playerPosition,
-                               "Bullet"));
-            application.playerProperties.shield -= 2;
-            application.bar.UpdateProtagonist(static_cast<size_t >(protagonist.health),
-                                              static_cast<size_t >(application.playerProperties.shield));
-        }
-        if (event.type == Event::KeyPressed && event.key.code == sf::Keyboard::F) {
-            application.playerShieldIsActive = !application.playerShieldIsActive;
+        if (event.type == Event::KeyPressed) {
+
+            if (event.key.code == sf::Keyboard::F) {
+                application.playerShieldIsActive = !application.playerShieldIsActive;
+            }
+
+            else if (event.key.code == sf::Keyboard::Q) {
+                if (protagonist.GetCurrentWeapon() == 0)
+                    protagonist.SetCurrentWeapon(1);
+                else
+                    protagonist.SetCurrentWeapon(0);
+            }
+
+            else if (event.key.code == sf::Keyboard::R && application.playerProperties.shield > 0) {
+
+                if (protagonist.GetCurrentWeapon() == 0) {
+                    application.entities.push_back(
+                            new Bullet(application.imageAssets.bulletImage, application.objects, protagonist.position,
+                                       application.playerProperties.playerBullet.SIZE, application.playerPosition,
+                                       "Bullet"));
+                    application.playerProperties.shield -= 2;
+                    application.bar.UpdateProtagonist(static_cast<size_t >(protagonist.health),
+                                                      static_cast<size_t >(application.playerProperties.shield));
+                }
+
+                else if (protagonist.GetAmountOfMissile() > 0) {
+                    application.entities.push_back(new Rocket(application.imageAssets.rocketImage, application.objects,
+                                                              protagonist.position,
+                                                              application.playerProperties.simpleRocket.SIZE,
+                                                              application.playerPosition, "Rocket"));
+                    protagonist.SetAmountOfMissile(protagonist.GetAmountOfMissile() - 1);
+                }
+
+            }
+
         }
     }
 }
@@ -135,7 +158,8 @@ bool IsShieldActive(const Application &application) {
 }
 
 bool IsBullet(const string &name) {
-    return (name == "Bullet" || name == "EnemyBullet" || name == "EnemyRocket" || name == "EnemySmartRocket");
+    return (name == "Bullet" || name == "Rocket" || name == "EnemyBullet" || name == "EnemyRocket" ||
+            name == "EnemySmartRocket");
 }
 
 bool IsEnemy(const string &name) {
@@ -147,11 +171,20 @@ void ProcessDamage(Player &protagonist, Application &application) {
         for (auto at : application.entities) {
             if (it->RetRect().intersects(at->RetRect())) {
 
-                if (((at->name == "Bullet" ) &&
-                     (IsEnemy(it->name)))) {
-                    it->health -= application.playerProperties.playerBullet.DAMAGE;
-                    at->alive = false;
-                    application.bar.UpdateEnemy(static_cast<size_t >(it->health), it->name);
+                if (IsEnemy(it->name)) {
+
+                    if (at->name == "Bullet") {
+                        it->health -= application.playerProperties.playerBullet.DAMAGE;
+                        at->alive = false;
+                        application.bar.UpdateEnemy(static_cast<size_t >(it->health), it->name);
+                    }
+
+                    else if (at->name == "Rocket") {
+                        it->health -= application.playerProperties.simpleRocket.DAMAGE;
+                        at->name = "explosion";
+                        application.bar.UpdateEnemy(static_cast<size_t >(it->health), it->name);
+                    }
+
                 }
 
                 else if (at->name == "Asteroid") {

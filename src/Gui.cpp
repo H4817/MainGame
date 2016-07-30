@@ -1,6 +1,6 @@
-#include "Bar.h"
+#include "Gui.h"
 
-Bar::Bar() {
+Gui::Gui() {
     texture1.loadFromFile("IMG/EnemyBar.png");
     playerBarHealth.setTexture(texture1);
 
@@ -22,11 +22,11 @@ Bar::Bar() {
 }
 
 
-void Bar::SetZeroSize(sf::RectangleShape &rectangleShape) {
+void Gui::SetZeroSize(sf::RectangleShape &rectangleShape) {
     rectangleShape.setSize({static_cast<float>(BAR_WIDTH), static_cast<float>(Y_OFFSET)});
 }
 
-void Bar::UpdateEnemy(size_t Health, const string &name) {
+void Gui::UpdateEnemy(size_t Health, const string &name) {
     if (name == "easyEnemy") {
         if ((Health > 0) && (Health <= enemiesHandler.easyEnemy.health)) {
             healthBarOffset = {
@@ -65,7 +65,7 @@ void Bar::UpdateEnemy(size_t Health, const string &name) {
     }
 }
 
-void Bar::UpdateProtagonist(size_t Health, size_t Shield) {
+void Gui::UpdateProtagonist(size_t Health, size_t Shield) {
     if ((Health > 0) && (Health <= playerProperties.HEALTH)) {
         healthBarOffset = {
                 static_cast<float>((BAR_WIDTH * (playerProperties.HEALTH - Health) / playerProperties.HEALTH)),
@@ -85,7 +85,7 @@ void Bar::UpdateProtagonist(size_t Health, size_t Shield) {
     }
 }
 
-void Bar::SetSpritesPosition(sf::RenderWindow &window) {
+void Gui::SetSpritesPosition(sf::RenderWindow &window) {
     sf::Vector2f center = window.getView().getCenter();
     sf::Vector2f size = window.getView().getSize();
 
@@ -98,7 +98,7 @@ void Bar::SetSpritesPosition(sf::RenderWindow &window) {
     plasmaIcon.setPosition((center.x - size.x / 2), (center.y + size.y / 2.4f));
 }
 
-void Bar::Draw(sf::RenderWindow &window) {
+void Gui::Draw(sf::RenderWindow &window) {
     SetSpritesPosition(window);
     window.draw(playerBarHealth);
     window.draw(playerBarShield);

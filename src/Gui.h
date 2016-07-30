@@ -3,9 +3,9 @@
 #include <SFML/Graphics.hpp>
 #include "Entity.h"
 
-class Bar {
+class Gui {
 public:
-    Bar();
+    Gui();
 
     void UpdateEnemy(size_t Health, const string & name);
 

@@ -6,12 +6,28 @@ Player::Player(Image &image, Vector2f Position, Vector2i Size, String Name) : En
         image, Position, Size, Name) {
     health = static_cast<int>(MAX_HP);
     state = STAY;
+    amountOfMissile = 20;
+    currentWeapon = BULLET;
     if (name == "player") {
         sprite.setPosition(size.x, size.y);
         sprite.setOrigin(ImageSize.x / 2, ImageSize.y / 2);
-
-//        sprite.setOrigin(sprite.getGlobalBounds().left + sprite.getGlobalBounds().width / 2, sprite.getGlobalBounds().top + sprite.getGlobalBounds().height / 2);
     }
+}
+
+void Player::SetAmountOfMissile(size_t amount) {
+    amountOfMissile = amount;
+}
+
+size_t Player::GetAmountOfMissile() {
+    return amountOfMissile;
+}
+
+size_t Player::GetCurrentWeapon() {
+    return currentWeapon;
+}
+
+void Player::SetCurrentWeapon(size_t weaponNumber) {
+    currentWeapon = static_cast<CurrentWeapon>(weaponNumber);
 }
 
 int Player::GetState() {

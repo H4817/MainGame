@@ -3,7 +3,7 @@
 #include "Player.h"
 #include "Bullet.h"
 #include "Enemies.h"
-#include "Bar.h"
+#include "Gui.h"
 #include "Asteroid.h"
 #include "Thrust.h"
 #include "shield.h"
@@ -39,7 +39,7 @@ struct Application {
     bool playerShieldIsActive = false;
     Clock clock;
     std::list<Entity *> entities;
-    Bar bar;
+    Gui bar;
     Shield shield;
     Aim aim;
     EnemiesHandler enemiesHandler;

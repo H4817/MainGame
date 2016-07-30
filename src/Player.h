@@ -17,13 +17,28 @@ public:
 
     int GetState();
 
+    size_t GetAmountOfMissile();
+
+    void SetAmountOfMissile(size_t amount);
+
+    size_t GetCurrentWeapon();
+
+    void SetCurrentWeapon(size_t weaponNumber);
+
 private:
+    enum CurrentWeapon
+    {
+        BULLET,
+        MISSILE
+    };
+    CurrentWeapon currentWeapon;
     PlayerProperties playerProperties;
     const size_t MAX_HP = playerProperties.HEALTH;
     float rotation;
     const double ACCELERATION = 0.001;
     const double DECELERATION = 0.997;
     const sf::Vector2f ImageSize = {79, 99};
+    size_t amountOfMissile;
     sf::Vector2f m_temp;
     float distance;
     enum {
