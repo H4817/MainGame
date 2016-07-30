@@ -6,7 +6,7 @@ Player::Player(Image &image, Vector2f Position, Vector2i Size, String Name) : En
         image, Position, Size, Name) {
     health = static_cast<int>(MAX_HP);
     state = STAY;
-    amountOfMissile = 20;
+    amountOfMissiles = 20;
     currentWeapon = BULLET;
     if (name == "player") {
         sprite.setPosition(size.x, size.y);
@@ -15,11 +15,11 @@ Player::Player(Image &image, Vector2f Position, Vector2i Size, String Name) : En
 }
 
 void Player::SetAmountOfMissile(size_t amount) {
-    amountOfMissile = amount;
+    amountOfMissiles = amount;
 }
 
 size_t Player::GetAmountOfMissile() {
-    return amountOfMissile;
+    return amountOfMissiles;
 }
 
 size_t Player::GetCurrentWeapon() {

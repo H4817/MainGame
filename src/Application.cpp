@@ -44,7 +44,7 @@ void ProcessEvents(RenderWindow &window, Player &protagonist, Application &appli
                                        application.playerProperties.playerBullet.SIZE, application.playerPosition,
                                        "Bullet"));
                     application.playerProperties.shield -= 2;
-                    application.bar.UpdateProtagonist(static_cast<size_t >(protagonist.health),
+                    application.gui.UpdateProtagonist(static_cast<size_t >(protagonist.health),
                                                       static_cast<size_t >(application.playerProperties.shield));
                 }
 
@@ -176,13 +176,13 @@ void ProcessDamage(Player &protagonist, Application &application) {
                     if (at->name == "Bullet") {
                         it->health -= application.playerProperties.playerBullet.DAMAGE;
                         at->alive = false;
-                        application.bar.UpdateEnemy(static_cast<size_t >(it->health), it->name);
+                        application.gui.UpdateEnemy(static_cast<size_t >(it->health), it->name);
                     }
 
                     else if (at->name == "Rocket") {
                         it->health -= application.playerProperties.simpleRocket.DAMAGE;
                         at->name = "explosion";
-                        application.bar.UpdateEnemy(static_cast<size_t >(it->health), it->name);
+                        application.gui.UpdateEnemy(static_cast<size_t >(it->health), it->name);
                     }
 
                 }
@@ -238,7 +238,7 @@ void ProcessDamage(Player &protagonist, Application &application) {
                     protagonist.health -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
                                            abs(static_cast<long>(it->velocity.x + it->velocity.y) / 2));
                 }
-                application.bar.UpdateEnemy(static_cast<size_t>(it->health), it->name);
+                application.gui.UpdateEnemy(static_cast<size_t>(it->health), it->name);
             }
             else if (it->name == "ShieldReward") {
                 application.playerProperties.shield += 30;
@@ -248,7 +248,7 @@ void ProcessDamage(Player &protagonist, Application &application) {
                 protagonist.health += 30;
                 it->alive = false;
             }
-            application.bar.UpdateProtagonist(static_cast<size_t>(protagonist.health),
+            application.gui.UpdateProtagonist(static_cast<size_t>(protagonist.health),
                                               static_cast<size_t>(application.playerProperties.shield));
         }
     }
@@ -317,7 +317,7 @@ void Draw(RenderWindow &window, Player &protagonist, Application &application) {
     if (application.playerShieldIsActive && application.playerProperties.shield > 0) {
         application.shield.Draw(window, protagonist.position);
     }
-    application.bar.Draw(window);
+    application.gui.Draw(window, protagonist.GetCurrentWeapon(), protagonist.GetAmountOfMissile());
     application.aim.Draw(window);
     if (protagonist.GetState() == 0) {
         application.thrust.Draw(window, protagonist.position, application.objects.playerRotation);

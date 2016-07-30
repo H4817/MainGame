@@ -38,7 +38,7 @@ private:
     const double ACCELERATION = 0.001;
     const double DECELERATION = 0.997;
     const sf::Vector2f ImageSize = {79, 99};
-    size_t amountOfMissile;
+    size_t amountOfMissiles;
     sf::Vector2f m_temp;
     float distance;
     enum {

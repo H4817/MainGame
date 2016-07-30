@@ -11,7 +11,7 @@ public:
 
     void UpdateProtagonist(size_t Health, size_t Shield);
 
-    void Draw(sf::RenderWindow &window);
+    void Draw(sf::RenderWindow &window, size_t weaponNumber, size_t amountOfMissiles);
 
 private:
 
@@ -22,6 +22,9 @@ private:
     PlayerProperties playerProperties;
     EnemiesHandler enemiesHandler;
 
+    sf::Font font;
+    sf::Text text;
+
     sf::RectangleShape blackRectangleForFillingEnemyHP;
     sf::RectangleShape blackRectangleForFillingPlayerHP;
     sf::RectangleShape blackRectangleForFillingPlayerShield;
@@ -31,11 +34,12 @@ private:
     sf::Texture texture1;
     sf::Texture texture2;
     sf::Texture texture3;
+    sf::Texture texture4;
     sf::Texture entitiesTexture;
     sf::Sprite playerBarHealth;
     sf::Sprite playerBarShield;
     sf::Sprite enemyBar;
-    sf::Sprite plasmaIcon;
+    sf::Sprite weaponIcon;
     sf::Vector2f healthBarOffset;
     sf::Vector2f shieldBarOffset;
 };

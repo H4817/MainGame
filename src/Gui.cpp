@@ -8,7 +8,18 @@ Gui::Gui() {
     playerBarShield.setTexture(texture2);
 
     texture3.loadFromFile("IMG/plasma_icon.png");
-    plasmaIcon.setTexture(texture3);
+    weaponIcon.setTexture(texture3);
+
+    texture4.loadFromFile("IMG/missile_icon.png");
+    weaponIcon.setTexture(texture4);
+
+    if (!font.loadFromFile("Assets/hemi-head.ttf"))
+        cout << "fonts are not found\n";
+    else {
+        text.setFont(font);
+        text.setCharacterSize(24); // in pixels, not points!
+        text.setColor(sf::Color::Yellow);
+    }
 
     entitiesBar.loadFromFile("IMG/EnemyBar.png");
     entitiesTexture.loadFromImage(entitiesBar);
@@ -76,8 +87,9 @@ void Gui::UpdateProtagonist(size_t Health, size_t Shield) {
         SetZeroSize(blackRectangleForFillingPlayerHP);
     }
     if ((Shield > 0) && (Shield <= playerProperties.shield)) {
-        shieldBarOffset = {static_cast<float>((BAR_WIDTH * (playerProperties.shield - Shield) / playerProperties.shield)),
-                           static_cast<float>(Y_OFFSET)};
+        shieldBarOffset = {
+                static_cast<float>((BAR_WIDTH * (playerProperties.shield - Shield) / playerProperties.shield)),
+                static_cast<float>(Y_OFFSET)};
         blackRectangleForFillingPlayerShield.setSize(shieldBarOffset);
     }
     else {
@@ -95,16 +107,26 @@ void Gui::SetSpritesPosition(sf::RenderWindow &window) {
     blackRectangleForFillingPlayerShield.setPosition((center.x - size.x / 2) + 200, center.y - size.y / 2 + 60);
     blackRectangleForFillingEnemyHP.setPosition((center.x + 100), (center.y + size.y / 2.2f) + 15);
     enemyBar.setPosition((center.x - 100), (center.y + size.y / 2.2f));
-    plasmaIcon.setPosition((center.x - size.x / 2), (center.y + size.y / 2.4f));
+    weaponIcon.setPosition((center.x - size.x / 2), (center.y + size.y / 2.4f));
+    text.setPosition((center.x - size.x / 2) + 55, (center.y + size.y / 2.18f));
 }
 
-void Gui::Draw(sf::RenderWindow &window) {
+void Gui::Draw(sf::RenderWindow &window, size_t weaponNumber, size_t amountOfMissiles) {
     SetSpritesPosition(window);
     window.draw(playerBarHealth);
     window.draw(playerBarShield);
+    if (weaponNumber == 0)
+        weaponIcon.setTexture(texture3);
+    else
+        weaponIcon.setTexture(texture4);
+
+    text.setString(to_string(amountOfMissiles));
+
+    window.draw(weaponIcon);
     window.draw(enemyBar);
     window.draw(blackRectangleForFillingEnemyHP);
     window.draw(blackRectangleForFillingPlayerHP);
     window.draw(blackRectangleForFillingPlayerShield);
-    window.draw(plasmaIcon);
+    if (weaponNumber != 0)
+        window.draw(text);
 }

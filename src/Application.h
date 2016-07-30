@@ -39,7 +39,7 @@ struct Application {
     bool playerShieldIsActive = false;
     Clock clock;
     std::list<Entity *> entities;
-    Gui bar;
+    Gui gui;
     Shield shield;
     Aim aim;
     EnemiesHandler enemiesHandler;

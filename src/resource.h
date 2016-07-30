@@ -4,7 +4,7 @@
 
 struct SimpleRocket {
     const sf::Vector2i SIZE = {49, 14};
-    const size_t DAMAGE = 40;
+    const size_t DAMAGE = 60;
 };
 
 struct PlayerBullet {
@@ -35,7 +35,7 @@ struct EasyEnemyBullet {
 
 struct _SmartRocket {
     const sf::Vector2i SIZE = {60, 16};
-    const size_t DAMAGE = 60;
+    const size_t DAMAGE = 80;
 };
 
 struct EasyEnemy {
