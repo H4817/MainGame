@@ -36,16 +36,16 @@ void ProcessEvents(RenderWindow &window, Player &protagonist, Application &appli
                     protagonist.SetCurrentWeapon(0);
             }
 
-            else if (event.key.code == sf::Keyboard::R && application.playerProperties.shield > 0) {
+            else if (event.key.code == sf::Keyboard::R && protagonist.GetShield() > 0) {
 
                 if (protagonist.GetCurrentWeapon() == 0) {
                     application.entities.push_back(
                             new Bullet(application.imageAssets.bulletImage, application.objects, protagonist.position,
                                        application.playerProperties.playerBullet.SIZE, application.playerPosition,
                                        "Bullet"));
-                    application.playerProperties.shield -= 2;
+                    protagonist.SetShield(protagonist.GetShield() - 2);
                     application.gui.UpdateProtagonist(static_cast<size_t >(protagonist.health),
-                                                      static_cast<size_t >(application.playerProperties.shield));
+                                                      static_cast<size_t >(protagonist.GetShield()));
                 }
 
                 else if (protagonist.GetAmountOfMissile() > 0) {
@@ -85,7 +85,7 @@ Object InitializePlayer(Application &application) {
     return player;
 }
 
-bool IsAliveEntity(Entity *entity) {
+bool IsNotAliveEntity(Entity *entity) {
     return !entity->alive;
 }
 
@@ -143,7 +143,7 @@ void AppendEnemiesBullets(Application &application, Entity *it, Player &protagon
 }
 
 void ProcessEntities(float &time_ms, Application &application, Player &protagonist) {
-    auto new_end = std::remove_if(application.entities.begin(), application.entities.end(), IsAliveEntity);
+    auto new_end = std::remove_if(application.entities.begin(), application.entities.end(), IsNotAliveEntity);
     application.entities.erase(new_end, application.entities.end());
     static float localTime = 0.f;
     for (auto it : application.entities) {
@@ -153,8 +153,8 @@ void ProcessEntities(float &time_ms, Application &application, Player &protagoni
     }
 }
 
-bool IsShieldActive(const Application &application) {
-    return application.playerShieldIsActive && application.playerProperties.shield > 0;
+bool IsShieldActive(const Application &application, const Player &protagonist) {
+    return application.playerShieldIsActive && protagonist.GetShield() > 0;
 }
 
 bool IsBullet(const string &name) {
@@ -195,8 +195,8 @@ void ProcessDamage(Player &protagonist, Application &application) {
                         else {
                             it->health -= 100;
                         }
-
-                        at->name = "explosion";
+                        if (it->name != "HealthReward" && it->name != "ShieldReward")
+                            at->name = "explosion";
                     }
                 }
 
@@ -205,9 +205,10 @@ void ProcessDamage(Player &protagonist, Application &application) {
         }
         if (it->RetRect().intersects(protagonist.RetRect())) {
             if (it->name == "EnemyBullet") {
-                if (IsShieldActive(application)) {
-                    application.playerProperties.shield -=
-                            application.enemiesHandler.easyEnemy.easyEnemyBullet.DAMAGE / 2;
+                if (IsShieldActive(application, protagonist)) {
+                    protagonist.SetShield(
+                            protagonist.GetShield() -
+                            static_cast<int>(application.enemiesHandler.easyEnemy.easyEnemyBullet.DAMAGE / 2));
                 }
                 else {
                     protagonist.health -= application.enemiesHandler.easyEnemy.easyEnemyBullet.DAMAGE;
@@ -215,9 +216,10 @@ void ProcessDamage(Player &protagonist, Application &application) {
                 it->alive = false;
             }
             else if (it->name == "EnemyRocket" || it->name == "EnemySmartRocket") {
-                if (IsShieldActive(application)) {
-                    application.playerProperties.shield -=
-                            application.enemiesHandler.mediumEnemy.simpleRocket.DAMAGE / 2;
+                if (IsShieldActive(application, protagonist)) {
+                    protagonist.SetShield(
+                            protagonist.GetShield() -
+                            static_cast<int>(application.enemiesHandler.mediumEnemy.simpleRocket.DAMAGE / 2));
                 }
                 else {
                     protagonist.health -= application.enemiesHandler.mediumEnemy.simpleRocket.DAMAGE;
@@ -229,10 +231,11 @@ void ProcessDamage(Player &protagonist, Application &application) {
                 it->boost.y = 0;
                 it->health -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
                                abs(static_cast<long>(it->velocity.x + it->velocity.y) / 2));
-                if (application.playerProperties.shield > 0 && application.playerShieldIsActive) {
-                    application.playerProperties.shield -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
+                if (protagonist.GetShield() > 0 && application.playerShieldIsActive) {
+                    protagonist.SetShield(protagonist.GetShield() -
+                                          static_cast<int>((application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
                                                             abs(static_cast<long>(it->velocity.x + it->velocity.y) /
-                                                                2));
+                                                                2))));
                 }
                 else {
                     protagonist.health -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
@@ -241,7 +244,7 @@ void ProcessDamage(Player &protagonist, Application &application) {
                 application.gui.UpdateEnemy(static_cast<size_t>(it->health), it->name);
             }
             else if (it->name == "ShieldReward") {
-                application.playerProperties.shield += 30;
+                protagonist.SetShield(protagonist.GetShield() + 30);
                 it->alive = false;
             }
             else if (it->name == "HealthReward") {
@@ -249,7 +252,7 @@ void ProcessDamage(Player &protagonist, Application &application) {
                 it->alive = false;
             }
             application.gui.UpdateProtagonist(static_cast<size_t>(protagonist.health),
-                                              static_cast<size_t>(application.playerProperties.shield));
+                                              static_cast<size_t>(protagonist.GetShield()));
         }
     }
 }
@@ -314,7 +317,7 @@ void Draw(RenderWindow &window, Player &protagonist, Application &application) {
         window.draw((it)->sprite);
     }
     window.draw(protagonist.sprite);
-    if (application.playerShieldIsActive && application.playerProperties.shield > 0) {
+    if (application.playerShieldIsActive && protagonist.GetShield() > 0) {
         application.shield.Draw(window, protagonist.position);
     }
     application.gui.Draw(window, protagonist.GetCurrentWeapon(), protagonist.GetAmountOfMissile());

@@ -25,12 +25,17 @@ public:
 
     void SetCurrentWeapon(size_t weaponNumber);
 
+    int GetShield() const;
+
+    void SetShield(int shield);
+
 private:
     enum CurrentWeapon
     {
         BULLET,
         MISSILE
     };
+    int shield;
     CurrentWeapon currentWeapon;
     PlayerProperties playerProperties;
     const size_t MAX_HP = playerProperties.HEALTH;

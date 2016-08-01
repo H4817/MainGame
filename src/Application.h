@@ -35,6 +35,13 @@ struct ImageAssets {
 };
 
 struct Application {
+    enum GameState {
+        MENU,
+        PAUSE,
+        GAME
+    };
+
+    GameState gameState;
     Level lvl;
     bool playerShieldIsActive = false;
     Clock clock;
