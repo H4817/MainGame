@@ -1,5 +1,8 @@
 #include "Application.h"
 
+void ShowMenu(Application &application) {
+    application.menu.Draw(application.window);
+}
 
 void getPlayerCoordinateForView(Vector2f position) {
     Vector2f centerPosition = {position.x, position.y};
@@ -335,6 +338,7 @@ bool AllEnemiesDead(const Application &application) {
 void MainLoop(RenderWindow &window, Application &application, Player &protagonist) {
 
     while (window.isOpen()) {
+        ShowMenu(application);
         GetMousePosition(window, application.playerPosition);
         float time_ms = RunTimer(application);
         ProcessEvents(window, protagonist, application);
@@ -392,8 +396,11 @@ void Run(RenderWindow &window, Application &application, Player &protagonist) {
     MainLoop(window, application, protagonist);
 }
 
+
 void StartGame() {
     Application application;
+//    InitializeWindow(application);
+//    ShowMenu(application);
     Initialize(application);
     SetLevel(application);
     auto protagonist = CreatePlayer(application);

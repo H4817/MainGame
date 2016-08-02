@@ -2,17 +2,24 @@
 
 #include <SFML/Graphics.hpp>
 
+sf::Vector2f GetMousePosition(sf::RenderWindow &window);
 
 class Button {
+
 public:
-    Button();
+//    Button();
 
-    Button(sf::Vector2f size, sf::Vector2f position, std::string str, Action state);
+//    Button(sf::Vector2f position, sf::Vector2f size, std::string str, Button::Action state);
 
-    Button(std::string str, Action state);
+//    Button(std::string str, Action state);
+
+    bool IsMouseOnButton(const sf::Vector2f &mousePosition);
+
+    bool IsMousePressed();
+
+    void ChangeColor(sf::RenderWindow &window);
 
 private:
-
     void StartGame();
 
     void ShowText();
@@ -20,7 +27,6 @@ private:
     void Exit();
 
 private:
-
     sf::RectangleShape rectangleShape;
 
     enum Action {
@@ -29,20 +35,22 @@ private:
         EXIT
     };
     Action action;
-    std::string m_string;
-    Vector2f size;
-    sf::Vector2f position;
+    sf::Text text;
+    sf::Vector2f size;
+    sf::Vector2f upLeftCorner;
 };
 
 class Menu {
+
 public:
     Menu();
 
-    void Draw();
+    void Draw(sf::RenderWindow &window);
 
 private:
-    sf::sprite background;
-    std::string title;
+    sf::Texture backgroundTexture;
+    sf::Sprite background;
+    sf::Text title;
 
 private:
     Button startGame;

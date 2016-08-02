@@ -8,6 +8,7 @@
 #include "Thrust.h"
 #include "shield.h"
 #include "aim.h"
+#include "Menu.h"
 #include <memory>
 
 
@@ -60,6 +61,7 @@ struct Application {
     size_t level = 0;
     size_t amountOfEnemies = 0;
     RenderWindow window;
+    Menu menu;
 };
 
 void StartGame();
