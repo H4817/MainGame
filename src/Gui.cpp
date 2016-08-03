@@ -17,7 +17,7 @@ Gui::Gui() {
         cout << "fonts are not found\n";
     else {
         text.setFont(font);
-        text.setCharacterSize(24); // in pixels, not points!
+        text.setCharacterSize(24);
         text.setColor(sf::Color::Yellow);
     }
 

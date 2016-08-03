@@ -7,11 +7,9 @@ sf::Vector2f GetMousePosition(sf::RenderWindow &window);
 class Button {
 
 public:
-//    Button();
+    Button(sf::Vector2f position, sf::Vector2f size, std::string str);
 
-//    Button(sf::Vector2f position, sf::Vector2f size, std::string str, Button::Action state);
-
-//    Button(std::string str, Action state);
+    void draw(sf::RenderWindow &window);
 
     bool IsMouseOnButton(const sf::Vector2f &mousePosition);
 
@@ -35,6 +33,7 @@ private:
         EXIT
     };
     Action action;
+    sf::Font font;
     sf::Text text;
     sf::Vector2f size;
     sf::Vector2f upLeftCorner;
@@ -49,10 +48,13 @@ public:
 
 private:
     sf::Texture backgroundTexture;
-    sf::Sprite background;
     sf::Text title;
+    sf::Sprite background;
 
 private:
+    const sf::Vector2f sizeOfButton = {200, 50};
+    const sf::Vector2f position = {400, 100};
+    Button setLevel;
     Button startGame;
     Button tutorial;
     Button aboutDesigner;

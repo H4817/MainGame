@@ -66,7 +66,7 @@ struct Application {
 
 void StartGame();
 
-void MainLoop(RenderWindow &window, Application &application, Player &protagonist);
+void MainLoop(Application &application, Player &protagonist);
 
 void GetMapObjects(Application &application);
 
@@ -76,6 +76,6 @@ void Initialize(Application &application);
 
 void SetLevel(Application &application);
 
-void Run(RenderWindow &window, Application &application, Player &protagonist);
+void Run(Application &application, Player &protagonist);
 
 void InitializeWindow(Application &application);

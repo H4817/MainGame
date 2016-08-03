@@ -1,9 +1,5 @@
 #include "Application.h"
 
-void ShowMenu(Application &application) {
-    application.menu.Draw(application.window);
-}
-
 void getPlayerCoordinateForView(Vector2f position) {
     Vector2f centerPosition = {position.x, position.y};
     if (position.x < MAP_WIDTH.x) centerPosition.x = MAP_WIDTH.x;
@@ -20,11 +16,11 @@ float RunTimer(Application &application) {
     return time_ms;
 }
 
-void ProcessEvents(RenderWindow &window, Player &protagonist, Application &application) {
+void ProcessEvents(Player &protagonist, Application &application) {
     sf::Event event;
-    while (window.pollEvent(event)) {
+    while (application.window.pollEvent(event)) {
         if (event.type == Event::Closed || event.key.code == sf::Keyboard::Escape) {
-            window.close();
+            application.window.close();
         }
         if (event.type == Event::KeyPressed) {
 
@@ -313,42 +309,42 @@ void AppendAsteroids(size_t amount, Application &application) {
     }
 }
 
-void Draw(RenderWindow &window, Player &protagonist, Application &application) {
-    window.clear();
-    application.lvl.Draw(window);
+void Draw(Player &protagonist, Application &application) {
+    application.window.clear();
+    application.menu.Draw(application.window);
+/*    application.lvl.Draw(application.window);
     for (auto it : application.entities) {
-        window.draw((it)->sprite);
+        application.window.draw((it)->sprite);
     }
-    window.draw(protagonist.sprite);
+    application.window.draw(protagonist.sprite);
     if (application.playerShieldIsActive && protagonist.GetShield() > 0) {
-        application.shield.Draw(window, protagonist.position);
+        application.shield.Draw(application.window, protagonist.position);
     }
-    application.gui.Draw(window, protagonist.GetCurrentWeapon(), protagonist.GetAmountOfMissile());
-    application.aim.Draw(window);
+    application.gui.Draw(application.window, protagonist.GetCurrentWeapon(), protagonist.GetAmountOfMissile());
+    application.aim.Draw(application.window);
     if (protagonist.GetState() == 0) {
-        application.thrust.Draw(window, protagonist.position, application.objects.playerRotation);
-    }
-    window.display();
+        application.thrust.Draw(application.window, protagonist.position, application.objects.playerRotation);
+    }*/
+    application.window.display();
 }
 
 bool AllEnemiesDead(const Application &application) {
     return application.amountOfEnemies == 0;
 }
 
-void MainLoop(RenderWindow &window, Application &application, Player &protagonist) {
+void MainLoop(Application &application, Player &protagonist) {
 
-    while (window.isOpen()) {
-        ShowMenu(application);
-        GetMousePosition(window, application.playerPosition);
+    while (application.window.isOpen()) {
+        GetMousePosition(application.window, application.playerPosition);
         float time_ms = RunTimer(application);
-        ProcessEvents(window, protagonist, application);
+        ProcessEvents(protagonist, application);
         protagonist.rotation_GG(application.playerPosition);
         protagonist.Update(time_ms, application.objects);
         ProcessEntities(time_ms, application, protagonist);
         ProcessDamage(protagonist, application);
-        CheckExistenceProtagonist(protagonist, window);
-        window.setView(view);
-        Draw(window, protagonist, application);
+        CheckExistenceProtagonist(protagonist, application.window);
+        application.window.setView(view);
+        Draw(protagonist, application);
         if (AllEnemiesDead(application))
             break;
     }
@@ -372,7 +368,7 @@ Player CreatePlayer(Application &application) {
 void InitializeWindow(Application &application) {
     application.window.create(
             sf::VideoMode(application.parameters.WINDOW_SIZE.first, application.parameters.WINDOW_SIZE.second), "Game");
-    application.window.setMouseCursorVisible(false);
+//    application.window.setMouseCursorVisible(false);
     application.window.setFramerateLimit(60);
     application.window.setVerticalSyncEnabled(true);
     view.reset(
@@ -392,17 +388,14 @@ void SetLevel(Application &application) {
 
 }
 
-void Run(RenderWindow &window, Application &application, Player &protagonist) {
-    MainLoop(window, application, protagonist);
+void Run(Application &application, Player &protagonist) {
+    MainLoop(application, protagonist);
 }
-
 
 void StartGame() {
     Application application;
-//    InitializeWindow(application);
-//    ShowMenu(application);
     Initialize(application);
     SetLevel(application);
     auto protagonist = CreatePlayer(application);
-    Run(application.window, application, protagonist);
+    Run(application, protagonist);
 }
