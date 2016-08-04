@@ -40,7 +40,7 @@ private:
     PlayerProperties playerProperties;
     const size_t MAX_HP = playerProperties.HEALTH;
     float rotation;
-    const double ACCELERATION = 0.001;
+    const double ACCELERATION = 0.003;
     const double DECELERATION = 0.997;
     const sf::Vector2f ImageSize = {79, 99};
     size_t amountOfMissiles;

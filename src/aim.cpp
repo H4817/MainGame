@@ -4,6 +4,7 @@
 Aim::Aim() {
     texture1.loadFromFile("IMG/cursor0.png");
     aim.setTexture(texture1);
+    aim.setOrigin(25, 25);
 }
 
 void Aim::Draw(RenderWindow &window) {

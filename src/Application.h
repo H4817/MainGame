@@ -42,6 +42,7 @@ struct Application {
         GAME
     };
 
+    Menu menu;
     GameState gameState;
     Level lvl;
     bool playerShieldIsActive = false;
@@ -61,10 +62,11 @@ struct Application {
     size_t level = 0;
     size_t amountOfEnemies = 0;
     RenderWindow window;
-    Menu menu;
 };
 
 void StartGame();
+
+bool IsEnemy(const string &name);
 
 void MainLoop(Application &application, Player &protagonist);
 

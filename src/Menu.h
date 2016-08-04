@@ -7,7 +7,7 @@ sf::Vector2f GetMousePosition(sf::RenderWindow &window);
 class Button {
 
 public:
-    Button(sf::Vector2f position, sf::Vector2f size, std::string str);
+    Button(sf::Vector2f position, sf::Vector2f size, std::string str, int state);
 
     void draw(sf::RenderWindow &window);
 
@@ -15,7 +15,9 @@ public:
 
     bool IsMousePressed();
 
-    void ChangeColor(sf::RenderWindow &window);
+    void Update(sf::RenderWindow &window);
+
+    void ProcessState();
 
 private:
     void StartGame();
@@ -26,7 +28,6 @@ private:
 
 private:
     sf::RectangleShape rectangleShape;
-
     enum Action {
         START_GAME,
         SHOW_TEXT,
@@ -48,12 +49,18 @@ public:
 
 private:
     sf::Texture backgroundTexture;
-    sf::Text title;
+    sf::Font font;
+    sf::Text text;
     sf::Sprite background;
 
 private:
+    enum State {
+        SHOW_TEXT,
+        SHOW_BUTTONS
+    };
+    State m_state;
     const sf::Vector2f sizeOfButton = {200, 50};
-    const sf::Vector2f position = {400, 100};
+    const sf::Vector2f position = {100, 100};
     Button setLevel;
     Button startGame;
     Button tutorial;

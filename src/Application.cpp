@@ -35,9 +35,9 @@ void ProcessEvents(Player &protagonist, Application &application) {
                     protagonist.SetCurrentWeapon(0);
             }
 
-            else if (event.key.code == sf::Keyboard::R && protagonist.GetShield() > 0) {
+            else if (event.key.code == sf::Keyboard::R) {
 
-                if (protagonist.GetCurrentWeapon() == 0) {
+                if (protagonist.GetCurrentWeapon() == 0 && protagonist.GetShield() > 0) {
                     application.entities.push_back(
                             new Bullet(application.imageAssets.bulletImage, application.objects, protagonist.position,
                                        application.playerProperties.playerBullet.SIZE, application.playerPosition,
@@ -47,7 +47,7 @@ void ProcessEvents(Player &protagonist, Application &application) {
                                                       static_cast<size_t >(protagonist.GetShield()));
                 }
 
-                else if (protagonist.GetAmountOfMissile() > 0) {
+                else if (protagonist.GetCurrentWeapon() != 0 && protagonist.GetAmountOfMissile() > 0) {
                     application.entities.push_back(new Rocket(application.imageAssets.rocketImage, application.objects,
                                                               protagonist.position,
                                                               application.playerProperties.simpleRocket.SIZE,
@@ -311,8 +311,7 @@ void AppendAsteroids(size_t amount, Application &application) {
 
 void Draw(Player &protagonist, Application &application) {
     application.window.clear();
-    application.menu.Draw(application.window);
-/*    application.lvl.Draw(application.window);
+    application.lvl.Draw(application.window);
     for (auto it : application.entities) {
         application.window.draw((it)->sprite);
     }
@@ -324,7 +323,7 @@ void Draw(Player &protagonist, Application &application) {
     application.aim.Draw(application.window);
     if (protagonist.GetState() == 0) {
         application.thrust.Draw(application.window, protagonist.position, application.objects.playerRotation);
-    }*/
+    }
     application.window.display();
 }
 
@@ -339,7 +338,6 @@ void MainLoop(Application &application, Player &protagonist) {
         float time_ms = RunTimer(application);
         ProcessEvents(protagonist, application);
         protagonist.rotation_GG(application.playerPosition);
-        protagonist.Update(time_ms, application.objects);
         ProcessEntities(time_ms, application, protagonist);
         ProcessDamage(protagonist, application);
         CheckExistenceProtagonist(protagonist, application.window);
@@ -392,10 +390,25 @@ void Run(Application &application, Player &protagonist) {
     MainLoop(application, protagonist);
 }
 
+void DrawMenu(Application &application) {
+    Event event;
+    while (application.window.isOpen()) {
+        while (application.window.pollEvent(event)) {
+            if (event.type == Event::Closed || event.key.code == sf::Keyboard::Escape) {
+                application.window.close();
+            }
+        }
+        application.window.clear();
+        application.menu.Draw(application.window);
+        application.window.display();
+    }
+}
+
 void StartGame() {
     Application application;
     Initialize(application);
     SetLevel(application);
     auto protagonist = CreatePlayer(application);
+//    DrawMenu(application);
     Run(application, protagonist);
 }
