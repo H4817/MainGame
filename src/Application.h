@@ -11,7 +11,6 @@
 #include "Menu.h"
 #include <memory>
 
-
 namespace {
     const Vector2f MAP_WIDTH = {960, 2270};
     const Vector2f MAP_HEIGHT = {530, 2600};
@@ -36,6 +35,9 @@ struct ImageAssets {
 };
 
 struct Application {
+
+    Application() : gameState(MENU) {};
+
     enum GameState {
         MENU,
         PAUSE,

@@ -409,6 +409,10 @@ void StartGame() {
     Initialize(application);
     SetLevel(application);
     auto protagonist = CreatePlayer(application);
-//    DrawMenu(application);
-    Run(application, protagonist);
+    if (application.gameState == application.GameState::MENU) {
+        DrawMenu(application);
+    }
+    else {
+        Run(application, protagonist);
+    }
 }

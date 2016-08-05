@@ -4,10 +4,17 @@
 
 sf::Vector2f GetMousePosition(sf::RenderWindow &window);
 
+enum Action {
+    SHOW_BUTTONS,
+    START_GAME,
+    SHOW_TEXT,
+    EXIT
+};
+
 class Button {
 
 public:
-    Button(sf::Vector2f position, sf::Vector2f size, std::string str, int state);
+    Button(sf::Vector2f position, sf::Vector2f size, std::string str, Action state);
 
     void draw(sf::RenderWindow &window);
 
@@ -17,22 +24,13 @@ public:
 
     void Update(sf::RenderWindow &window);
 
-    void ProcessState();
+    sf::Vector2f GetPosition();
 
-private:
-    void StartGame();
-
-    void ShowText();
-
-    void Exit();
+    sf::Vector2f GetSize();
+    Action GetAction();
 
 private:
     sf::RectangleShape rectangleShape;
-    enum Action {
-        START_GAME,
-        SHOW_TEXT,
-        EXIT
-    };
     Action action;
     sf::Font font;
     sf::Text text;
@@ -47,18 +45,24 @@ public:
 
     void Draw(sf::RenderWindow &window);
 
+    void DrawButtons(sf::RenderWindow &window);
+
+    void ProcessState();
+
+private:
+    void StartGame();
+
+    void ShowText();
+
+    void Exit();
+
 private:
     sf::Texture backgroundTexture;
     sf::Font font;
     sf::Text text;
     sf::Sprite background;
 
-private:
-    enum State {
-        SHOW_TEXT,
-        SHOW_BUTTONS
-    };
-    State m_state;
+    Action m_state;
     const sf::Vector2f sizeOfButton = {200, 50};
     const sf::Vector2f position = {100, 100};
     Button setLevel;

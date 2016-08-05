@@ -4,7 +4,7 @@ sf::Vector2f GetMousePosition(sf::RenderWindow &window) {
     return window.mapPixelToCoords(sf::Mouse::getPosition(window));
 }
 
-Button::Button(sf::Vector2f position, sf::Vector2f size, std::string str, int state) {
+Button::Button(sf::Vector2f position, sf::Vector2f size, std::string str, Action state) {
     upLeftCorner = position;
     Button::size = size;
     rectangleShape.setSize(size);
@@ -22,19 +22,31 @@ Button::Button(sf::Vector2f position, sf::Vector2f size, std::string str, int st
         text.setPosition((position.x + 20),
                          (position.y + 10));
     }
-    action = static_cast<Action>(state);
+    action = state;
 }
 
-void Button::ProcessState() {
-    if (action == 0) {
+void Menu::ProcessState() {
+    if (m_state == START_GAME) {
         StartGame();
     }
-    else if (action == 1) {
+    else if (m_state == SHOW_TEXT) {
         ShowText();
     }
-    else {
+    else if (m_state == EXIT){
         Exit();
     }
+}
+
+sf::Vector2f Button::GetPosition() {
+    return upLeftCorner;
+}
+
+sf::Vector2f Button::GetSize() {
+    return size;
+}
+
+Action Button::GetAction() {
+    return action;
 }
 
 void Button::draw(sf::RenderWindow &window) {
@@ -55,7 +67,8 @@ bool Button::IsMouseOnButton(const sf::Vector2f &mousePosition) {
 void Button::Update(sf::RenderWindow &window) {
     if (IsMouseOnButton(GetMousePosition(window))) {
         if (IsMousePressed()) {
-            ProcessState();
+//            ProcessState();
+            GetAction();
         }
         rectangleShape.setOutlineColor(sf::Color::Yellow);
         text.setColor(sf::Color::Yellow);
@@ -66,25 +79,27 @@ void Button::Update(sf::RenderWindow &window) {
     }
 }
 
-void Button::ShowText() {
+void Menu::ShowText() {
 
 }
 
-void Button::StartGame() {
+void Menu::StartGame() {
 
 }
 
-void Button::Exit() {
+void Menu::Exit() {
+    printf("Exit");
     exit(0);
 }
 
-Menu::Menu() : tutorial(position, sizeOfButton, "Tutorial", 1),
-               startGame({position.x, position.y + 100}, sizeOfButton, "Start Game", 1),
-               setLevel({position.x, position.y + 200}, sizeOfButton, "Set Level", 1),
-               aboutDesigner({position.x, position.y + 300}, sizeOfButton, "About Designer", 1),
-               exit({position.x, position.y + 400}, sizeOfButton, "Exit", 2) {
+Menu::Menu() : tutorial(position, sizeOfButton, "Tutorial", SHOW_TEXT),
+               startGame({position.x, position.y + 100}, sizeOfButton, "Start Game", START_GAME),
+               setLevel({position.x, position.y + 200}, sizeOfButton, "Set Level", SHOW_TEXT),
+               aboutDesigner({position.x, position.y + 300}, sizeOfButton, "About Designer", SHOW_TEXT),
+               exit({position.x, position.y + 400}, sizeOfButton, "Exit", EXIT) {
     backgroundTexture.loadFromFile("IMG/back_3.png");
     background.setTexture(backgroundTexture);
+    m_state = SHOW_BUTTONS;
     if (!font.loadFromFile("Assets/hemi-head.ttf"))
         printf("fonts are not found\n");
     else {
@@ -95,14 +110,19 @@ Menu::Menu() : tutorial(position, sizeOfButton, "Tutorial", 1),
     }
 }
 
+void Menu::DrawButtons(sf::RenderWindow &window) {
+    tutorial.draw(window);
+    startGame.draw(window);
+    setLevel.draw(window);
+    aboutDesigner.draw(window);
+    exit.draw(window);
+
+}
+
 void Menu::Draw(sf::RenderWindow &window) {
     window.draw(background);
     if (m_state == SHOW_BUTTONS) {
-        tutorial.draw(window);
-        startGame.draw(window);
-        setLevel.draw(window);
-        aboutDesigner.draw(window);
-        exit.draw(window);
+        DrawButtons(window);
     }
     else {
         window.draw(text);
