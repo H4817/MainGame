@@ -96,7 +96,7 @@ Menu::Menu() : tutorial(position, sizeOfButton, "Tutorial", SHOW_TEXT),
                startGame({position.x, position.y + 100}, sizeOfButton, "Start Game", START_GAME),
                setLevel({position.x, position.y + 200}, sizeOfButton, "Set Level", SHOW_TEXT),
                aboutDesigner({position.x, position.y + 300}, sizeOfButton, "About Designer", SHOW_TEXT),
-               exit({position.x, position.y + 400}, sizeOfButton, "Exit", EXIT) {
+               m_exit({position.x, position.y + 400}, sizeOfButton, "Exit", EXIT) {
     backgroundTexture.loadFromFile("IMG/back_3.png");
     background.setTexture(backgroundTexture);
     m_state = SHOW_BUTTONS;
@@ -115,7 +115,7 @@ void Menu::DrawButtons(sf::RenderWindow &window) {
     startGame.draw(window);
     setLevel.draw(window);
     aboutDesigner.draw(window);
-    exit.draw(window);
+    m_exit.draw(window);
 
 }
 

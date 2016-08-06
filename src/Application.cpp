@@ -67,7 +67,6 @@ void GetMousePosition(RenderWindow &window, Vector2f &playerPosition) {
 }
 
 void InitializeImages(Application &application) {
-    application.lvl.LoadFromFile("Assets/map1.tmx");
     application.imageAssets.bulletImage.loadFromFile("IMG/PlasmaBullet.png");
     application.imageAssets.rocketImage.loadFromFile("IMG/rocket1.png");
     application.imageAssets.smartRocketImage.loadFromFile("IMG/SmartRocket.png");
@@ -80,8 +79,7 @@ void InitializeImages(Application &application) {
 }
 
 Object InitializePlayer(Application &application) {
-    Object player = application.lvl.GetObject("player");
-    return player;
+    return application.map.GetObject("player");
 }
 
 bool IsNotAliveEntity(Entity *entity) {
@@ -258,6 +256,10 @@ void ProcessDamage(Player &protagonist, Application &application) {
 
 void AppendEnemies(Application &application) {
 
+    application.enemiesContainer.easyOpponent = application.map.GetObjects("easyEnemy");
+    application.enemiesContainer.mediumOpponent = application.map.GetObjects("mediumEnemy");
+    application.enemiesContainer.strongOpponent = application.map.GetObjects("hardEnemy");
+
     for (int i = 0; i < application.enemiesContainer.easyOpponent.size(); i++) {
         application.entities.push_back(
                 new CEasyEnemy(application.imageAssets.easyEnemyImage, application.objects,
@@ -265,7 +267,7 @@ void AppendEnemies(Application &application) {
                                 application.enemiesContainer.easyOpponent[i].rect.top},
                                application.enemiesHandler.easyEnemy.SIZE, application.playerPosition,
                                "easyEnemy"));
-        ++application.amountOfEnemies;
+//        ++application.amountOfEnemies;
     }
 
     for (int i = 0; i < application.enemiesContainer.mediumOpponent.size(); i++) {
@@ -275,7 +277,7 @@ void AppendEnemies(Application &application) {
                                   application.enemiesContainer.mediumOpponent[i].rect.top},
                                  application.enemiesHandler.mediumEnemy.SIZE, application.playerPosition,
                                  "mediumEnemy"));
-        ++application.amountOfEnemies;
+//        ++application.amountOfEnemies;
     }
 
     for (int i = 0; i < application.enemiesContainer.strongOpponent.size(); i++) {
@@ -285,7 +287,7 @@ void AppendEnemies(Application &application) {
                                   application.enemiesContainer.strongOpponent[i].rect.top},
                                  application.enemiesHandler.hardEnemy.SIZE, application.playerPosition,
                                  "strongEnemy"));
-        ++application.amountOfEnemies;
+//        ++application.amountOfEnemies;
     }
 
 }
@@ -311,7 +313,7 @@ void AppendAsteroids(size_t amount, Application &application) {
 
 void Draw(Player &protagonist, Application &application) {
     application.window.clear();
-    application.lvl.Draw(application.window);
+    application.map.Draw(application.window);
     for (auto it : application.entities) {
         application.window.draw((it)->sprite);
     }
@@ -343,16 +345,12 @@ void MainLoop(Application &application, Player &protagonist) {
         CheckExistenceProtagonist(protagonist, application.window);
         application.window.setView(view);
         Draw(protagonist, application);
-        if (AllEnemiesDead(application))
-            break;
+        if (AllEnemiesDead(application)) {
+//            printf("Asd");
+//            break;
+        }
     }
 
-}
-
-void GetMapObjects(Application &application) {
-    application.enemiesContainer.easyOpponent = application.lvl.GetObjects("easyEnemy");
-    application.enemiesContainer.mediumOpponent = application.lvl.GetObjects("mediumEnemy");
-    application.enemiesContainer.strongOpponent = application.lvl.GetObjects("hardEnemy");
 }
 
 Player CreatePlayer(Application &application) {
@@ -366,7 +364,7 @@ Player CreatePlayer(Application &application) {
 void InitializeWindow(Application &application) {
     application.window.create(
             sf::VideoMode(application.parameters.WINDOW_SIZE.first, application.parameters.WINDOW_SIZE.second), "Game");
-//    application.window.setMouseCursorVisible(false);
+    application.window.setMouseCursorVisible(false);
     application.window.setFramerateLimit(60);
     application.window.setVerticalSyncEnabled(true);
     view.reset(
@@ -377,12 +375,19 @@ void InitializeWindow(Application &application) {
 void Initialize(Application &application) {
     InitializeWindow(application);
     InitializeImages(application);
-    AppendAsteroids(10, application);
-    GetMapObjects(application);
-    AppendEnemies(application);
 }
 
 void SetLevel(Application &application) {
+
+    if (application.level < 5 && AllEnemiesDead(application)) {
+        ++application.level;
+    }
+
+    application.map.LoadFromFile(application.mapInfo[application.level].first);
+
+    AppendAsteroids(application.mapInfo[application.level].second, application);
+
+    AppendEnemies(application);
 
 }
 
@@ -399,7 +404,7 @@ void DrawMenu(Application &application) {
             }
         }
         application.window.clear();
-        application.menu.Draw(application.window);
+//        application.menu.Draw(application.window);
         application.window.display();
     }
 }
@@ -409,10 +414,10 @@ void StartGame() {
     Initialize(application);
     SetLevel(application);
     auto protagonist = CreatePlayer(application);
-    if (application.gameState == application.GameState::MENU) {
-        DrawMenu(application);
-    }
-    else {
-        Run(application, protagonist);
-    }
+//    if (application.gamestate == application.gamestate::menu) {
+//        drawmenu(application);
+//    }
+//    else {
+    Run(application, protagonist);
+//    }
 }

@@ -27,6 +27,7 @@ public:
     sf::Vector2f GetPosition();
 
     sf::Vector2f GetSize();
+
     Action GetAction();
 
 private:
@@ -69,7 +70,7 @@ private:
     Button startGame;
     Button tutorial;
     Button aboutDesigner;
-    Button exit;
+    Button m_exit;
 
 };
 

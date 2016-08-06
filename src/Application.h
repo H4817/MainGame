@@ -22,6 +22,7 @@ struct EnemiesContainer {
     std::vector<Object> mediumOpponent;
     std::vector<Object> strongOpponent;
 };
+
 struct ImageAssets {
     Image heroImage;
     Image easyEnemyImage;
@@ -34,19 +35,23 @@ struct ImageAssets {
     Image asteroid;
 };
 
+enum GameState {
+    MENU,
+    PAUSE,
+    GAME
+};
+
 struct Application {
 
-    Application() : gameState(MENU) {};
-
-    enum GameState {
-        MENU,
-        PAUSE,
-        GAME
+    Application() : gameState(MENU) {
+        mapInfo = {{"Assets/map1.tmx",    0},
+                   {"Assets/Level_1.tmx", 10}};
     };
 
-    Menu menu;
+//    Menu menu;
     GameState gameState;
-    Level lvl;
+    Level map;
+    vector<pair<string, size_t>> mapInfo;
     bool playerShieldIsActive = false;
     Clock clock;
     std::list<Entity *> entities;
@@ -71,8 +76,6 @@ void StartGame();
 bool IsEnemy(const string &name);
 
 void MainLoop(Application &application, Player &protagonist);
-
-void GetMapObjects(Application &application);
 
 Player CreatePlayer(Application &application);
 
