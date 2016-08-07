@@ -140,13 +140,19 @@ void AppendEnemiesBullets(Application &application, Entity *it, Player &protagon
 }
 
 void ProcessEntities(float &time_ms, Application &application, Player &protagonist) {
-    auto new_end = std::remove_if(application.entities.begin(), application.entities.end(), IsNotAliveEntity);
-    application.entities.erase(new_end, application.entities.end());
+//    auto new_end = std::remove_if(application.entities.begin(), application.entities.end(), IsNotAliveEntity);
+//    application.entities.erase(new_end, application.entities.end());
     static float localTime = 0.f;
-    for (auto it : application.entities) {
+    std::list<Entity *>::iterator it;
+    for (it = application.entities.begin(); it != application.entities.end(); ++it) {
+        Entity *tmp = *it;
+        if (IsNotAliveEntity(*it)) {
+            it = application.entities.erase(it);
+//            delete tmp;
+        }
         localTime += time_ms;
-        AppendEnemiesBullets(application, it, protagonist, localTime);
-        it->Update(time_ms, application.objects);
+        AppendEnemiesBullets(application, tmp, protagonist, localTime);
+        tmp->Update(time_ms, application.objects);
     }
 }
 
@@ -157,6 +163,10 @@ bool IsShieldActive(const Application &application, const Player &protagonist) {
 bool IsBullet(const string &name) {
     return (name == "Bullet" || name == "Rocket" || name == "EnemyBullet" || name == "EnemyRocket" ||
             name == "EnemySmartRocket");
+}
+
+bool IsReward(const string &name) {
+    return (name == "HealthReward" || name == "ShieldReward");
 }
 
 bool IsEnemy(const string &name) {
@@ -180,6 +190,10 @@ void ProcessDamage(Player &protagonist, Application &application) {
                         it->health -= application.playerProperties.simpleRocket.DAMAGE;
                         at->name = "explosion";
                         application.gui.UpdateEnemy(static_cast<size_t >(it->health), it->name);
+                    }
+
+                    if (it->health <= 0 && application.amountOfEnemies > 0) {
+                        --application.amountOfEnemies;
                     }
 
                 }
@@ -257,7 +271,7 @@ void ProcessDamage(Player &protagonist, Application &application) {
 void AppendEnemies(Application &application) {
 
     application.enemiesContainer.easyOpponent = application.map.GetObjects("easyEnemy");
-    application.enemiesContainer.mediumOpponent = application.map.GetObjects("mediumEnemy");
+//    application.enemiesContainer.mediumOpponent = application.map.GetObjects("mediumEnemy");
     application.enemiesContainer.strongOpponent = application.map.GetObjects("hardEnemy");
 
     for (int i = 0; i < application.enemiesContainer.easyOpponent.size(); i++) {
@@ -267,7 +281,7 @@ void AppendEnemies(Application &application) {
                                 application.enemiesContainer.easyOpponent[i].rect.top},
                                application.enemiesHandler.easyEnemy.SIZE, application.playerPosition,
                                "easyEnemy"));
-//        ++application.amountOfEnemies;
+        ++application.amountOfEnemies;
     }
 
     for (int i = 0; i < application.enemiesContainer.mediumOpponent.size(); i++) {
@@ -277,7 +291,7 @@ void AppendEnemies(Application &application) {
                                   application.enemiesContainer.mediumOpponent[i].rect.top},
                                  application.enemiesHandler.mediumEnemy.SIZE, application.playerPosition,
                                  "mediumEnemy"));
-//        ++application.amountOfEnemies;
+        ++application.amountOfEnemies;
     }
 
     for (int i = 0; i < application.enemiesContainer.strongOpponent.size(); i++) {
@@ -287,7 +301,7 @@ void AppendEnemies(Application &application) {
                                   application.enemiesContainer.strongOpponent[i].rect.top},
                                  application.enemiesHandler.hardEnemy.SIZE, application.playerPosition,
                                  "strongEnemy"));
-//        ++application.amountOfEnemies;
+        ++application.amountOfEnemies;
     }
 
 }
@@ -321,7 +335,8 @@ void Draw(Player &protagonist, Application &application) {
     if (application.playerShieldIsActive && protagonist.GetShield() > 0) {
         application.shield.Draw(application.window, protagonist.position);
     }
-    application.gui.Draw(application.window, protagonist.GetCurrentWeapon(), protagonist.GetAmountOfMissile());
+    application.gui.Draw(application.window, protagonist.GetCurrentWeapon(), protagonist.GetAmountOfMissile(),
+                         application.amountOfEnemies);
     application.aim.Draw(application.window);
     if (protagonist.GetState() == 0) {
         application.thrust.Draw(application.window, protagonist.position, application.objects.playerRotation);
@@ -346,8 +361,14 @@ void MainLoop(Application &application, Player &protagonist) {
         application.window.setView(view);
         Draw(protagonist, application);
         if (AllEnemiesDead(application)) {
-//            printf("Asd");
-//            break;
+            if (application.level < 5) {
+                ++application.level;
+            }
+            cout << "ASD" << endl;
+            break;
+        }
+        else {
+            cout << application.amountOfEnemies << endl;
         }
     }
 
@@ -379,10 +400,6 @@ void Initialize(Application &application) {
 
 void SetLevel(Application &application) {
 
-    if (application.level < 5 && AllEnemiesDead(application)) {
-        ++application.level;
-    }
-
     application.map.LoadFromFile(application.mapInfo[application.level].first);
 
     AppendAsteroids(application.mapInfo[application.level].second, application);
@@ -391,7 +408,9 @@ void SetLevel(Application &application) {
 
 }
 
-void Run(Application &application, Player &protagonist) {
+void Run(Application &application) {
+    SetLevel(application);
+    auto protagonist = CreatePlayer(application);
     MainLoop(application, protagonist);
 }
 
@@ -412,12 +431,14 @@ void DrawMenu(Application &application) {
 void StartGame() {
     Application application;
     Initialize(application);
-    SetLevel(application);
-    auto protagonist = CreatePlayer(application);
 //    if (application.gamestate == application.gamestate::menu) {
 //        drawmenu(application);
 //    }
 //    else {
-    Run(application, protagonist);
+    while (application.level < 2 && application.window.isOpen())
+        Run(application);
 //    }
 }
+
+
+

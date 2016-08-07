@@ -7,15 +7,15 @@ class Gui {
 public:
     Gui();
 
-    void UpdateEnemy(size_t Health, const string & name);
+    void UpdateEnemy(size_t Health, const string &name);
 
     void UpdateProtagonist(size_t Health, size_t Shield);
 
-    void Draw(sf::RenderWindow &window, size_t weaponNumber, size_t amountOfMissiles);
+    void Draw(sf::RenderWindow &window, size_t weaponNumber, size_t amountOfMissiles, size_t amountOfEnemies);
 
 private:
 
-    void SetZeroSize(sf::RectangleShape & rectangleShape);
+    void SetZeroSize(sf::RectangleShape &rectangleShape);
 
     void SetSpritesPosition(sf::RenderWindow &window);
 
@@ -23,7 +23,8 @@ private:
     EnemiesHandler enemiesHandler;
 
     sf::Font font;
-    sf::Text text;
+    sf::Text missilesAmount;
+    sf::Text levelStatus;
 
     sf::RectangleShape blackRectangleForFillingEnemyHP;
     sf::RectangleShape blackRectangleForFillingPlayerHP;

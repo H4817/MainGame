@@ -75,6 +75,8 @@ void StartGame();
 
 bool IsEnemy(const string &name);
 
+bool IsReward(const string &name);
+
 void MainLoop(Application &application, Player &protagonist);
 
 Player CreatePlayer(Application &application);

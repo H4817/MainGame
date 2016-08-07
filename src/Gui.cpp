@@ -16,9 +16,12 @@ Gui::Gui() {
     if (!font.loadFromFile("Assets/hemi-head.ttf"))
         cout << "fonts are not found\n";
     else {
-        text.setFont(font);
-        text.setCharacterSize(24);
-        text.setColor(sf::Color::Yellow);
+        missilesAmount.setFont(font);
+        missilesAmount.setCharacterSize(24);
+        missilesAmount.setColor(sf::Color::Yellow);
+        levelStatus.setFont(font);
+        levelStatus.setCharacterSize(48);
+        levelStatus.setColor(sf::Color::White);
     }
 
     entitiesBar.loadFromFile("IMG/EnemyBar.png");
@@ -108,10 +111,11 @@ void Gui::SetSpritesPosition(sf::RenderWindow &window) {
     blackRectangleForFillingEnemyHP.setPosition((center.x + 100), (center.y + size.y / 2.2f) + 15);
     enemyBar.setPosition((center.x - 100), (center.y + size.y / 2.2f));
     weaponIcon.setPosition((center.x - size.x / 2), (center.y + size.y / 2.4f));
-    text.setPosition((center.x - size.x / 2) + 55, (center.y + size.y / 2.18f));
+    missilesAmount.setPosition((center.x - size.x / 2) + 55, (center.y + size.y / 2.18f));
+    levelStatus.setPosition((center.x - 100), center.y - size.y / 2 + 15);
 }
 
-void Gui::Draw(sf::RenderWindow &window, size_t weaponNumber, size_t amountOfMissiles) {
+void Gui::Draw(sf::RenderWindow &window, size_t weaponNumber, size_t amountOfMissiles, size_t amountOfEnemies) {
     SetSpritesPosition(window);
     window.draw(playerBarHealth);
     window.draw(playerBarShield);
@@ -120,7 +124,7 @@ void Gui::Draw(sf::RenderWindow &window, size_t weaponNumber, size_t amountOfMis
     else
         weaponIcon.setTexture(texture4);
 
-    text.setString(to_string(amountOfMissiles));
+    missilesAmount.setString(to_string(amountOfMissiles));
 
     window.draw(weaponIcon);
     window.draw(enemyBar);
@@ -128,5 +132,15 @@ void Gui::Draw(sf::RenderWindow &window, size_t weaponNumber, size_t amountOfMis
     window.draw(blackRectangleForFillingPlayerHP);
     window.draw(blackRectangleForFillingPlayerShield);
     if (weaponNumber != 0)
-        window.draw(text);
+        window.draw(missilesAmount);
+
+    if (amountOfEnemies == 0) {
+        window.draw(levelStatus);
+        levelStatus.setString("level complete");
+    }
+    else {
+        levelStatus.setString(std::to_string(amountOfEnemies));
+        window.draw(levelStatus);
+    }
 }
+
