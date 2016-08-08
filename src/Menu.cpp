@@ -25,14 +25,14 @@ Button::Button(sf::Vector2f position, sf::Vector2f size, std::string str, Action
     action = state;
 }
 
-void Menu::ProcessState() {
-    if (m_state == START_GAME) {
-        StartGame();
+void Button::ProcessState(GameState &gameState) {
+    if (action == START_GAME) {
+        gameState = GAME;
     }
-    else if (m_state == SHOW_TEXT) {
+    else if (action == SHOW_TEXT) {
         ShowText();
     }
-    else if (m_state == EXIT){
+    else if (action == EXIT) {
         Exit();
     }
 }
@@ -49,8 +49,8 @@ Action Button::GetAction() {
     return action;
 }
 
-void Button::draw(sf::RenderWindow &window) {
-    Update(window);
+void Button::draw(sf::RenderWindow &window, GameState &gameState) {
+    Update(window, gameState);
     window.draw(rectangleShape);
     window.draw(text);
 }
@@ -64,11 +64,10 @@ bool Button::IsMouseOnButton(const sf::Vector2f &mousePosition) {
             (mousePosition.y >= upLeftCorner.y) && (mousePosition.y <= (upLeftCorner.y + size.y)));
 }
 
-void Button::Update(sf::RenderWindow &window) {
+void Button::Update(sf::RenderWindow &window, GameState &gameState) {
     if (IsMouseOnButton(GetMousePosition(window))) {
         if (IsMousePressed()) {
-//            ProcessState();
-            GetAction();
+            ProcessState(gameState);
         }
         rectangleShape.setOutlineColor(sf::Color::Yellow);
         text.setColor(sf::Color::Yellow);
@@ -79,15 +78,15 @@ void Button::Update(sf::RenderWindow &window) {
     }
 }
 
-void Menu::ShowText() {
-
+void Button::ShowText() {
+//    printf("ShowText");
 }
 
-void Menu::StartGame() {
-
+void Button::StartGame() {
+//    printf("StartGame");
 }
 
-void Menu::Exit() {
+void Button::Exit() {
     printf("Exit");
     exit(0);
 }
@@ -110,19 +109,18 @@ Menu::Menu() : tutorial(position, sizeOfButton, "Tutorial", SHOW_TEXT),
     }
 }
 
-void Menu::DrawButtons(sf::RenderWindow &window) {
-    tutorial.draw(window);
-    startGame.draw(window);
-    setLevel.draw(window);
-    aboutDesigner.draw(window);
-    m_exit.draw(window);
-
+void Menu::DrawButtons(sf::RenderWindow &window, GameState &gameState) {
+    tutorial.draw(window, gameState);
+    startGame.draw(window, gameState);
+    setLevel.draw(window, gameState);
+    aboutDesigner.draw(window, gameState);
+    m_exit.draw(window, gameState);
 }
 
-void Menu::Draw(sf::RenderWindow &window) {
+void Menu::Draw(sf::RenderWindow &window, GameState &gameState) {
     window.draw(background);
     if (m_state == SHOW_BUTTONS) {
-        DrawButtons(window);
+        DrawButtons(window, gameState);
     }
     else {
         window.draw(text);

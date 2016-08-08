@@ -9,6 +9,7 @@
 #include "shield.h"
 #include "aim.h"
 #include "Menu.h"
+#include "GameState.h"
 #include <memory>
 
 namespace {
@@ -35,20 +36,15 @@ struct ImageAssets {
     Image asteroid;
 };
 
-enum GameState {
-    MENU,
-    PAUSE,
-    GAME
-};
-
 struct Application {
 
     Application() : gameState(MENU) {
-        mapInfo = {{"Assets/map1.tmx",    0},
-                   {"Assets/Level_1.tmx", 10}};
+        mapInfo = {{"Assets/Level_1.tmx",    0},
+                   {"Assets/map1.tmx", 10}};
+
     };
 
-//    Menu menu;
+    Menu menu;
     GameState gameState;
     Level map;
     vector<pair<string, size_t>> mapInfo;
@@ -88,3 +84,5 @@ void SetLevel(Application &application);
 void Run(Application &application, Player &protagonist);
 
 void InitializeWindow(Application &application);
+
+void CloseWindowWhenItWasInterrupted(Application &application, const Event &event);

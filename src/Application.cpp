@@ -19,13 +19,14 @@ float RunTimer(Application &application) {
 void ProcessEvents(Player &protagonist, Application &application) {
     sf::Event event;
     while (application.window.pollEvent(event)) {
-        if (event.type == Event::Closed || event.key.code == sf::Keyboard::Escape) {
-            application.window.close();
-        }
+        CloseWindowWhenItWasInterrupted(application, event);
         if (event.type == Event::KeyPressed) {
 
             if (event.key.code == sf::Keyboard::F) {
                 application.playerShieldIsActive = !application.playerShieldIsActive;
+            }
+            else if (event.key.code == sf::Keyboard::D) {
+                application.gameState = PAUSE;
             }
 
             else if (event.key.code == sf::Keyboard::Q) {
@@ -364,11 +365,7 @@ void MainLoop(Application &application, Player &protagonist) {
             if (application.level < 5) {
                 ++application.level;
             }
-            cout << "ASD" << endl;
             break;
-        }
-        else {
-            cout << application.amountOfEnemies << endl;
         }
     }
 
@@ -385,7 +382,6 @@ Player CreatePlayer(Application &application) {
 void InitializeWindow(Application &application) {
     application.window.create(
             sf::VideoMode(application.parameters.WINDOW_SIZE.first, application.parameters.WINDOW_SIZE.second), "Game");
-    application.window.setMouseCursorVisible(false);
     application.window.setFramerateLimit(60);
     application.window.setVerticalSyncEnabled(true);
     view.reset(
@@ -414,16 +410,22 @@ void Run(Application &application) {
     MainLoop(application, protagonist);
 }
 
+void CloseWindowWhenItWasInterrupted(Application &application, const Event &event) {
+    if (event.type == sf::Event::Closed ||
+        (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
+        application.window.close();
+        printf("The window was closed");
+    }
+}
+
 void DrawMenu(Application &application) {
     Event event;
-    while (application.window.isOpen()) {
+    while (application.window.isOpen() && application.gameState == MENU) {
         while (application.window.pollEvent(event)) {
-            if (event.type == Event::Closed || event.key.code == sf::Keyboard::Escape) {
-                application.window.close();
-            }
+            CloseWindowWhenItWasInterrupted(application, event);
         }
         application.window.clear();
-//        application.menu.Draw(application.window);
+        application.menu.Draw(application.window, application.gameState);
         application.window.display();
     }
 }
@@ -431,13 +433,15 @@ void DrawMenu(Application &application) {
 void StartGame() {
     Application application;
     Initialize(application);
-//    if (application.gamestate == application.gamestate::menu) {
-//        drawmenu(application);
-//    }
-//    else {
-    while (application.level < 2 && application.window.isOpen())
-        Run(application);
-//    }
+    if (application.gameState == GameState::MENU || application.gameState == GameState::PAUSE) {
+        application.window.setMouseCursorVisible(true);
+        DrawMenu(application);
+    }
+    if (application.gameState == GameState::GAME) {
+        application.window.setMouseCursorVisible(false);
+        while (application.level < 2 && application.window.isOpen())
+            Run(application);
+    }
 }
 
 
