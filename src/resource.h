@@ -15,7 +15,7 @@ struct PlayerBullet {
 struct PlayerProperties {
     const sf::Vector2i SIZE = {79, 99};
     const size_t HEALTH = 300;
-    int shield = 500;
+    size_t shield = 500;
     const float SPEED = 0.2;
     PlayerBullet playerBullet;
     SimpleRocket simpleRocket;

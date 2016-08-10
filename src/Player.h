@@ -29,7 +29,16 @@ public:
 
     void SetShield(int shield);
 
+    int GetHealth() const;
+
+    void SetHealth(int health);
+
+    const size_t GetMAX_HP() const;
+
+    const size_t GetMAX_SHIELD() const;
+
 private:
+    int health;
     enum CurrentWeapon
     {
         BULLET,
@@ -39,6 +48,7 @@ private:
     CurrentWeapon currentWeapon;
     PlayerProperties playerProperties;
     const size_t MAX_HP = playerProperties.HEALTH;
+    const size_t MAX_SHIELD = playerProperties.shield;
     float rotation;
     const double ACCELERATION = 0.003;
     const double DECELERATION = 0.997;

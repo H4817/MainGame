@@ -40,7 +40,7 @@ struct Application {
 
     Application() : gameState(MENU) {
         mapInfo = {{"Assets/Level_1.tmx",    0},
-                   {"Assets/map1.tmx", 10}};
+                   {"Assets/map1.tmx", 100}};
 
     };
 
@@ -60,7 +60,7 @@ struct Application {
     ImageAssets imageAssets;
     MapObjects objects;
     Parameters parameters;
-    Thrust thrust;
+    //Thrust thrust;
     Vector2f playerPosition;
     size_t level = 0;
     size_t amountOfEnemies = 0;

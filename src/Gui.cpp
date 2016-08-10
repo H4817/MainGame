@@ -139,7 +139,7 @@ void Gui::Draw(sf::RenderWindow &window, size_t weaponNumber, size_t amountOfMis
         levelStatus.setString("level complete");
     }
     else {
-        levelStatus.setString(std::to_string(amountOfEnemies));
+        levelStatus.setString("Enemies left: " + std::to_string(amountOfEnemies));
         window.draw(levelStatus);
     }
 }

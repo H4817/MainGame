@@ -4,7 +4,7 @@ void getPlayerCoordinateForView(Vector2f position);
 
 Player::Player(Image &image, Vector2f Position, Vector2i Size, String Name) : Entity(
         image, Position, Size, Name) {
-    shield = playerProperties.shield;
+    shield = static_cast<int>(MAX_SHIELD);
     health = static_cast<int>(MAX_HP);
     state = STAY;
     amountOfMissiles = 20;
@@ -113,4 +113,20 @@ int Player::GetShield() const {
 
 void Player::SetShield(int shield) {
     Player::shield = shield;
+}
+
+int Player::GetHealth() const {
+    return health;
+}
+
+void Player::SetHealth(int health) {
+    Player::health = health;
+}
+
+const size_t Player::GetMAX_HP() const {
+    return MAX_HP;
+}
+
+const size_t Player::GetMAX_SHIELD() const {
+    return MAX_SHIELD;
 }

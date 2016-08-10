@@ -44,7 +44,7 @@ void ProcessEvents(Player &protagonist, Application &application) {
                                        application.playerProperties.playerBullet.SIZE, application.playerPosition,
                                        "Bullet"));
                     protagonist.SetShield(protagonist.GetShield() - 2);
-                    application.gui.UpdateProtagonist(static_cast<size_t >(protagonist.health),
+                    application.gui.UpdateProtagonist(static_cast<size_t >(protagonist.GetHealth()),
                                                       static_cast<size_t >(protagonist.GetShield()));
                 }
 
@@ -72,7 +72,7 @@ void InitializeImages(Application &application) {
     application.imageAssets.rocketImage.loadFromFile("IMG/rocket1.png");
     application.imageAssets.smartRocketImage.loadFromFile("IMG/SmartRocket.png");
     application.imageAssets.enemyBulletImage.loadFromFile("IMG/RedPlasmaBullet.png");
-    application.imageAssets.heroImage.loadFromFile("IMG/888.png");
+    application.imageAssets.heroImage.loadFromFile("IMG/8888.png");
     application.imageAssets.easyEnemyImage.loadFromFile("IMG/EasyEnemyYellowThrust1.png");
     application.imageAssets.mediumEnemyImage.loadFromFile("IMG/MediumEnemyWithGreenThrust.png");
     application.imageAssets.strongEnemyImage.loadFromFile("IMG/StrongEnemyWithGreenThrust.png");
@@ -174,6 +174,12 @@ bool IsEnemy(const string &name) {
     return (name == "easyEnemy" || name == "mediumEnemy" || name == "strongEnemy");
 }
 
+void DecreaseAmountOfEnemiesWhenTheyAreDying(int health, Application &application) {
+    if (health <= 0 && application.amountOfEnemies > 0) {
+        --application.amountOfEnemies;
+    }
+}
+
 void ProcessDamage(Player &protagonist, Application &application) {
     for (auto it : application.entities) {
         for (auto at : application.entities) {
@@ -193,9 +199,7 @@ void ProcessDamage(Player &protagonist, Application &application) {
                         application.gui.UpdateEnemy(static_cast<size_t >(it->health), it->name);
                     }
 
-                    if (it->health <= 0 && application.amountOfEnemies > 0) {
-                        --application.amountOfEnemies;
-                    }
+                    DecreaseAmountOfEnemiesWhenTheyAreDying(it->health, application);
 
                 }
 
@@ -204,11 +208,13 @@ void ProcessDamage(Player &protagonist, Application &application) {
                         if (IsBullet(it->name)) {
                             it->alive = false;
                         }
-                        else {
-                            it->health -= 100;
-                        }
-                        if (it->name != "HealthReward" && it->name != "ShieldReward")
+                        if (!IsReward(it->name)) {
                             at->name = "explosion";
+                        }
+                        if (IsEnemy(it->name)) {
+                            it->health -= 100;
+                            DecreaseAmountOfEnemiesWhenTheyAreDying(it->health, application);
+                        }
                     }
                 }
 
@@ -223,7 +229,8 @@ void ProcessDamage(Player &protagonist, Application &application) {
                             static_cast<int>(application.enemiesHandler.easyEnemy.easyEnemyBullet.DAMAGE / 2));
                 }
                 else {
-                    protagonist.health -= application.enemiesHandler.easyEnemy.easyEnemyBullet.DAMAGE;
+                    protagonist.SetHealth(protagonist.GetHealth() -
+                                          static_cast<int>(application.enemiesHandler.easyEnemy.easyEnemyBullet.DAMAGE));
                 }
                 it->alive = false;
             }
@@ -234,7 +241,8 @@ void ProcessDamage(Player &protagonist, Application &application) {
                             static_cast<int>(application.enemiesHandler.mediumEnemy.simpleRocket.DAMAGE / 2));
                 }
                 else {
-                    protagonist.health -= application.enemiesHandler.mediumEnemy.simpleRocket.DAMAGE;
+                    protagonist.SetHealth(protagonist.GetHealth() -
+                                          static_cast<int>(application.enemiesHandler.mediumEnemy.simpleRocket.DAMAGE));
                 }
                 it->name = "explosion";
             }
@@ -250,20 +258,23 @@ void ProcessDamage(Player &protagonist, Application &application) {
                                                                 2))));
                 }
                 else {
-                    protagonist.health -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
-                                           abs(static_cast<long>(it->velocity.x + it->velocity.y) / 2));
+                    protagonist.SetHealth(protagonist.GetHealth() -
+                                          static_cast<int>(application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
+                                                           abs(static_cast<long>(it->velocity.x + it->velocity.y) /
+                                                               2)));
                 }
                 application.gui.UpdateEnemy(static_cast<size_t>(it->health), it->name);
+                DecreaseAmountOfEnemiesWhenTheyAreDying(it->health, application);
             }
-            else if (it->name == "ShieldReward") {
+            else if (it->name == "ShieldReward" && protagonist.GetShield() + 30 < protagonist.GetMAX_SHIELD()) {
                 protagonist.SetShield(protagonist.GetShield() + 30);
                 it->alive = false;
             }
-            else if (it->name == "HealthReward") {
-                protagonist.health += 30;
+            else if (it->name == "HealthReward" && protagonist.GetHealth() + 30 < protagonist.GetMAX_HP()) {
+                protagonist.SetHealth(protagonist.GetHealth() + 30);
                 it->alive = false;
             }
-            application.gui.UpdateProtagonist(static_cast<size_t>(protagonist.health),
+            application.gui.UpdateProtagonist(static_cast<size_t>(protagonist.GetHealth()),
                                               static_cast<size_t>(protagonist.GetShield()));
         }
     }
@@ -339,9 +350,9 @@ void Draw(Player &protagonist, Application &application) {
     application.gui.Draw(application.window, protagonist.GetCurrentWeapon(), protagonist.GetAmountOfMissile(),
                          application.amountOfEnemies);
     application.aim.Draw(application.window);
-    if (protagonist.GetState() == 0) {
-        application.thrust.Draw(application.window, protagonist.position, application.objects.playerRotation);
-    }
+    //if (protagonist.GetState() == 0) {
+    //application.thrust.Draw(application.window, protagonist.position, application.objects.playerRotation);
+    //}
     application.window.display();
 }
 
