@@ -144,12 +144,14 @@ void ProcessEntities(float &time_ms, Application &application, Player &protagoni
 //    auto new_end = std::remove_if(application.entities.begin(), application.entities.end(), IsNotAliveEntity);
 //    application.entities.erase(new_end, application.entities.end());
     static float localTime = 0.f;
-    std::list<Entity *>::iterator it;
-    for (it = application.entities.begin(); it != application.entities.end(); ++it) {
+    for (std::list<Entity *>::iterator it = application.entities.begin(); it != application.entities.end(); ++it) {
         Entity *tmp = *it;
         if (IsNotAliveEntity(*it)) {
             it = application.entities.erase(it);
 //            delete tmp;
+        }
+        if (application.amountOfEnemies == 0 && tmp->name == "player") {
+            it = application.entities.erase(it);
         }
         localTime += time_ms;
         AppendEnemiesBullets(application, tmp, protagonist, localTime);
@@ -161,9 +163,12 @@ bool IsShieldActive(const Application &application, const Player &protagonist) {
     return application.playerShieldIsActive && protagonist.GetShield() > 0;
 }
 
-bool IsBullet(const string &name) {
-    return (name == "Bullet" || name == "Rocket" || name == "EnemyBullet" || name == "EnemyRocket" ||
-            name == "EnemySmartRocket");
+bool IsEnemyProjectile(const string &name) {
+    return (name == "EnemyBullet" || name == "EnemyRocket" || name == "EnemySmartRocket");
+}
+
+bool IsPlayerProjectile(const string &name) {
+    return (name == "Bullet" || name == "Rocket");
 }
 
 bool IsReward(const string &name) {
@@ -174,10 +179,22 @@ bool IsEnemy(const string &name) {
     return (name == "easyEnemy" || name == "mediumEnemy" || name == "strongEnemy");
 }
 
+bool IsPlayer(const string &name) {
+    return name == "player";
+}
+
 void DecreaseAmountOfEnemiesWhenTheyAreDying(int health, Application &application) {
     if (health <= 0 && application.amountOfEnemies > 0) {
         --application.amountOfEnemies;
     }
+}
+
+void SetPlayerHealth(Player &protagonist, int health) {
+    protagonist.SetHealth(protagonist.GetHealth() + health);
+}
+
+void SetPlayerShield(Player &protagonist, int shield) {
+    protagonist.SetShield(protagonist.GetShield() + shield);
 }
 
 void ProcessDamage(Player &protagonist, Application &application) {
@@ -202,50 +219,60 @@ void ProcessDamage(Player &protagonist, Application &application) {
                     DecreaseAmountOfEnemiesWhenTheyAreDying(it->health, application);
 
                 }
-
-                else if (at->name == "Asteroid") {
-                    if (it->name != "Asteroid") {
-                        if (IsBullet(it->name)) {
-                            it->alive = false;
-                        }
-                        if (!IsReward(it->name)) {
-                            at->name = "explosion";
-                        }
-                        if (IsEnemy(it->name)) {
-                            it->health -= 100;
-                            DecreaseAmountOfEnemiesWhenTheyAreDying(it->health, application);
-                        }
-                    }
-                }
-
+                ProcessAsteroidDamage(at, it, application, protagonist);
             }
 
         }
         if (it->RetRect().intersects(protagonist.RetRect())) {
-            if (it->name == "EnemyBullet") {
-                if (IsShieldActive(application, protagonist)) {
-                    protagonist.SetShield(
-                            protagonist.GetShield() -
-                            static_cast<int>(application.enemiesHandler.easyEnemy.easyEnemyBullet.DAMAGE / 2));
+
+
+            if (IsEnemyProjectile(it->name)) {
+
+                if (it->name == "EnemyBullet") {
+                    if (IsShieldActive(application, protagonist)) {
+                        SetPlayerShield(protagonist,
+                                        -static_cast<int>(application.enemiesHandler.easyEnemy.easyEnemyBullet.DAMAGE /
+                                                          2));
+                    }
+                    else {
+                        SetPlayerHealth(protagonist,
+                                        -static_cast<int>(application.enemiesHandler.easyEnemy.easyEnemyBullet.DAMAGE));
+                    }
+                    it->alive = false;
                 }
-                else {
-                    protagonist.SetHealth(protagonist.GetHealth() -
-                                          static_cast<int>(application.enemiesHandler.easyEnemy.easyEnemyBullet.DAMAGE));
+
+                else if (it->name == "EnemyRocket") {
+
+                    if (IsShieldActive(application, protagonist)) {
+                        SetPlayerShield(protagonist,
+                                        -static_cast<int>(application.enemiesHandler.mediumEnemy.simpleRocket.DAMAGE /
+                                                          2));
+                    }
+                    else {
+                        SetPlayerShield(protagonist,
+                                        -static_cast<int>(application.enemiesHandler.mediumEnemy.simpleRocket.DAMAGE));
+                    }
+                    it->name = "explosion";
+
                 }
-                it->alive = false;
+
+                else if (it->name == "EnemySmartRocket") {
+
+                    if (IsShieldActive(application, protagonist)) {
+                        SetPlayerShield(protagonist,
+                                        -static_cast<int>(application.enemiesHandler.hardEnemy.smartRocket.DAMAGE /
+                                                          2));
+                    }
+                    else {
+                        SetPlayerShield(protagonist,
+                                        -static_cast<int>(application.enemiesHandler.hardEnemy.smartRocket.DAMAGE));
+                    }
+                    it->name = "explosion";
+
+                }
+
             }
-            else if (it->name == "EnemyRocket" || it->name == "EnemySmartRocket") {
-                if (IsShieldActive(application, protagonist)) {
-                    protagonist.SetShield(
-                            protagonist.GetShield() -
-                            static_cast<int>(application.enemiesHandler.mediumEnemy.simpleRocket.DAMAGE / 2));
-                }
-                else {
-                    protagonist.SetHealth(protagonist.GetHealth() -
-                                          static_cast<int>(application.enemiesHandler.mediumEnemy.simpleRocket.DAMAGE));
-                }
-                it->name = "explosion";
-            }
+
             else if (IsEnemy(it->name)) {
                 it->boost.x = 0;
                 it->boost.y = 0;
@@ -280,9 +307,30 @@ void ProcessDamage(Player &protagonist, Application &application) {
     }
 }
 
+void ProcessAsteroidDamage(Entity *entity1, Entity *entity2, Application &application, Player &protagonist) {
+
+    if (entity1->name == "Asteroid" && entity2->name != "Asteroid") {
+        if (IsEnemyProjectile(entity2->name) || IsPlayerProjectile(entity2->name)) {
+            entity2->alive = false;
+            entity1->name = "explosion";
+        }
+        else if (!IsReward(entity2->name)) {
+            if (IsEnemy(entity2->name)) {
+                entity2->health -= 100;
+            }
+            else if (IsPlayer(entity2->name)) {
+                protagonist.SetHealth(protagonist.GetHealth() - 50);
+                protagonist.SetShield(protagonist.GetShield() - 50);
+            }
+            entity1->name = "explosion";
+        }
+    }
+
+}
+
 void AppendEnemies(Application &application) {
 
-    application.enemiesContainer.easyOpponent = application.map.GetObjects("easyEnemy");
+//    application.enemiesContainer.easyOpponent = application.map.GetObjects("easyEnemy");
 //    application.enemiesContainer.mediumOpponent = application.map.GetObjects("mediumEnemy");
     application.enemiesContainer.strongOpponent = application.map.GetObjects("hardEnemy");
 
@@ -320,10 +368,9 @@ void AppendEnemies(Application &application) {
 
 void CheckExistenceProtagonist(Player &protagonist, RenderWindow &window) {
     if (!protagonist.alive) {
-        window.close();
         cout << "game over\n";
+        window.close();
     }
-
 }
 
 void AppendAsteroids(size_t amount, Application &application) {
@@ -376,6 +423,7 @@ void MainLoop(Application &application, Player &protagonist) {
             if (application.level < 5) {
                 ++application.level;
             }
+            printf("All enemies are dead\n");
             break;
         }
     }

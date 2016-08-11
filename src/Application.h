@@ -39,8 +39,8 @@ struct ImageAssets {
 struct Application {
 
     Application() : gameState(MENU) {
-        mapInfo = {{"Assets/Level_1.tmx",    0},
-                   {"Assets/map1.tmx", 100}};
+        mapInfo = {{"Assets/Level_1.tmx", 0},
+                   {"Assets/map1.tmx",    10}};
 
     };
 
@@ -81,8 +81,22 @@ void Initialize(Application &application);
 
 void SetLevel(Application &application);
 
-void Run(Application &application, Player &protagonist);
+void Run(Application &application);
 
 void InitializeWindow(Application &application);
 
 void CloseWindowWhenItWasInterrupted(Application &application, const Event &event);
+
+void CheckExistenceProtagonist(Player &protagonist, RenderWindow &window);
+
+void DrawMenu(Application &application);
+
+void ProcessMeleeDamage();
+
+void ProcessAsteroidDamage(Entity *entity1, Entity *entity2, Application &application, Player &protagonist);
+
+void ProcessDistanceDamage();
+
+void SetPlayerShield(Player & protagonist, int shield);
+
+void SetPlayerHealth(Player & protagonist, int health);
