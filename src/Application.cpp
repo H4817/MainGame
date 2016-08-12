@@ -1,11 +1,15 @@
 #include "Application.h"
 
+void SetMapSize(Application &application) {
+    MAP_SIZE = {application.mapSize[application.level].first, application.mapSize[application.level].second};
+}
+
 void getPlayerCoordinateForView(Vector2f position) {
     Vector2f centerPosition = {position.x, position.y};
-    if (position.x < MAP_WIDTH.x) centerPosition.x = MAP_WIDTH.x;
-    if (position.x > MAP_WIDTH.y) centerPosition.x = MAP_WIDTH.y;
-    if (position.y < MAP_HEIGHT.x) centerPosition.y = MAP_HEIGHT.x;
-    if (position.y > MAP_HEIGHT.y) centerPosition.y = MAP_HEIGHT.y;
+    if (position.x < 960) centerPosition.x = 960;
+    if (position.x > MAP_SIZE.x) centerPosition.x = MAP_SIZE.x;
+    if (position.y < 530) centerPosition.y = 530;
+    if (position.y > MAP_SIZE.y) centerPosition.y = MAP_SIZE.y;
     view.setCenter(centerPosition.x, centerPosition.y);
 }
 
@@ -197,6 +201,96 @@ void SetPlayerShield(Player &protagonist, int shield) {
     protagonist.SetShield(protagonist.GetShield() + shield);
 }
 
+void ProcessMeleeDamage(Entity *entity, Application &application, Player &protagonist) {
+
+    if (IsEnemy(entity->name)) {
+
+        entity->boost.x = 0;
+        entity->boost.y = 0;
+        entity->health -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
+                           abs(static_cast<long>(entity->velocity.x + entity->velocity.y) / 2));
+
+        if (protagonist.GetShield() > 0 && application.playerShieldIsActive) {
+            protagonist.SetShield(protagonist.GetShield() -
+                                  static_cast<int>((application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
+                                                    abs(static_cast<long>(entity->velocity.x + entity->velocity.y) /
+                                                        2))));
+        }
+
+        else {
+            protagonist.SetHealth(protagonist.GetHealth() -
+                                  static_cast<int>(application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
+                                                   abs(static_cast<long>(entity->velocity.x + entity->velocity.y) /
+                                                       2)));
+        }
+
+        application.gui.UpdateEnemy(static_cast<size_t>(entity->health), entity->name);
+        DecreaseAmountOfEnemiesWhenTheyAreDying(entity->health, application);
+    }
+
+    else if (entity->name == "ShieldReward" && protagonist.GetShield() + 30 < protagonist.GetMAX_SHIELD()) {
+        protagonist.SetShield(protagonist.GetShield() + 30);
+        entity->alive = false;
+    }
+
+    else if (entity->name == "HealthReward" && protagonist.GetHealth() + 30 < protagonist.GetMAX_HP()) {
+        protagonist.SetHealth(protagonist.GetHealth() + 30);
+        entity->alive = false;
+    }
+
+}
+
+void ProcessDistanceDamage(Entity *entity, Application &application, Player &protagonist) {
+
+    if (entity->name == "EnemyBullet") {
+
+        if (IsShieldActive(application, protagonist)) {
+            SetPlayerShield(protagonist,
+                            -static_cast<int>(application.enemiesHandler.easyEnemy.easyEnemyBullet.DAMAGE /
+                                              2));
+        }
+
+        else {
+            SetPlayerHealth(protagonist,
+                            -static_cast<int>(application.enemiesHandler.easyEnemy.easyEnemyBullet.DAMAGE));
+        }
+
+        entity->alive = false;
+    }
+
+    else if (entity->name == "EnemyRocket") {
+
+        if (IsShieldActive(application, protagonist)) {
+            SetPlayerShield(protagonist,
+                            -static_cast<int>(application.enemiesHandler.mediumEnemy.simpleRocket.DAMAGE /
+                                              2));
+        }
+
+        else {
+            SetPlayerShield(protagonist,
+                            -static_cast<int>(application.enemiesHandler.mediumEnemy.simpleRocket.DAMAGE));
+        }
+
+        entity->name = "explosion";
+    }
+
+    else if (entity->name == "EnemySmartRocket") {
+
+        if (IsShieldActive(application, protagonist)) {
+            SetPlayerShield(protagonist,
+                            -static_cast<int>(application.enemiesHandler.hardEnemy.smartRocket.DAMAGE /
+                                              2));
+        }
+
+        else {
+            SetPlayerShield(protagonist,
+                            -static_cast<int>(application.enemiesHandler.hardEnemy.smartRocket.DAMAGE));
+        }
+
+        entity->name = "explosion";
+    }
+}
+
 void ProcessDamage(Player &protagonist, Application &application) {
     for (auto it : application.entities) {
         for (auto at : application.entities) {
@@ -225,82 +319,14 @@ void ProcessDamage(Player &protagonist, Application &application) {
         }
         if (it->RetRect().intersects(protagonist.RetRect())) {
 
-
             if (IsEnemyProjectile(it->name)) {
-
-                if (it->name == "EnemyBullet") {
-                    if (IsShieldActive(application, protagonist)) {
-                        SetPlayerShield(protagonist,
-                                        -static_cast<int>(application.enemiesHandler.easyEnemy.easyEnemyBullet.DAMAGE /
-                                                          2));
-                    }
-                    else {
-                        SetPlayerHealth(protagonist,
-                                        -static_cast<int>(application.enemiesHandler.easyEnemy.easyEnemyBullet.DAMAGE));
-                    }
-                    it->alive = false;
-                }
-
-                else if (it->name == "EnemyRocket") {
-
-                    if (IsShieldActive(application, protagonist)) {
-                        SetPlayerShield(protagonist,
-                                        -static_cast<int>(application.enemiesHandler.mediumEnemy.simpleRocket.DAMAGE /
-                                                          2));
-                    }
-                    else {
-                        SetPlayerShield(protagonist,
-                                        -static_cast<int>(application.enemiesHandler.mediumEnemy.simpleRocket.DAMAGE));
-                    }
-                    it->name = "explosion";
-
-                }
-
-                else if (it->name == "EnemySmartRocket") {
-
-                    if (IsShieldActive(application, protagonist)) {
-                        SetPlayerShield(protagonist,
-                                        -static_cast<int>(application.enemiesHandler.hardEnemy.smartRocket.DAMAGE /
-                                                          2));
-                    }
-                    else {
-                        SetPlayerShield(protagonist,
-                                        -static_cast<int>(application.enemiesHandler.hardEnemy.smartRocket.DAMAGE));
-                    }
-                    it->name = "explosion";
-
-                }
-
+                ProcessDistanceDamage(it, application, protagonist);
             }
 
-            else if (IsEnemy(it->name)) {
-                it->boost.x = 0;
-                it->boost.y = 0;
-                it->health -= (application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
-                               abs(static_cast<long>(it->velocity.x + it->velocity.y) / 2));
-                if (protagonist.GetShield() > 0 && application.playerShieldIsActive) {
-                    protagonist.SetShield(protagonist.GetShield() -
-                                          static_cast<int>((application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
-                                                            abs(static_cast<long>(it->velocity.x + it->velocity.y) /
-                                                                2))));
-                }
-                else {
-                    protagonist.SetHealth(protagonist.GetHealth() -
-                                          static_cast<int>(application.enemiesHandler.easyEnemy.COLLISION_DAMAGE +
-                                                           abs(static_cast<long>(it->velocity.x + it->velocity.y) /
-                                                               2)));
-                }
-                application.gui.UpdateEnemy(static_cast<size_t>(it->health), it->name);
-                DecreaseAmountOfEnemiesWhenTheyAreDying(it->health, application);
+            else {
+                ProcessMeleeDamage(it, application, protagonist);
             }
-            else if (it->name == "ShieldReward" && protagonist.GetShield() + 30 < protagonist.GetMAX_SHIELD()) {
-                protagonist.SetShield(protagonist.GetShield() + 30);
-                it->alive = false;
-            }
-            else if (it->name == "HealthReward" && protagonist.GetHealth() + 30 < protagonist.GetMAX_HP()) {
-                protagonist.SetHealth(protagonist.GetHealth() + 30);
-                it->alive = false;
-            }
+
             application.gui.UpdateProtagonist(static_cast<size_t>(protagonist.GetHealth()),
                                               static_cast<size_t>(protagonist.GetShield()));
         }
@@ -330,7 +356,7 @@ void ProcessAsteroidDamage(Entity *entity1, Entity *entity2, Application &applic
 
 void AppendEnemies(Application &application) {
 
-//    application.enemiesContainer.easyOpponent = application.map.GetObjects("easyEnemy");
+    application.enemiesContainer.easyOpponent = application.map.GetObjects("easyEnemy");
 //    application.enemiesContainer.mediumOpponent = application.map.GetObjects("mediumEnemy");
     application.enemiesContainer.strongOpponent = application.map.GetObjects("hardEnemy");
 
@@ -454,6 +480,7 @@ void Initialize(Application &application) {
 }
 
 void SetLevel(Application &application) {
+    SetMapSize(application);
 
     application.map.LoadFromFile(application.mapInfo[application.level].first);
 

@@ -13,8 +13,7 @@
 #include <memory>
 
 namespace {
-    const Vector2f MAP_WIDTH = {960, 2270};
-    const Vector2f MAP_HEIGHT = {530, 2600};
+    Vector2f MAP_SIZE;
     sf::View view;
 }
 
@@ -41,6 +40,7 @@ struct Application {
     Application() : gameState(MENU) {
         mapInfo = {{"Assets/Level_1.tmx", 0},
                    {"Assets/map1.tmx",    10}};
+        mapSize = {{980, 650}, {2270, 2600}};
 
     };
 
@@ -48,6 +48,7 @@ struct Application {
     GameState gameState;
     Level map;
     vector<pair<string, size_t>> mapInfo;
+    vector<pair<size_t, size_t >> mapSize;
     bool playerShieldIsActive = false;
     Clock clock;
     std::list<Entity *> entities;
@@ -91,11 +92,11 @@ void CheckExistenceProtagonist(Player &protagonist, RenderWindow &window);
 
 void DrawMenu(Application &application);
 
-void ProcessMeleeDamage();
+void ProcessMeleeDamage(Entity *entity, Application &application, Player &protagonist);
 
 void ProcessAsteroidDamage(Entity *entity1, Entity *entity2, Application &application, Player &protagonist);
 
-void ProcessDistanceDamage();
+void ProcessDistanceDamage(Entity *entity, Application &application, Player &protagonist);
 
 void SetPlayerShield(Player & protagonist, int shield);
 
