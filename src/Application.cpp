@@ -1,7 +1,8 @@
 #include "Application.h"
+#include "MapSize.h"
 
 void SetMapSize(Application &application) {
-    MAP_SIZE = {application.mapSize[application.level].first, application.mapSize[application.level].second};
+    MAP_SIZE = {mapSize[currentLevel].first, mapSize[currentLevel].second};
 }
 
 void getPlayerCoordinateForView(Vector2f position) {
@@ -154,8 +155,11 @@ void ProcessEntities(float &time_ms, Application &application, Player &protagoni
             it = application.entities.erase(it);
 //            delete tmp;
         }
-        if (application.amountOfEnemies == 0 && tmp->name == "player") {
-            it = application.entities.erase(it);
+        if (0 >= application.amountOfEnemies) {
+            if (tmp->name == "player") {
+                it = application.entities.erase(it);
+                printf("player was deleted\n");
+            }
         }
         localTime += time_ms;
         AppendEnemiesBullets(application, tmp, protagonist, localTime);
@@ -267,7 +271,7 @@ void ProcessDistanceDamage(Entity *entity, Application &application, Player &pro
         }
 
         else {
-            SetPlayerShield(protagonist,
+            SetPlayerHealth(protagonist,
                             -static_cast<int>(application.enemiesHandler.mediumEnemy.simpleRocket.DAMAGE));
         }
 
@@ -283,7 +287,7 @@ void ProcessDistanceDamage(Entity *entity, Application &application, Player &pro
         }
 
         else {
-            SetPlayerShield(protagonist,
+            SetPlayerHealth(protagonist,
                             -static_cast<int>(application.enemiesHandler.hardEnemy.smartRocket.DAMAGE));
         }
 
@@ -403,8 +407,8 @@ void AppendAsteroids(size_t amount, Application &application) {
     for (size_t i = 0; i < amount; ++i) {
         application.entities.push_back(
                 new Asteroid(application.imageAssets.asteroid,
-                             {static_cast<float>(rand() % (application.parameters.MAP_SIZE.x - 20 + 1) + 20),
-                              static_cast<float>(rand() % (application.parameters.MAP_SIZE.y - 10 + 1) + 10)},
+                             {static_cast<float>(rand() % (mapSize[currentLevel].first - 20 + 1) + 20),
+                              static_cast<float>(rand() % (mapSize[currentLevel].second - 10 + 1) + 10)},
                              {65, 64},
                              "Asteroid"));
     }
@@ -416,7 +420,9 @@ void Draw(Player &protagonist, Application &application) {
     for (auto it : application.entities) {
         application.window.draw((it)->sprite);
     }
-    application.window.draw(protagonist.sprite);
+    if (protagonist.alive) {
+        application.window.draw(protagonist.sprite);
+    }
     if (application.playerShieldIsActive && protagonist.GetShield() > 0) {
         application.shield.Draw(application.window, protagonist.position);
     }
@@ -446,9 +452,6 @@ void MainLoop(Application &application, Player &protagonist) {
         application.window.setView(view);
         Draw(protagonist, application);
         if (AllEnemiesDead(application)) {
-            if (application.level < 5) {
-                ++application.level;
-            }
             printf("All enemies are dead\n");
             break;
         }
@@ -479,19 +482,19 @@ void Initialize(Application &application) {
     InitializeImages(application);
 }
 
-void SetLevel(Application &application) {
+void SetLevel(Application &application, size_t level) {
     SetMapSize(application);
 
-    application.map.LoadFromFile(application.mapInfo[application.level].first);
+    application.map.LoadFromFile(application.mapInfo[level].first);
 
-    AppendAsteroids(application.mapInfo[application.level].second, application);
+    AppendAsteroids(application.mapInfo[level].second, application);
 
     AppendEnemies(application);
 
 }
 
-void Run(Application &application) {
-    SetLevel(application);
+void Run(Application &application, size_t level) {
+    SetLevel(application, level);
     auto protagonist = CreatePlayer(application);
     MainLoop(application, protagonist);
 }
@@ -516,19 +519,12 @@ void DrawMenu(Application &application) {
     }
 }
 
-void StartGame() {
+void StartGame(size_t level) {
     Application application;
+    currentLevel = level;
     Initialize(application);
-    if (application.gameState == GameState::MENU || application.gameState == GameState::PAUSE) {
-        application.window.setMouseCursorVisible(true);
-        DrawMenu(application);
-    }
-    if (application.gameState == GameState::GAME) {
-        application.window.setMouseCursorVisible(false);
-        while (application.level < 2 && application.window.isOpen())
-            Run(application);
-    }
+    printf("game\n");
+    application.window.setMouseCursorVisible(false);
+    Run(application, level);
 }
-
-
 

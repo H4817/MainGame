@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include "MapSize.h"
 
 Entity::Entity(Image &image, Vector2f Position, Vector2i Size, String Name) {
     position = Position;
@@ -28,22 +29,22 @@ bool Entity::IsCharacter() {
 
 void Entity::SetPositionOnAnotherSide(Vector2f &position) {
     if (position.x < 0) {
-        position.x = parameters.MAP_SIZE.x;
+        position.x = mapSize[currentLevel].first;
         if (IsCharacter())
             ReduceSpeed();
     }
     if (position.y < 0) {
-        position.y = parameters.MAP_SIZE.y;
+        position.y = mapSize[currentLevel].second;
         if (IsCharacter())
             ReduceSpeed();
     }
 
-    if (position.x > parameters.MAP_SIZE.x) {
+    if (position.x > mapSize[currentLevel].first) {
         position.x = 0;
         if (IsCharacter())
             ReduceSpeed();
     }
-    if (position.y > parameters.MAP_SIZE.y) {
+    if (position.y > mapSize[currentLevel].second) {
         position.y = 0;
         if (IsCharacter())
             ReduceSpeed();

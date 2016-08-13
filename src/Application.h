@@ -40,7 +40,6 @@ struct Application {
     Application() : gameState(MENU) {
         mapInfo = {{"Assets/Level_1.tmx", 0},
                    {"Assets/map1.tmx",    10}};
-        mapSize = {{980, 650}, {2270, 2600}};
 
     };
 
@@ -48,7 +47,6 @@ struct Application {
     GameState gameState;
     Level map;
     vector<pair<string, size_t>> mapInfo;
-    vector<pair<size_t, size_t >> mapSize;
     bool playerShieldIsActive = false;
     Clock clock;
     std::list<Entity *> entities;
@@ -63,12 +61,11 @@ struct Application {
     Parameters parameters;
     //Thrust thrust;
     Vector2f playerPosition;
-    size_t level = 0;
     size_t amountOfEnemies = 0;
     RenderWindow window;
 };
 
-void StartGame();
+void StartGame(size_t level);
 
 bool IsEnemy(const string &name);
 
@@ -80,9 +77,9 @@ Player CreatePlayer(Application &application);
 
 void Initialize(Application &application);
 
-void SetLevel(Application &application);
+void SetLevel(Application &application, size_t level);
 
-void Run(Application &application);
+void Run(Application &application, size_t level);
 
 void InitializeWindow(Application &application);
 
