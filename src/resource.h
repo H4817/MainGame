@@ -47,7 +47,7 @@ struct EasyEnemy {
 
 struct MediumEnemy {
     size_t health = 300;
-    const sf::Vector2i SIZE = {117, 100};
+    const sf::Vector2i SIZE = {114, 102};
     const size_t COLLISION_DAMAGE = 3;
     const size_t AGGRO_DISTANCE = 1000;
     SimpleRocket simpleRocket;

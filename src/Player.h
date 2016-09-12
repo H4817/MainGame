@@ -37,7 +37,11 @@ public:
 
     const size_t GetMAX_SHIELD() const;
 
+
 private:
+    void ProcessState();
+    Texture withoutThrust;
+    Texture withThrust;
     int health;
     enum CurrentWeapon
     {

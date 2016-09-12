@@ -1,5 +1,6 @@
 #pragma once
 
+#include "LevelInfo.h"
 #include "Player.h"
 #include "Bullet.h"
 #include "Enemies.h"
@@ -37,13 +38,18 @@ struct ImageAssets {
 
 struct Application {
 
-    Application() : gameState(MENU) {
+    Application() {
+        gameState = GAME;
         mapInfo = {{"Assets/Level_1.tmx", 0},
-                   {"Assets/map1.tmx",    10}};
+                   {"Assets/Level_2.tmx", 0},
+                   {"Assets/Level_3.tmx", 5},
+                   {"Assets/map1.tmx",    15}
 
+
+        };
     };
 
-    Menu menu;
+//    Menu menu;
     GameState gameState;
     Level map;
     vector<pair<string, size_t>> mapInfo;
@@ -59,7 +65,6 @@ struct Application {
     ImageAssets imageAssets;
     MapObjects objects;
     Parameters parameters;
-    //Thrust thrust;
     Vector2f playerPosition;
     size_t amountOfEnemies = 0;
     RenderWindow window;
@@ -95,6 +100,6 @@ void ProcessAsteroidDamage(Entity *entity1, Entity *entity2, Application &applic
 
 void ProcessDistanceDamage(Entity *entity, Application &application, Player &protagonist);
 
-void SetPlayerShield(Player & protagonist, int shield);
+void SetPlayerShield(Player &protagonist, int shield);
 
-void SetPlayerHealth(Player & protagonist, int health);
+void SetPlayerHealth(Player &protagonist, int health);

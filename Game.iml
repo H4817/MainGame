@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="CPP_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src/Gui.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Entity.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Bullet.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Menu.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Gui.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/GameState.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Asteroid.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Menu.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/aim.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/shield.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Application.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Thrust.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Bullet.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Thrust.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Entity.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Player.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Enemies.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Asteroid.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Application.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Enemies.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/shield.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/aim.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Player.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cmake_modules/FindSFML.cmake" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TinyXML/tinystr.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TinyXML/tinystr.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TinyXML/tinyxml.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TinyXML/tinyxml.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TinyXML/tinyxmlerror.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TinyXML/tinyxmlparser.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/config.h.in" isTestSource="false" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="Header Search Paths">
+        <CLASSES>
+          <root url="file:///usr/include" />
+          <root url="file:///usr/lib/gcc/x86_64-pc-linux-gnu/6.1.1/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-pc-linux-gnu/6.1.1/include" />
+          <root url="file:///usr/local/include" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/Game-b06836aa/b06836aa/Release" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/Game-b06836aa/b06836aa/Debug" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/Game-b06836aa/b06836aa/RelWithDebInfo" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/Game-b06836aa/b06836aa/MinSizeRel" />
+        </CLASSES>
+        <SOURCES>
+          <root url="file:///usr/include" />
+          <root url="file:///usr/lib/gcc/x86_64-pc-linux-gnu/6.1.1/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-pc-linux-gnu/6.1.1/include" />
+          <root url="file:///usr/local/include" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/Game-b06836aa/b06836aa/Release" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/Game-b06836aa/b06836aa/Debug" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/Game-b06836aa/b06836aa/RelWithDebInfo" />
+          <root url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/Game-b06836aa/b06836aa/MinSizeRel" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+</module>

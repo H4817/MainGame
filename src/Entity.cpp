@@ -1,5 +1,5 @@
 #include "Entity.h"
-#include "MapSize.h"
+#include "LevelInfo.h"
 
 Entity::Entity(Image &image, Vector2f Position, Vector2i Size, String Name) {
     position = Position;
@@ -29,22 +29,22 @@ bool Entity::IsCharacter() {
 
 void Entity::SetPositionOnAnotherSide(Vector2f &position) {
     if (position.x < 0) {
-        position.x = mapSize[currentLevel].first;
+        position.x = mapSize[currentLevel - 1].first;
         if (IsCharacter())
             ReduceSpeed();
     }
     if (position.y < 0) {
-        position.y = mapSize[currentLevel].second;
+        position.y = mapSize[currentLevel - 1].second;
         if (IsCharacter())
             ReduceSpeed();
     }
 
-    if (position.x > mapSize[currentLevel].first) {
+    if (position.x > mapSize[currentLevel - 1].first) {
         position.x = 0;
         if (IsCharacter())
             ReduceSpeed();
     }
-    if (position.y > mapSize[currentLevel].second) {
+    if (position.y > mapSize[currentLevel - 1].second) {
         position.y = 0;
         if (IsCharacter())
             ReduceSpeed();

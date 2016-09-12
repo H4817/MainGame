@@ -4,6 +4,8 @@ void getPlayerCoordinateForView(Vector2f position);
 
 Player::Player(Image &image, Vector2f Position, Vector2i Size, String Name) : Entity(
         image, Position, Size, Name) {
+    withoutThrust.loadFromFile("IMG/888.png");
+    withThrust.loadFromFile("IMG/8888.png");
     shield = static_cast<int>(MAX_SHIELD);
     health = static_cast<int>(MAX_HP);
     state = STAY;
@@ -86,6 +88,15 @@ void Player::checkCollisionWithMap(float Dx, float Dy, MapObjects &objects) {
     }
 }
 
+void Player::ProcessState() {
+    if (state == MOVE) {
+        sprite.setTexture(withThrust);
+    }
+    else {
+        sprite.setTexture(withoutThrust);
+    }
+}
+
 void Player::Update(float time, MapObjects &objects) {
     sprite.setRotation(rotation);
     control(time);
@@ -99,12 +110,10 @@ void Player::Update(float time, MapObjects &objects) {
     if (health <= 0) {
         alive = false;
     }
-    if (!isMove) {
-        speed = 0;
-    }
-    if (alive) {
+    else {
         getPlayerCoordinateForView(position);
     }
+    ProcessState();
 }
 
 int Player::GetShield() const {

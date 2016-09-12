@@ -52,7 +52,7 @@ Action Button::GetAction() {
 void Button::draw(sf::RenderWindow &window, GameState &gameState) {
     Update(window, gameState);
     window.draw(rectangleShape);
-    window.draw(text);
+    //window.draw(text);
 }
 
 bool Button::IsMousePressed() {

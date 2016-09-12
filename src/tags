@@ -1,0 +1,377 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ACCELERATION	Bullet.h	/^    const double ACCELERATION = 0.005;$/;"	m	class:SmartRocket
+ACCELERATION	Enemies.h	/^    const double ACCELERATION = 0.003;$/;"	m	class:CEasyEnemy
+ACCELERATION	Player.h	/^    const double ACCELERATION = 0.003;$/;"	m	struct:Player
+AGGRO_DISTANCE	Enemies.h	/^    size_t AGGRO_DISTANCE;$/;"	m	class:CEasyEnemy
+AGGRO_DISTANCE	resource.h	/^    const size_t AGGRO_DISTANCE = 1000;$/;"	m	struct:MediumEnemy
+AGGRO_DISTANCE	resource.h	/^    const size_t AGGRO_DISTANCE = 1500;$/;"	m	struct:HardEnemy
+AGGRO_DISTANCE	resource.h	/^    const size_t AGGRO_DISTANCE = 700;$/;"	m	struct:EasyEnemy
+ANGLE	resource.h	/^    const size_t ANGLE = 180;$/;"	m	struct:Parameters
+Action	Menu.h	/^enum Action {$/;"	g
+Aim	aim.cpp	/^Aim::Aim() {$/;"	f	class:Aim
+Aim	aim.h	/^struct Aim {$/;"	s
+AllEnemiesDead	Application.cpp	/^bool AllEnemiesDead(const Application &application) {$/;"	f
+Animation	Asteroid.cpp	/^void Asteroid::Animation(float time) {$/;"	f	class:Asteroid
+AppendAsteroids	Application.cpp	/^void AppendAsteroids(size_t amount, Application &application) {$/;"	f
+AppendEnemies	Application.cpp	/^void AppendEnemies(Application &application) {$/;"	f
+AppendEnemiesBullets	Application.cpp	/^void AppendEnemiesBullets(Application &application, Entity *it, Player &protagonist, float &localTime) {$/;"	f
+Application	Application.h	/^    Application() : gameState(MENU) {$/;"	f	struct:Application
+Application	Application.h	/^struct Application {$/;"	s
+Asteroid	Asteroid.cpp	/^Asteroid::Asteroid(Image &image, Vector2f Position, Vector2i Size, String Name) : Entity(image,$/;"	f	class:Asteroid
+Asteroid	Asteroid.h	/^class Asteroid : public Entity {$/;"	c
+BAR_WIDTH	Gui.h	/^    const size_t BAR_WIDTH = 191;$/;"	m	class:Gui
+BULLET	Player.h	/^        BULLET,$/;"	e	enum:Player::CurrentWeapon
+Bullet	Bullet.cpp	/^Bullet::Bullet(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size, Vector2f targetPosition,$/;"	f	class:Bullet
+Bullet	Bullet.h	/^struct Bullet : public Entity {$/;"	s
+Button	Menu.cpp	/^Button::Button(sf::Vector2f position, sf::Vector2f size, std::string str, Action state) {$/;"	f	class:Button
+Button	Menu.h	/^class Button {$/;"	c
+CEasyEnemy	Enemies.cpp	/^CEasyEnemy::CEasyEnemy(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size, Vector2f &temp,$/;"	f	class:CEasyEnemy
+CEasyEnemy	Enemies.h	/^class CEasyEnemy : public Entity, public IEnemy {$/;"	c
+CMediumEnemy	Enemies.cpp	/^CMediumEnemy::CMediumEnemy(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size,$/;"	f	class:CMediumEnemy
+CMediumEnemy	Enemies.h	/^class CMediumEnemy : public CEasyEnemy {$/;"	c
+COLLISION_DAMAGE	resource.h	/^    const size_t COLLISION_DAMAGE = 2;$/;"	m	struct:EasyEnemy
+COLLISION_DAMAGE	resource.h	/^    const size_t COLLISION_DAMAGE = 3;$/;"	m	struct:HardEnemy
+COLLISION_DAMAGE	resource.h	/^    const size_t COLLISION_DAMAGE = 3;$/;"	m	struct:MediumEnemy
+CStrongEnemy	Enemies.cpp	/^CStrongEnemy::CStrongEnemy(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size,$/;"	f	class:CStrongEnemy
+CStrongEnemy	Enemies.h	/^class CStrongEnemy : public CMediumEnemy {$/;"	c
+CheckExistenceProtagonist	Application.cpp	/^void CheckExistenceProtagonist(Player &protagonist, RenderWindow &window) {$/;"	f
+CloseWindowWhenItWasInterrupted	Application.cpp	/^void CloseWindowWhenItWasInterrupted(Application &application, const Event &event) {$/;"	f
+CreateExplosion	Bullet.cpp	/^void Rocket::CreateExplosion(const float &time) {$/;"	f	class:Rocket
+CreateExplosion	Bullet.cpp	/^void SmartRocket::CreateExplosion(const float &time) {$/;"	f	class:SmartRocket
+CreateNewReward	Enemies.cpp	/^void CEasyEnemy::CreateNewReward() {$/;"	f	class:CEasyEnemy
+CreateNewReward	Enemies.cpp	/^void CMediumEnemy::CreateNewReward() {$/;"	f	class:CMediumEnemy
+CreatePlayer	Application.cpp	/^Player CreatePlayer(Application &application) {$/;"	f
+CurrentWeapon	Player.h	/^    enum CurrentWeapon$/;"	g	struct:Player
+DAMAGE	resource.h	/^    const size_t DAMAGE = 15;$/;"	m	struct:PlayerBullet
+DAMAGE	resource.h	/^    const size_t DAMAGE = 20;$/;"	m	struct:EasyEnemyBullet
+DAMAGE	resource.h	/^    const size_t DAMAGE = 60;$/;"	m	struct:SimpleRocket
+DAMAGE	resource.h	/^    const size_t DAMAGE = 80;$/;"	m	struct:_SmartRocket
+DECELERATION	Enemies.h	/^    const double DECELERATION = 0.985;$/;"	m	class:CEasyEnemy
+DECELERATION	Player.h	/^    const double DECELERATION = 0.997;$/;"	m	struct:Player
+DEG_TO_RAD	Entity.h	/^    const float DEG_TO_RAD = 0.017453f;$/;"	m	struct:Entity
+DecreaseAmountOfEnemiesWhenTheyAreDying	Application.cpp	/^void DecreaseAmountOfEnemiesWhenTheyAreDying(int health, Application &application) {$/;"	f
+Draw	Application.cpp	/^void Draw(Player &protagonist, Application &application) {$/;"	f
+Draw	Gui.cpp	/^void Gui::Draw(sf::RenderWindow &window, size_t weaponNumber, size_t amountOfMissiles, size_t amountOfEnemies) {$/;"	f	class:Gui
+Draw	Menu.cpp	/^void Menu::Draw(sf::RenderWindow &window, GameState &gameState) {$/;"	f	class:Menu
+Draw	Thrust.cpp	/^void Thrust::Draw(RenderWindow &window, Vector2f &position, float &rotation) {$/;"	f	class:Thrust
+Draw	aim.cpp	/^void Aim::Draw(RenderWindow &window) {$/;"	f	class:Aim
+Draw	level.h	/^inline void Level::Draw(sf::RenderWindow &window) {$/;"	f	class:Level
+Draw	shield.cpp	/^void Shield::Draw(sf::RenderWindow & window, sf::Vector2f position) {$/;"	f	class:Shield
+DrawButtons	Menu.cpp	/^void Menu::DrawButtons(sf::RenderWindow &window, GameState &gameState) {$/;"	f	class:Menu
+DrawMenu	Application.cpp	/^void DrawMenu(Application &application) {$/;"	f
+EXIT	Menu.h	/^    EXIT$/;"	e	enum:Action
+EasyEnemy	resource.h	/^struct EasyEnemy {$/;"	s
+EasyEnemyBullet	resource.h	/^struct EasyEnemyBullet {$/;"	s
+EnemiesContainer	Application.h	/^struct EnemiesContainer {$/;"	s
+EnemiesHandler	resource.h	/^struct EnemiesHandler {$/;"	s
+Entity	Entity.cpp	/^Entity::Entity(Image &image, Vector2f Position, Vector2i Size, String Name) {$/;"	f	class:Entity
+Entity	Entity.h	/^struct Entity {$/;"	s
+Exit	Menu.cpp	/^void Button::Exit() {$/;"	f	class:Button
+ExplosionAnimation	Bullet.cpp	/^void Rocket::ExplosionAnimation(const float &time) {$/;"	f	class:Rocket
+ExplosionAnimation	Bullet.cpp	/^void SmartRocket::ExplosionAnimation(const float &time) {$/;"	f	class:SmartRocket
+ExplosionAnimation	Enemies.cpp	/^void CEasyEnemy::ExplosionAnimation(const float &time) {$/;"	f	class:CEasyEnemy
+ExplosionAnimation	Enemies.cpp	/^void CMediumEnemy::ExplosionAnimation(const float &time) {$/;"	f	class:CMediumEnemy
+GAME	GameState.h	/^    GAME$/;"	e	enum:GameState
+GameState	GameState.h	/^enum GameState {$/;"	g
+GetAction	Menu.cpp	/^Action Button::GetAction() {$/;"	f	class:Button
+GetAllObjects	level.h	/^inline std::vector<Object> Level::GetAllObjects() {$/;"	f	class:Level
+GetAmountOfMissile	Player.cpp	/^size_t Player::GetAmountOfMissile() {$/;"	f	class:Player
+GetCurrentWeapon	Player.cpp	/^size_t Player::GetCurrentWeapon() {$/;"	f	class:Player
+GetHealth	Player.cpp	/^int Player::GetHealth() const {$/;"	f	class:Player
+GetMAX_HP	Player.cpp	/^const size_t Player::GetMAX_HP() const {$/;"	f	class:Player
+GetMAX_SHIELD	Player.cpp	/^const size_t Player::GetMAX_SHIELD() const {$/;"	f	class:Player
+GetMapSize	level.h	/^inline sf::Vector2i Level::GetMapSize() {$/;"	f	class:Level
+GetMousePosition	Application.cpp	/^void GetMousePosition(RenderWindow &window, Vector2f &playerPosition) {$/;"	f
+GetMousePosition	Menu.cpp	/^sf::Vector2f GetMousePosition(sf::RenderWindow &window) {$/;"	f
+GetObject	level.h	/^inline Object Level::GetObject(std::string name) {$/;"	f	class:Level
+GetObjects	level.h	/^inline std::vector<Object> Level::GetObjects(std::string name) {$/;"	f	class:Level
+GetPosition	Menu.cpp	/^sf::Vector2f Button::GetPosition() {$/;"	f	class:Button
+GetPropertyFloat	level.h	/^inline float Object::GetPropertyFloat(std::string name) {$/;"	f	class:Object
+GetPropertyInt	level.h	/^inline int Object::GetPropertyInt(std::string name) {$/;"	f	class:Object
+GetPropertyString	level.h	/^inline std::string Object::GetPropertyString(std::string name) {$/;"	f	class:Object
+GetShield	Player.cpp	/^int Player::GetShield() const {$/;"	f	class:Player
+GetSize	Menu.cpp	/^sf::Vector2f Button::GetSize() {$/;"	f	class:Button
+GetState	Player.cpp	/^int Player::GetState() {$/;"	f	class:Player
+GetTileSize	level.h	/^inline sf::Vector2i Level::GetTileSize() {$/;"	f	class:Level
+Gui	Gui.cpp	/^Gui::Gui() {$/;"	f	class:Gui
+Gui	Gui.h	/^class Gui {$/;"	c
+HEALTH	resource.h	/^    const size_t HEALTH = 300;$/;"	m	struct:PlayerProperties
+HardEnemy	resource.h	/^struct HardEnemy {$/;"	s
+IEnemy	Enemies.h	/^class IEnemy {$/;"	c
+IMAGE_SIZE	Asteroid.h	/^    const Vector2f IMAGE_SIZE = {65, 64};$/;"	m	class:Asteroid
+IMAGE_SIZE	Bullet.h	/^    const Vector2f IMAGE_SIZE = {49, 14};$/;"	m	class:Rocket
+IMAGE_SIZE	Bullet.h	/^    const Vector2f IMAGE_SIZE = {54, 25};$/;"	m	struct:Bullet
+ImageAssets	Application.h	/^struct ImageAssets {$/;"	s
+ImageSize	Player.h	/^    const sf::Vector2f ImageSize = {79, 99};$/;"	m	struct:Player
+Initialize	Application.cpp	/^void Initialize(Application &application) {$/;"	f
+InitializeImages	Application.cpp	/^void InitializeImages(Application &application) {$/;"	f
+InitializePlayer	Application.cpp	/^Object InitializePlayer(Application &application) {$/;"	f
+InitializeWindow	Application.cpp	/^void InitializeWindow(Application &application) {$/;"	f
+IsAggro	Application.cpp	/^bool IsAggro(const Vector2f &protagonistPosition, const Vector2f &enemyPosition, const size_t &distance) {$/;"	f
+IsCharacter	Entity.cpp	/^bool Entity::IsCharacter() {$/;"	f	class:Entity
+IsEnemy	Application.cpp	/^bool IsEnemy(const string &name) {$/;"	f
+IsEnemyProjectile	Application.cpp	/^bool IsEnemyProjectile(const string &name) {$/;"	f
+IsMouseOnButton	Menu.cpp	/^bool Button::IsMouseOnButton(const sf::Vector2f &mousePosition) {$/;"	f	class:Button
+IsMousePressed	Menu.cpp	/^bool Button::IsMousePressed() {$/;"	f	class:Button
+IsNotAliveEntity	Application.cpp	/^bool IsNotAliveEntity(Entity *entity) {$/;"	f
+IsOutsideOfDistance	Bullet.cpp	/^bool IsOutsideOfDistance(const Vector2f &playerPos, const Vector2f &position, size_t distance) {$/;"	f
+IsPlayer	Application.cpp	/^bool IsPlayer(const string &name) {$/;"	f
+IsPlayerProjectile	Application.cpp	/^bool IsPlayerProjectile(const string &name) {$/;"	f
+IsReward	Application.cpp	/^bool IsReward(const string &name) {$/;"	f
+IsShieldActive	Application.cpp	/^bool IsShieldActive(const Application &application, const Player &protagonist) {$/;"	f
+Layer	level.h	/^struct Layer {$/;"	s
+Level	level.h	/^class Level {$/;"	c
+LoadFromFile	level.h	/^inline bool Level::LoadFromFile(std::string filename) {$/;"	f	class:Level
+MAP_SIZE	Application.h	/^    Vector2f MAP_SIZE;$/;"	m	namespace:__anon2
+MAX_HEALTH	Enemies.h	/^    size_t MAX_HEALTH;$/;"	m	class:CEasyEnemy
+MAX_HP	Player.h	/^    const size_t MAX_HP = playerProperties.HEALTH;$/;"	m	struct:Player
+MAX_SHIELD	Player.h	/^    const size_t MAX_SHIELD = playerProperties.shield;$/;"	m	struct:Player
+MENU	GameState.h	/^    MENU,$/;"	e	enum:GameState
+MISSILE	Player.h	/^        MISSILE$/;"	e	enum:Player::CurrentWeapon
+MOVE	Player.h	/^        MOVE, SLIDE, STAY$/;"	e	enum:Player::__anon1
+MYPROJECT_GAMESTATE_H	GameState.h	2;"	d
+MYPROJECT_MAPSIZE_H	MapSize.h	2;"	d
+MainLoop	Application.cpp	/^void MainLoop(Application &application, Player &protagonist) {$/;"	f
+MapObjects	resource.h	/^struct MapObjects {$/;"	s
+MediumEnemy	resource.h	/^struct MediumEnemy {$/;"	s
+Menu	Menu.cpp	/^Menu::Menu() : tutorial(position, sizeOfButton, "Tutorial", SHOW_TEXT),$/;"	f	class:Menu
+Menu	Menu.h	/^class Menu {$/;"	c
+OFFSET	shield.h	/^    const sf::Vector2i OFFSET = {35, 25};$/;"	m	class:Shield
+Object	level.h	/^struct Object {$/;"	s
+PAUSE	GameState.h	/^    PAUSE,$/;"	e	enum:GameState
+Parameters	resource.h	/^struct Parameters {$/;"	s
+Player	Player.cpp	/^Player::Player(Image &image, Vector2f Position, Vector2i Size, String Name) : Entity($/;"	f	class:Player
+Player	Player.h	/^struct Player : public Entity {$/;"	s
+PlayerBullet	resource.h	/^struct PlayerBullet {$/;"	s
+PlayerProperties	resource.h	/^struct PlayerProperties {$/;"	s
+ProcessAsteroidDamage	Application.cpp	/^void ProcessAsteroidDamage(Entity *entity1, Entity *entity2, Application &application, Player &protagonist) {$/;"	f
+ProcessDamage	Application.cpp	/^void ProcessDamage(Player &protagonist, Application &application) {$/;"	f
+ProcessDistanceDamage	Application.cpp	/^void ProcessDistanceDamage(Entity *entity, Application &application, Player &protagonist) {$/;"	f
+ProcessEntities	Application.cpp	/^void ProcessEntities(float &time_ms, Application &application, Player &protagonist) {$/;"	f
+ProcessEvents	Application.cpp	/^void ProcessEvents(Player &protagonist, Application &application) {$/;"	f
+ProcessMeleeDamage	Application.cpp	/^void ProcessMeleeDamage(Entity *entity, Application &application, Player &protagonist) {$/;"	f
+ProcessState	Menu.cpp	/^void Button::ProcessState(GameState &gameState) {$/;"	f	class:Button
+ReduceSpeed	Entity.cpp	/^void Entity::ReduceSpeed() {$/;"	f	class:Entity
+RetRect	Entity.cpp	/^FloatRect Entity::RetRect() {$/;"	f	class:Entity
+Rocket	Bullet.cpp	/^Rocket::Rocket(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size, Vector2f temp,$/;"	f	class:Rocket
+Rocket	Bullet.h	/^class Rocket : public Entity {$/;"	c
+Run	Application.cpp	/^void Run(Application &application, size_t level) {$/;"	f
+RunTimer	Application.cpp	/^float RunTimer(Application &application) {$/;"	f
+SHOW_BUTTONS	Menu.h	/^    SHOW_BUTTONS,$/;"	e	enum:Action
+SHOW_TEXT	Menu.h	/^    SHOW_TEXT,$/;"	e	enum:Action
+SIZE	resource.h	/^    const sf::Vector2i SIZE = {117, 100};$/;"	m	struct:MediumEnemy
+SIZE	resource.h	/^    const sf::Vector2i SIZE = {150, 150};$/;"	m	struct:HardEnemy
+SIZE	resource.h	/^    const sf::Vector2i SIZE = {49, 14};$/;"	m	struct:SimpleRocket
+SIZE	resource.h	/^    const sf::Vector2i SIZE = {54, 25};$/;"	m	struct:EasyEnemyBullet
+SIZE	resource.h	/^    const sf::Vector2i SIZE = {54, 25};$/;"	m	struct:PlayerBullet
+SIZE	resource.h	/^    const sf::Vector2i SIZE = {60, 16};$/;"	m	struct:_SmartRocket
+SIZE	resource.h	/^    const sf::Vector2i SIZE = {79, 99};$/;"	m	struct:PlayerProperties
+SIZE	resource.h	/^    const sf::Vector2i SIZE = {80, 67};$/;"	m	struct:EasyEnemy
+SLIDE	Player.h	/^        MOVE, SLIDE, STAY$/;"	e	enum:Player::__anon1
+SPEED	resource.h	/^    const float SPEED = 0.2;$/;"	m	struct:PlayerProperties
+START_GAME	Menu.h	/^    START_GAME,$/;"	e	enum:Action
+STAY	Player.h	/^        MOVE, SLIDE, STAY$/;"	e	enum:Player::__anon1
+SetAmountOfMissile	Player.cpp	/^void Player::SetAmountOfMissile(size_t amount) {$/;"	f	class:Player
+SetCurrentWeapon	Player.cpp	/^void Player::SetCurrentWeapon(size_t weaponNumber) {$/;"	f	class:Player
+SetHealth	Player.cpp	/^void Player::SetHealth(int health) {$/;"	f	class:Player
+SetLevel	Application.cpp	/^void SetLevel(Application &application, size_t level) {$/;"	f
+SetMapSize	Application.cpp	/^void SetMapSize(Application &application) {$/;"	f
+SetPlayerHealth	Application.cpp	/^void SetPlayerHealth(Player &protagonist, int health) {$/;"	f
+SetPlayerShield	Application.cpp	/^void SetPlayerShield(Player &protagonist, int shield) {$/;"	f
+SetPositionOnAnotherSide	Entity.cpp	/^void Entity::SetPositionOnAnotherSide(Vector2f &position) {$/;"	f	class:Entity
+SetShield	Player.cpp	/^void Player::SetShield(int shield) {$/;"	f	class:Player
+SetSpritesPosition	Gui.cpp	/^void Gui::SetSpritesPosition(sf::RenderWindow &window) {$/;"	f	class:Gui
+SetZeroSize	Gui.cpp	/^void Gui::SetZeroSize(sf::RectangleShape &rectangleShape) {$/;"	f	class:Gui
+Shield	shield.cpp	/^Shield::Shield() {$/;"	f	class:Shield
+Shield	shield.h	/^class Shield {$/;"	c
+ShowText	Menu.cpp	/^void Button::ShowText() {$/;"	f	class:Button
+SimpleRocket	resource.h	/^struct SimpleRocket {$/;"	s
+SmartRocket	Bullet.cpp	/^SmartRocket::SmartRocket(Image &image, MapObjects &objects, Vector2f Position, Vector2i Size, Vector2f temp,$/;"	f	class:SmartRocket
+SmartRocket	Bullet.h	/^class SmartRocket : public Rocket {$/;"	c
+StartGame	Application.cpp	/^void StartGame(size_t level) {$/;"	f
+StartGame	Menu.cpp	/^void Button::StartGame() {$/;"	f	class:Button
+Thrust	Thrust.cpp	/^Thrust::Thrust() {$/;"	f	class:Thrust
+Thrust	Thrust.h	/^struct Thrust {$/;"	s
+Update	Asteroid.cpp	/^void Asteroid::Update(float time, MapObjects &objects) {$/;"	f	class:Asteroid
+Update	Bullet.cpp	/^void Bullet::Update(float time, MapObjects &objects) {$/;"	f	class:Bullet
+Update	Bullet.cpp	/^void Rocket::Update(float time, MapObjects &objects) {$/;"	f	class:Rocket
+Update	Bullet.cpp	/^void SmartRocket::Update(float time, MapObjects &objects) {$/;"	f	class:SmartRocket
+Update	Enemies.cpp	/^void CEasyEnemy::Update(float time, MapObjects &objects) {$/;"	f	class:CEasyEnemy
+Update	Enemies.cpp	/^void CMediumEnemy::Update(float time, MapObjects &objects) {$/;"	f	class:CMediumEnemy
+Update	Menu.cpp	/^void Button::Update(sf::RenderWindow &window, GameState &gameState) {$/;"	f	class:Button
+Update	Player.cpp	/^void Player::Update(float time, MapObjects &objects) {$/;"	f	class:Player
+UpdateEnemy	Gui.cpp	/^void Gui::UpdateEnemy(size_t Health, const string &name) {$/;"	f	class:Gui
+UpdateProtagonist	Gui.cpp	/^void Gui::UpdateProtagonist(size_t Health, size_t Shield) {$/;"	f	class:Gui
+WINDOW_SIZE	resource.h	/^    const std::pair<unsigned, unsigned> WINDOW_SIZE = {sf::VideoMode::getDesktopMode().width,$/;"	m	struct:Parameters
+Y_OFFSET	Gui.h	/^    const size_t Y_OFFSET = 10;$/;"	m	class:Gui
+_SmartRocket	resource.h	/^struct _SmartRocket {$/;"	s
+aboutDesigner	Menu.h	/^    Button aboutDesigner;$/;"	m	class:Menu
+action	Menu.h	/^    Action action;$/;"	m	class:Button
+additionalText	Menu.h	/^    sf::Text additionalText;$/;"	m	class:Button
+aim	Application.h	/^    Aim aim;$/;"	m	struct:Application
+aim	aim.h	/^    Sprite aim;$/;"	m	struct:Aim
+alive	Entity.h	/^    bool alive;$/;"	m	struct:Entity
+amountOfEnemies	Application.h	/^    size_t amountOfEnemies = 0;$/;"	m	struct:Application
+amountOfMissiles	Player.h	/^    size_t amountOfMissiles;$/;"	m	struct:Player
+asteroid	Application.h	/^    Image asteroid;$/;"	m	struct:ImageAssets
+background	Menu.h	/^    sf::Sprite background;$/;"	m	class:Menu
+backgroundTexture	Menu.h	/^    sf::Texture backgroundTexture;$/;"	m	class:Menu
+blackRectangleForFillingEnemyHP	Gui.h	/^    sf::RectangleShape blackRectangleForFillingEnemyHP;$/;"	m	class:Gui
+blackRectangleForFillingPlayerHP	Gui.h	/^    sf::RectangleShape blackRectangleForFillingPlayerHP;$/;"	m	class:Gui
+blackRectangleForFillingPlayerShield	Gui.h	/^    sf::RectangleShape blackRectangleForFillingPlayerShield;$/;"	m	class:Gui
+boost	Entity.h	/^    Vector2f boost;$/;"	m	struct:Entity
+bulletImage	Application.h	/^    Image bulletImage;$/;"	m	struct:ImageAssets
+checkCollisionWithMap	Player.cpp	/^void Player::checkCollisionWithMap(float Dx, float Dy, MapObjects &objects) {$/;"	f	class:Player
+clock	Application.h	/^    Clock clock;$/;"	m	struct:Application
+clock	Thrust.h	/^    Clock clock;$/;"	m	struct:Thrust
+control	Player.cpp	/^void Player::control(const float &time) {$/;"	f	class:Player
+currentLevel	MapSize.h	/^static size_t currentLevel;$/;"	v
+currentWeapon	Player.h	/^    CurrentWeapon currentWeapon;$/;"	m	struct:Player
+distance	Bullet.h	/^    const size_t distance = 1200;$/;"	m	class:Rocket
+distance	Bullet.h	/^    const size_t distance = 1500;$/;"	m	class:SmartRocket
+distance	Bullet.h	/^    const size_t distance = 1700;$/;"	m	struct:Bullet
+distance	Enemies.h	/^    float distance;$/;"	m	class:CEasyEnemy
+distance	Player.h	/^    float distance;$/;"	m	struct:Player
+draw	Menu.cpp	/^void Button::draw(sf::RenderWindow &window, GameState &gameState) {$/;"	f	class:Button
+drawingBounds	level.h	/^    sf::Rect<float> drawingBounds;$/;"	m	class:Level
+easyEnemy	resource.h	/^    EasyEnemy easyEnemy;$/;"	m	struct:EnemiesHandler
+easyEnemyBullet	resource.h	/^    EasyEnemyBullet easyEnemyBullet;$/;"	m	struct:EasyEnemy
+easyEnemyImage	Application.h	/^    Image easyEnemyImage;$/;"	m	struct:ImageAssets
+easyOpponent	Application.h	/^    std::vector<Object> easyOpponent;$/;"	m	struct:EnemiesContainer
+enemiesContainer	Application.h	/^    EnemiesContainer enemiesContainer;$/;"	m	struct:Application
+enemiesHandler	Application.h	/^    EnemiesHandler enemiesHandler;$/;"	m	struct:Application
+enemiesHandler	Enemies.h	/^    EnemiesHandler enemiesHandler;$/;"	m	class:CEasyEnemy
+enemiesHandler	Gui.h	/^    EnemiesHandler enemiesHandler;$/;"	m	class:Gui
+enemyBar	Gui.h	/^    sf::Sprite enemyBar;$/;"	m	class:Gui
+enemyBulletImage	Application.h	/^    Image enemyBulletImage;$/;"	m	struct:ImageAssets
+entities	Application.h	/^    std::list<Entity *> entities;$/;"	m	struct:Application
+entitiesBar	Gui.h	/^    sf::Image entitiesBar;$/;"	m	class:Gui
+entitiesTexture	Gui.h	/^    sf::Texture entitiesTexture;$/;"	m	class:Gui
+firstTileID	level.h	/^    int firstTileID;$/;"	m	class:Level
+font	Gui.h	/^    sf::Font font;$/;"	m	class:Gui
+font	Menu.h	/^    sf::Font font;$/;"	m	class:Button
+font	Menu.h	/^    sf::Font font;$/;"	m	class:Menu
+frameCounter	Thrust.h	/^    float frameCounter;$/;"	m	struct:Thrust
+gameState	Application.h	/^    GameState gameState;$/;"	m	struct:Application
+getPlayerCoordinateForView	Application.cpp	/^void getPlayerCoordinateForView(Vector2f position) {$/;"	f
+gui	Application.h	/^    Gui gui;$/;"	m	struct:Application
+hardEnemy	resource.h	/^    HardEnemy hardEnemy;$/;"	m	struct:EnemiesHandler
+health	Entity.h	/^    int health;$/;"	m	struct:Entity
+health	Player.h	/^    int health;$/;"	m	struct:Player
+health	resource.h	/^    size_t health = 200;$/;"	m	struct:EasyEnemy
+health	resource.h	/^    size_t health = 300;$/;"	m	struct:MediumEnemy
+health	resource.h	/^    size_t health = 500;$/;"	m	struct:HardEnemy
+healthBarOffset	Gui.h	/^    sf::Vector2f healthBarOffset;$/;"	m	class:Gui
+height	level.h	/^    int width, height, tileWidth, tileHeight;$/;"	m	class:Level
+heroImage	Application.h	/^    Image heroImage;$/;"	m	struct:ImageAssets
+imageAssets	Application.h	/^    ImageAssets imageAssets;$/;"	m	struct:Application
+isExplosion	Asteroid.h	/^    bool isExplosion;$/;"	m	class:Asteroid
+isMove	Entity.h	/^    bool isMove;$/;"	m	struct:Entity
+layers	level.h	/^    std::vector<Layer> layers;$/;"	m	class:Level
+levelStatus	Gui.h	/^    sf::Text levelStatus;$/;"	m	class:Gui
+m_angle	Bullet.h	/^    float m_angle;$/;"	m	struct:Bullet
+m_exit	Menu.h	/^    Button m_exit;$/;"	m	class:Menu
+m_explosionTexture	Asteroid.h	/^    Texture m_explosionTexture;$/;"	m	class:Asteroid
+m_explosionTexture	Bullet.h	/^    Texture m_explosionTexture;$/;"	m	class:Rocket
+m_explosionTexture	Enemies.h	/^    Texture m_explosionTexture;$/;"	m	class:CEasyEnemy
+m_frameCounter	Asteroid.h	/^    float m_frameCounter;$/;"	m	class:Asteroid
+m_frameCounter	Bullet.h	/^    float m_frameCounter;$/;"	m	class:Rocket
+m_frameCounter	Enemies.h	/^    float m_frameCounter;$/;"	m	class:CEasyEnemy
+m_healthRewardTexture	Enemies.h	/^    Texture m_healthRewardTexture;$/;"	m	class:CEasyEnemy
+m_isAggro	Enemies.h	/^    bool m_isAggro;$/;"	m	class:CEasyEnemy
+m_playerCoordinates	Bullet.h	/^    Vector2f *m_playerCoordinates;$/;"	m	class:SmartRocket
+m_playerCoordinates	Enemies.h	/^    Vector2f *m_playerCoordinates;$/;"	m	class:CEasyEnemy
+m_rotation	Enemies.h	/^    float m_rotation;$/;"	m	class:CEasyEnemy
+m_shieldRewardTexture	Enemies.h	/^    Texture m_shieldRewardTexture;$/;"	m	class:CEasyEnemy
+m_state	Menu.h	/^    Action m_state;$/;"	m	class:Menu
+m_temp	Player.h	/^    sf::Vector2f m_temp;$/;"	m	struct:Player
+main	main.cpp	/^int main() {$/;"	f
+map	Application.h	/^    Level map;$/;"	m	struct:Application
+mapInfo	Application.h	/^    vector<pair<string, size_t>> mapInfo;$/;"	m	struct:Application
+mapSize	MapSize.h	/^const std::vector<std::pair<size_t, size_t >> mapSize = {{980,  650},$/;"	v
+mediumEnemy	resource.h	/^    MediumEnemy mediumEnemy;$/;"	m	struct:EnemiesHandler
+mediumEnemyImage	Application.h	/^    Image mediumEnemyImage;$/;"	m	struct:ImageAssets
+mediumOpponent	Application.h	/^    std::vector<Object> mediumOpponent;$/;"	m	struct:EnemiesContainer
+menu	Application.h	/^    Menu menu;$/;"	m	struct:Application
+min_distance	Enemies.h	/^    size_t min_distance;$/;"	m	class:CEasyEnemy
+missilesAmount	Gui.h	/^    sf::Text missilesAmount;$/;"	m	class:Gui
+name	Entity.h	/^    String name;$/;"	m	struct:Entity
+name	level.h	/^    std::string name;$/;"	m	struct:Object
+obj	resource.h	/^    std::vector<Object> obj;$/;"	m	struct:MapObjects
+objects	Application.h	/^    MapObjects objects;$/;"	m	struct:Application
+objects	level.h	/^    std::vector<Object> objects;$/;"	m	class:Level
+opacity	level.h	/^    int opacity;$/;"	m	struct:Layer
+parameters	Application.h	/^    Parameters parameters;$/;"	m	struct:Application
+parameters	Entity.h	/^    Parameters parameters;$/;"	m	struct:Entity
+playerBarHealth	Gui.h	/^    sf::Sprite playerBarHealth;$/;"	m	class:Gui
+playerBarShield	Gui.h	/^    sf::Sprite playerBarShield;$/;"	m	class:Gui
+playerBullet	resource.h	/^    PlayerBullet playerBullet;$/;"	m	struct:PlayerProperties
+playerPos	Bullet.h	/^    Vector2f playerPos;$/;"	m	class:Rocket
+playerPos	Bullet.h	/^    Vector2f playerPos;$/;"	m	struct:Bullet
+playerPosition	Application.h	/^    Vector2f playerPosition;$/;"	m	struct:Application
+playerPosition	resource.h	/^    sf::Vector2f playerPosition;$/;"	m	struct:MapObjects
+playerProperties	Application.h	/^    PlayerProperties playerProperties;$/;"	m	struct:Application
+playerProperties	Gui.h	/^    PlayerProperties playerProperties;$/;"	m	class:Gui
+playerProperties	Player.h	/^    PlayerProperties playerProperties;$/;"	m	struct:Player
+playerRotation	resource.h	/^    float playerRotation;$/;"	m	struct:MapObjects
+playerShieldIsActive	Application.h	/^    bool playerShieldIsActive = false;$/;"	m	struct:Application
+position	Entity.h	/^    Vector2f position;$/;"	m	struct:Entity
+position	Menu.h	/^    const sf::Vector2f position = {100, 100};$/;"	m	class:Menu
+position	aim.h	/^    Vector2f position;$/;"	m	struct:Aim
+properties	level.h	/^    std::map<std::string, std::string> properties;$/;"	m	struct:Object
+rect	level.h	/^    sf::Rect<float> rect;$/;"	m	struct:Object
+rectangleShape	Menu.h	/^    sf::RectangleShape rectangleShape;$/;"	m	class:Button
+rocketImage	Application.h	/^    Image rocketImage;$/;"	m	struct:ImageAssets
+rotation	Bullet.h	/^    float rotation;$/;"	m	class:Rocket
+rotation	Bullet.h	/^    float rotation;$/;"	m	struct:Bullet
+rotation	Player.h	/^    float rotation;$/;"	m	struct:Player
+rotation_GG	Player.cpp	/^void Player::rotation_GG(Vector2f pos) {$/;"	f	class:Player
+setLevel	Menu.h	/^    Button setLevel;$/;"	m	class:Menu
+shield	Application.h	/^    Shield shield;$/;"	m	struct:Application
+shield	Player.h	/^    int shield;$/;"	m	struct:Player
+shield	resource.h	/^    size_t shield = 500;$/;"	m	struct:PlayerProperties
+shield	shield.h	/^    sf::Sprite shield;$/;"	m	class:Shield
+shieldBarOffset	Gui.h	/^    sf::Vector2f shieldBarOffset;$/;"	m	class:Gui
+simpleRocket	resource.h	/^    SimpleRocket simpleRocket;$/;"	m	struct:MediumEnemy
+simpleRocket	resource.h	/^    SimpleRocket simpleRocket;$/;"	m	struct:PlayerProperties
+size	Entity.h	/^    Vector2i size;$/;"	m	struct:Entity
+size	Menu.h	/^    sf::Vector2f size;$/;"	m	class:Button
+sizeOfButton	Menu.h	/^    const sf::Vector2f sizeOfButton = {200, 50};$/;"	m	class:Menu
+smartRocket	resource.h	/^    _SmartRocket smartRocket;$/;"	m	struct:HardEnemy
+smartRocketImage	Application.h	/^    Image smartRocketImage;$/;"	m	struct:ImageAssets
+speed	Entity.h	/^    float speed;$/;"	m	struct:Entity
+sprite	Entity.h	/^    Sprite sprite;$/;"	m	struct:Entity
+sprite	level.h	/^    sf::Sprite sprite;$/;"	m	struct:Object
+startGame	Menu.h	/^    Button startGame;$/;"	m	class:Menu
+state	Player.h	/^    } state;$/;"	m	struct:Player	typeref:enum:Player::__anon1
+strongEnemyImage	Application.h	/^    Image strongEnemyImage;$/;"	m	struct:ImageAssets
+strongOpponent	Application.h	/^    std::vector<Object> strongOpponent;$/;"	m	struct:EnemiesContainer
+temp	Entity.h	/^    Vector2f temp;$/;"	m	struct:Entity
+text	Menu.h	/^    sf::Text text;$/;"	m	class:Button
+text	Menu.h	/^    sf::Text text;$/;"	m	class:Menu
+texture	Entity.h	/^    Texture texture;$/;"	m	struct:Entity
+texture1	Gui.h	/^    sf::Texture texture1;$/;"	m	class:Gui
+texture1	Thrust.h	/^    Texture texture1;$/;"	m	struct:Thrust
+texture1	aim.h	/^    Texture texture1;$/;"	m	struct:Aim
+texture1	shield.h	/^    sf::Texture texture1;$/;"	m	class:Shield
+texture2	Gui.h	/^    sf::Texture texture2;$/;"	m	class:Gui
+texture3	Gui.h	/^    sf::Texture texture3;$/;"	m	class:Gui
+texture4	Gui.h	/^    sf::Texture texture4;$/;"	m	class:Gui
+thrust	Thrust.h	/^    Sprite thrust;$/;"	m	struct:Thrust
+tileHeight	level.h	/^    int width, height, tileWidth, tileHeight;$/;"	m	class:Level
+tileWidth	level.h	/^    int width, height, tileWidth, tileHeight;$/;"	m	class:Level
+tiles	level.h	/^    std::vector<sf::Sprite> tiles;$/;"	m	struct:Layer
+tilesetImage	level.h	/^    sf::Texture tilesetImage;$/;"	m	class:Level
+tutorial	Menu.h	/^    Button tutorial;$/;"	m	class:Menu
+type	level.h	/^    std::string type;$/;"	m	struct:Object
+upLeftCorner	Menu.h	/^    sf::Vector2f upLeftCorner;$/;"	m	class:Button
+velocity	Entity.h	/^    Vector2f velocity;$/;"	m	struct:Entity
+view	Application.h	/^    sf::View view;$/;"	m	namespace:__anon2
+weaponIcon	Gui.h	/^    sf::Sprite weaponIcon;$/;"	m	class:Gui
+width	level.h	/^    int width, height, tileWidth, tileHeight;$/;"	m	class:Level
+window	Application.h	/^    RenderWindow window;$/;"	m	struct:Application

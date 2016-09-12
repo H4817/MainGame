@@ -1,0 +1,9 @@
+/home/nikolaj/Dropbox/Game2016-05/MainGame/build-dir/CMakeFiles/edit_cache.dir
+/home/nikolaj/Dropbox/Game2016-05/MainGame/build-dir/CMakeFiles/package_source.dir
+/home/nikolaj/Dropbox/Game2016-05/MainGame/build-dir/CMakeFiles/rebuild_cache.dir
+/home/nikolaj/Dropbox/Game2016-05/MainGame/build-dir/CMakeFiles/package.dir
+/home/nikolaj/Dropbox/Game2016-05/MainGame/build-dir/CMakeFiles/Game.dir
+/home/nikolaj/Dropbox/Game2016-05/MainGame/build-dir/CMakeFiles/install/strip.dir
+/home/nikolaj/Dropbox/Game2016-05/MainGame/build-dir/CMakeFiles/install/local.dir
+/home/nikolaj/Dropbox/Game2016-05/MainGame/build-dir/CMakeFiles/list_install_components.dir
+/home/nikolaj/Dropbox/Game2016-05/MainGame/build-dir/CMakeFiles/install.dir

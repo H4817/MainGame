@@ -1,16 +1,23 @@
 #include "Application.h"
-#include "MapSize.h"
+#include "LevelInfo.h"
+
+void DeleteAllObjects(Application &application) {
+    for (std::list<Entity *>::iterator it = application.entities.begin(); it != application.entities.end(); ++it) {
+        it = application.entities.erase(it);
+    }
+}
+
 
 void SetMapSize(Application &application) {
-    MAP_SIZE = {mapSize[currentLevel].first, mapSize[currentLevel].second};
+    MAP_SIZE = {mapSize[currentLevel - 1].first, mapSize[currentLevel - 1].second};
 }
 
 void getPlayerCoordinateForView(Vector2f position) {
     Vector2f centerPosition = {position.x, position.y};
     if (position.x < 960) centerPosition.x = 960;
-    if (position.x > MAP_SIZE.x) centerPosition.x = MAP_SIZE.x;
+    if (position.x > MAP_SIZE.x - 960) centerPosition.x = MAP_SIZE.x - 960;
     if (position.y < 530) centerPosition.y = 530;
-    if (position.y > MAP_SIZE.y) centerPosition.y = MAP_SIZE.y;
+    if (position.y > MAP_SIZE.y - 530) centerPosition.y = MAP_SIZE.y - 530;
     view.setCenter(centerPosition.x, centerPosition.y);
 }
 
@@ -78,9 +85,9 @@ void InitializeImages(Application &application) {
     application.imageAssets.smartRocketImage.loadFromFile("IMG/SmartRocket.png");
     application.imageAssets.enemyBulletImage.loadFromFile("IMG/RedPlasmaBullet.png");
     application.imageAssets.heroImage.loadFromFile("IMG/8888.png");
-    application.imageAssets.easyEnemyImage.loadFromFile("IMG/EasyEnemyYellowThrust1.png");
-    application.imageAssets.mediumEnemyImage.loadFromFile("IMG/MediumEnemyWithGreenThrust.png");
-    application.imageAssets.strongEnemyImage.loadFromFile("IMG/StrongEnemyWithGreenThrust.png");
+    application.imageAssets.easyEnemyImage.loadFromFile("IMG/EasyEnemy1.png");
+    application.imageAssets.mediumEnemyImage.loadFromFile("IMG/MediumEnemy1.png");
+    application.imageAssets.strongEnemyImage.loadFromFile("IMG/StrongEnemy.png");
     application.imageAssets.asteroid.loadFromFile("IMG/Asteroids/strip_rock_type_D.png");
 }
 
@@ -146,20 +153,11 @@ void AppendEnemiesBullets(Application &application, Entity *it, Player &protagon
 }
 
 void ProcessEntities(float &time_ms, Application &application, Player &protagonist) {
-//    auto new_end = std::remove_if(application.entities.begin(), application.entities.end(), IsNotAliveEntity);
-//    application.entities.erase(new_end, application.entities.end());
     static float localTime = 0.f;
     for (std::list<Entity *>::iterator it = application.entities.begin(); it != application.entities.end(); ++it) {
         Entity *tmp = *it;
-        if (IsNotAliveEntity(*it)) {
+        if (IsNotAliveEntity(*it) || (0 >= application.amountOfEnemies && tmp->name == "player")) {
             it = application.entities.erase(it);
-//            delete tmp;
-        }
-        if (0 >= application.amountOfEnemies) {
-            if (tmp->name == "player") {
-                it = application.entities.erase(it);
-                printf("player was deleted\n");
-            }
         }
         localTime += time_ms;
         AppendEnemiesBullets(application, tmp, protagonist, localTime);
@@ -361,7 +359,7 @@ void ProcessAsteroidDamage(Entity *entity1, Entity *entity2, Application &applic
 void AppendEnemies(Application &application) {
 
     application.enemiesContainer.easyOpponent = application.map.GetObjects("easyEnemy");
-//    application.enemiesContainer.mediumOpponent = application.map.GetObjects("mediumEnemy");
+    application.enemiesContainer.mediumOpponent = application.map.GetObjects("mediumEnemy");
     application.enemiesContainer.strongOpponent = application.map.GetObjects("hardEnemy");
 
     for (int i = 0; i < application.enemiesContainer.easyOpponent.size(); i++) {
@@ -407,8 +405,8 @@ void AppendAsteroids(size_t amount, Application &application) {
     for (size_t i = 0; i < amount; ++i) {
         application.entities.push_back(
                 new Asteroid(application.imageAssets.asteroid,
-                             {static_cast<float>(rand() % (mapSize[currentLevel].first - 20 + 1) + 20),
-                              static_cast<float>(rand() % (mapSize[currentLevel].second - 10 + 1) + 10)},
+                             {static_cast<float>(rand() % (mapSize[currentLevel - 1].first - 20 + 1) + 20),
+                              static_cast<float>(rand() % (mapSize[currentLevel - 1].second - 10 + 1) + 10)},
                              {65, 64},
                              "Asteroid"));
     }
@@ -429,9 +427,6 @@ void Draw(Player &protagonist, Application &application) {
     application.gui.Draw(application.window, protagonist.GetCurrentWeapon(), protagonist.GetAmountOfMissile(),
                          application.amountOfEnemies);
     application.aim.Draw(application.window);
-    //if (protagonist.GetState() == 0) {
-    //application.thrust.Draw(application.window, protagonist.position, application.objects.playerRotation);
-    //}
     application.window.display();
 }
 
@@ -452,6 +447,7 @@ void MainLoop(Application &application, Player &protagonist) {
         application.window.setView(view);
         Draw(protagonist, application);
         if (AllEnemiesDead(application)) {
+            DeleteAllObjects(application);
             printf("All enemies are dead\n");
             break;
         }
@@ -485,9 +481,9 @@ void Initialize(Application &application) {
 void SetLevel(Application &application, size_t level) {
     SetMapSize(application);
 
-    application.map.LoadFromFile(application.mapInfo[level].first);
+    application.map.LoadFromFile(application.mapInfo[level - 1].first);
 
-    AppendAsteroids(application.mapInfo[level].second, application);
+    AppendAsteroids(application.mapInfo[level - 1].second, application);
 
     AppendEnemies(application);
 
@@ -514,7 +510,7 @@ void DrawMenu(Application &application) {
             CloseWindowWhenItWasInterrupted(application, event);
         }
         application.window.clear();
-        application.menu.Draw(application.window, application.gameState);
+//        application.menu.Draw(application.window, application.gameState);
         application.window.display();
     }
 }
@@ -523,8 +519,10 @@ void StartGame(size_t level) {
     Application application;
     currentLevel = level;
     Initialize(application);
-    printf("game\n");
     application.window.setMouseCursorVisible(false);
     Run(application, level);
+    if (!application.window.isOpen()) {
+        exit(0);
+    }
 }
 
