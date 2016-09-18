@@ -12,7 +12,7 @@ Bullet::Bullet(Image &image, MapObjects &objects, Vector2f Position, Vector2i Si
     boost = position;
     rotation = (atan2(targetPosition.y - position.y, targetPosition.x - position.x)) * parameters.ANGLE / M_PI;
     playerPos = Position;
-    sprite.setOrigin(IMAGE_SIZE.x / 2, IMAGE_SIZE.y / 2);
+    sprite.setOrigin(Size.x / 2, Size.y / 2);
 }
 
 void Bullet::Update(float time, MapObjects &objects) {
@@ -33,7 +33,7 @@ Rocket::Rocket(Image &image, MapObjects &objects, Vector2f Position, Vector2i Si
     boost = {position.x, position.y};
     rotation = (atan2(temp.y - position.y, temp.x - position.x)) * parameters.ANGLE / M_PI;
     playerPos = Position;
-    sprite.setOrigin(IMAGE_SIZE.x / 2, IMAGE_SIZE.y / 2);
+    sprite.setOrigin(Size.x / 2, Size.y / 2);
     m_explosionTexture.loadFromFile("IMG/Exp_type_A1.png");
     m_frameCounter = 0;
 }
@@ -74,7 +74,7 @@ SmartRocket::SmartRocket(Image &image, MapObjects &objects, Vector2f Position, V
     boost = {position.x, position.y};
     rotation = (atan2(temp.y - position.y, temp.x - position.x)) * parameters.ANGLE / M_PI;
     playerPos = Position;
-    sprite.setOrigin(IMAGE_SIZE.x / 2, IMAGE_SIZE.y / 2);
+    sprite.setOrigin(Size.x / 2, Size.y / 2);
     m_explosionTexture.loadFromFile("IMG/Exp_type_C1.png");
     m_frameCounter = 0;
     m_playerCoordinates = &objects.playerPosition;

@@ -20,7 +20,7 @@ include_directories("${PROJECT_BINARY_DIR}")
 
 # Define sources and executable
 set(EXECUTABLE_NAME "Game")
-add_executable(${EXECUTABLE_NAME} src/main.cpp src/Entity.cpp src/Enemies.cpp src/Player.cpp src/Bullet.cpp src/Gui.cpp src/shield.cpp src/Thrust.cpp src/aim.cpp TinyXML/tinyxml.cpp TinyXML/tinystr.cpp TinyXML/tinyxmlerror.cpp TinyXML/tinyxmlparser.cpp src/Asteroid.cpp src/Asteroid.h src/Application.cpp src/Application.h src/Menu.cpp src/Menu.h src/GameState.h src/LevelInfo.h src/LevelInfo.cpp)
+add_executable(${EXECUTABLE_NAME} src/main.cpp src/Entity.cpp src/Enemies.cpp src/Player.cpp src/Bullet.cpp src/Gui.cpp src/shield.cpp src/Thrust.cpp src/aim.cpp TinyXML/tinyxml.cpp TinyXML/tinystr.cpp TinyXML/tinyxmlerror.cpp TinyXML/tinyxmlparser.cpp src/Asteroid.cpp src/Asteroid.h src/Application.cpp src/Application.h src/Menu/Menu.cpp src/Menu/Menu.h src/Menu/Button.cpp src/Menu/Button.h src/Menu/MyFont.cpp src/Menu/MyFont.h src/GameState.h src/LevelInfo.h src/LevelInfo.cpp)
 
 
 # Detect and add SFML

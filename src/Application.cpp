@@ -28,10 +28,10 @@ float RunTimer(Application &application) {
     return time_ms;
 }
 
-void ProcessEvents(Player &protagonist, Application &application) {
+void ProcessEvents(Player &protagonist, Application &application, RenderWindow &window) {
     sf::Event event;
-    while (application.window.pollEvent(event)) {
-        CloseWindowWhenItWasInterrupted(application, event);
+    while (window.pollEvent(event)) {
+        CloseWindowWhenItWasInterrupted(event, window);
         if (event.type == Event::KeyPressed) {
 
             if (event.key.code == sf::Keyboard::F) {
@@ -80,11 +80,12 @@ void GetMousePosition(RenderWindow &window, Vector2f &playerPosition) {
 }
 
 void InitializeImages(Application &application) {
-    application.imageAssets.bulletImage.loadFromFile("IMG/PlasmaBullet.png");
+    application.imageAssets.bulletImage.loadFromFile("IMG/shieldReward.png");
+//    application.imageAssets.bulletImage.loadFromFile("IMG/PlasmaBullet.png");
     application.imageAssets.rocketImage.loadFromFile("IMG/rocket1.png");
     application.imageAssets.smartRocketImage.loadFromFile("IMG/SmartRocket.png");
     application.imageAssets.enemyBulletImage.loadFromFile("IMG/RedPlasmaBullet.png");
-    application.imageAssets.heroImage.loadFromFile("IMG/8888.png");
+    application.imageAssets.heroImage.loadFromFile("IMG/arrow.png");
     application.imageAssets.easyEnemyImage.loadFromFile("IMG/EasyEnemy1.png");
     application.imageAssets.mediumEnemyImage.loadFromFile("IMG/MediumEnemy1.png");
     application.imageAssets.strongEnemyImage.loadFromFile("IMG/StrongEnemy.png");
@@ -412,40 +413,40 @@ void AppendAsteroids(size_t amount, Application &application) {
     }
 }
 
-void Draw(Player &protagonist, Application &application) {
-    application.window.clear();
-    application.map.Draw(application.window);
+void Draw(Player &protagonist, Application &application, RenderWindow &window) {
+    window.clear();
+    application.map.Draw(window);
     for (auto it : application.entities) {
-        application.window.draw((it)->sprite);
+        window.draw((it)->sprite);
     }
     if (protagonist.alive) {
-        application.window.draw(protagonist.sprite);
+        window.draw(protagonist.sprite);
     }
     if (application.playerShieldIsActive && protagonist.GetShield() > 0) {
-        application.shield.Draw(application.window, protagonist.position);
+        application.shield.Draw(window, protagonist.position);
     }
-    application.gui.Draw(application.window, protagonist.GetCurrentWeapon(), protagonist.GetAmountOfMissile(),
+    application.gui.Draw(window, protagonist.GetCurrentWeapon(), protagonist.GetAmountOfMissile(),
                          application.amountOfEnemies);
-    application.aim.Draw(application.window);
-    application.window.display();
+    application.aim.Draw(window);
+    window.display();
 }
 
 bool AllEnemiesDead(const Application &application) {
     return application.amountOfEnemies == 0;
 }
 
-void MainLoop(Application &application, Player &protagonist) {
-
-    while (application.window.isOpen()) {
-        GetMousePosition(application.window, application.playerPosition);
+void MainLoop(Application &application, Player &protagonist, RenderWindow &window, Menu & menu) {
+    while (window.isOpen()) {
+        GetMousePosition(window, application.playerPosition);
         float time_ms = RunTimer(application);
-        ProcessEvents(protagonist, application);
+        ProcessEvents(protagonist, application, window);
         protagonist.rotation_GG(application.playerPosition);
         ProcessEntities(time_ms, application, protagonist);
         ProcessDamage(protagonist, application);
-        CheckExistenceProtagonist(protagonist, application.window);
-        application.window.setView(view);
-        Draw(protagonist, application);
+        CheckExistenceProtagonist(protagonist, window);
+        window.setView(view);
+        DrawMenu(window, menu, application.gameState);
+//        Draw(protagonist, application, window);
         if (AllEnemiesDead(application)) {
             DeleteAllObjects(application);
             printf("All enemies are dead\n");
@@ -463,18 +464,18 @@ Player CreatePlayer(Application &application) {
     return protagonist;
 }
 
-void InitializeWindow(Application &application) {
-    application.window.create(
+void InitializeWindow(Application &application, RenderWindow &window) {
+    window.create(
             sf::VideoMode(application.parameters.WINDOW_SIZE.first, application.parameters.WINDOW_SIZE.second), "Game");
-    application.window.setFramerateLimit(60);
-    application.window.setVerticalSyncEnabled(true);
+    window.setFramerateLimit(60);
+    window.setVerticalSyncEnabled(true);
     view.reset(
             sf::FloatRect(0, 0, application.parameters.WINDOW_SIZE.first, application.parameters.WINDOW_SIZE.second));
 }
 
 
-void Initialize(Application &application) {
-    InitializeWindow(application);
+void Initialize(Application &application, RenderWindow &window) {
+    InitializeWindow(application, window);
     InitializeImages(application);
 }
 
@@ -489,39 +490,39 @@ void SetLevel(Application &application, size_t level) {
 
 }
 
-void Run(Application &application, size_t level) {
+void Run(Application &application, size_t level, RenderWindow &window, Menu & menu) {
     SetLevel(application, level);
     auto protagonist = CreatePlayer(application);
-    MainLoop(application, protagonist);
+    MainLoop(application, protagonist, window, menu);
 }
 
-void CloseWindowWhenItWasInterrupted(Application &application, const Event &event) {
+void CloseWindowWhenItWasInterrupted(const Event &event, RenderWindow &window) {
     if (event.type == sf::Event::Closed ||
         (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
-        application.window.close();
+        window.close();
         printf("The window was closed");
     }
 }
 
-void DrawMenu(Application &application) {
+void DrawMenu(RenderWindow &window, Menu & menu, GameState & gameState) {
     Event event;
-    while (application.window.isOpen() && application.gameState == MENU) {
-        while (application.window.pollEvent(event)) {
-            CloseWindowWhenItWasInterrupted(application, event);
+    while (window.isOpen() && gameState == MENU) {
+        while (window.pollEvent(event)) {
+            CloseWindowWhenItWasInterrupted(event, window);
         }
-        application.window.clear();
-//        application.menu.Draw(application.window, application.gameState);
-        application.window.display();
+//        window.clear(sf::Color(200, 0, 0));
+        menu.Draw(window);
+//        window.display();
     }
 }
 
-void StartGame(size_t level) {
+void StartGame(size_t level, RenderWindow &window, Menu &menu) {
     Application application;
     currentLevel = level;
-    Initialize(application);
-    application.window.setMouseCursorVisible(false);
-    Run(application, level);
-    if (!application.window.isOpen()) {
+    Initialize(application, window);
+    window.setMouseCursorVisible(false);
+    Run(application, level, window, menu);
+    if (!window.isOpen()) {
         exit(0);
     }
 }

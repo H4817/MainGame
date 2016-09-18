@@ -13,6 +13,7 @@ CEasyEnemy::CEasyEnemy(Image &image, MapObjects &objects, Vector2f Position, Vec
     sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
     boost = {position.x, position.y};
     sprite.setTextureRect(IntRect(0, 0, size.x, size.y));
+    sprite.setOrigin(Size.x / 2, Size.y / 2);
     m_explosionTexture.loadFromFile("IMG/Exp_type_B1.png");
     m_shieldRewardTexture.loadFromFile("IMG/shieldReward.png");
     m_healthRewardTexture.loadFromFile("IMG/healthReward.png");
@@ -100,6 +101,7 @@ CMediumEnemy::CMediumEnemy(Image &image, MapObjects &objects, Vector2f Position,
     m_playerCoordinates = &objects.playerPosition;
     m_frameCounter = 0;
     sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
+    sprite.setOrigin(Size.x / 2, Size.y / 2);
     boost = {position.x, position.y};
     sprite.setTextureRect(IntRect(0, 0, size.x, size.y));
     withoutThrust.loadFromFile("IMG/MediumEnemy1.png");
@@ -135,9 +137,9 @@ CStrongEnemy::CStrongEnemy(Image &image, MapObjects &objects, Vector2f Position,
     m_playerCoordinates = &objects.playerPosition;
     m_frameCounter = 0;
     sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
+    sprite.setOrigin(Size.x / 2, Size.y / 2);
     boost = {position.x, position.y};
     sprite.setTextureRect(IntRect(0, 0, size.x, size.y));
     withThrust.loadFromFile("IMG/StrongEnemyWithGreenThrust1.png");
     withoutThrust.loadFromFile("IMG/StrongEnemy.png");
 }
-

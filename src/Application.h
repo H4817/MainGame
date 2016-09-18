@@ -9,8 +9,8 @@
 #include "Thrust.h"
 #include "shield.h"
 #include "aim.h"
-#include "Menu.h"
 #include "GameState.h"
+#include "Menu/Menu.h"
 #include <memory>
 
 namespace {
@@ -45,11 +45,9 @@ struct Application {
                    {"Assets/Level_3.tmx", 5},
                    {"Assets/map1.tmx",    15}
 
-
         };
     };
 
-//    Menu menu;
     GameState gameState;
     Level map;
     vector<pair<string, size_t>> mapInfo;
@@ -67,32 +65,31 @@ struct Application {
     Parameters parameters;
     Vector2f playerPosition;
     size_t amountOfEnemies = 0;
-    RenderWindow window;
 };
 
-void StartGame(size_t level);
+void StartGame(size_t level, RenderWindow &window, Menu & menu);
 
 bool IsEnemy(const string &name);
 
 bool IsReward(const string &name);
 
-void MainLoop(Application &application, Player &protagonist);
+void MainLoop(Application &application, Player &protagonist, RenderWindow &window, Menu & menu);
 
 Player CreatePlayer(Application &application);
 
-void Initialize(Application &application);
+void Initialize(Application &application, RenderWindow &window);
 
 void SetLevel(Application &application, size_t level);
 
-void Run(Application &application, size_t level);
+void Run(Application &application, size_t level, RenderWindow &window, Menu & menu);
 
-void InitializeWindow(Application &application);
+void InitializeWindow(Application &application, RenderWindow &window);
 
-void CloseWindowWhenItWasInterrupted(Application &application, const Event &event);
+void CloseWindowWhenItWasInterrupted(const Event &event, RenderWindow &window);
 
 void CheckExistenceProtagonist(Player &protagonist, RenderWindow &window);
 
-void DrawMenu(Application &application);
+void DrawMenu(RenderWindow &window, Menu & menu, GameState & gameState);
 
 void ProcessMeleeDamage(Entity *entity, Application &application, Player &protagonist);
 

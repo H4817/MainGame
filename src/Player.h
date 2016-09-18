@@ -11,8 +11,6 @@ public:
 
     void rotation_GG(sf::Vector2f pos);
 
-    void checkCollisionWithMap(float Dx, float Dy, MapObjects &objects);
-
     void Update(float time, MapObjects &objects);
 
     int GetState();
@@ -56,7 +54,6 @@ private:
     float rotation;
     const double ACCELERATION = 0.003;
     const double DECELERATION = 0.997;
-    const sf::Vector2f ImageSize = {79, 99};
     size_t amountOfMissiles;
     sf::Vector2f m_temp;
     float distance;

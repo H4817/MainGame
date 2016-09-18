@@ -13,7 +13,7 @@ Player::Player(Image &image, Vector2f Position, Vector2i Size, String Name) : En
     currentWeapon = BULLET;
     if (name == "player") {
         sprite.setPosition(size.x, size.y);
-        sprite.setOrigin(ImageSize.x / 2, ImageSize.y / 2);
+        sprite.setOrigin(Size.x / 2, Size.y / 2);
     }
 }
 
@@ -65,35 +65,12 @@ void Player::rotation_GG(Vector2f pos) {
     rotation = static_cast<float>((atan2(dY, dX)) * parameters.ANGLE / M_PI);
 }
 
-void Player::checkCollisionWithMap(float Dx, float Dy, MapObjects &objects) {
-    for (int i = 0; i < objects.obj.size(); i++) {
-        if (RetRect().intersects(objects.obj[i].rect)) {
-            if (objects.obj[i].name == "solid") {
-                if (Dy > 0) {
-                    position.y = objects.obj[i].rect.top - size.y;
-                    boost.y = 0;
-                }
-                if (Dy < 0) {
-                    position.y = objects.obj[i].rect.top + objects.obj[i].rect.height;
-                    boost.y = 0;
-                }
-                if (Dx > 0) {
-                    position.x = objects.obj[i].rect.left - size.x;
-                }
-                if (Dx < 0) {
-                    position.x = objects.obj[i].rect.left + objects.obj[i].rect.width;
-                }
-            }
-        }
-    }
-}
-
 void Player::ProcessState() {
     if (state == MOVE) {
-        sprite.setTexture(withThrust);
+//        sprite.setTexture(withThrust);
     }
     else {
-        sprite.setTexture(withoutThrust);
+//        sprite.setTexture(withoutThrust);
     }
 }
 
@@ -101,11 +78,9 @@ void Player::Update(float time, MapObjects &objects) {
     sprite.setRotation(rotation);
     control(time);
     position.x += boost.x * time;
-    checkCollisionWithMap(boost.x, 0, objects);
     position.y += boost.y * time;
     objects.playerPosition = position;
     objects.playerRotation = rotation;
-    checkCollisionWithMap(0, boost.y, objects);
     sprite.setPosition(position.x + size.x / 2, position.y + size.y / 2);
     if (health <= 0) {
         alive = false;

@@ -8,12 +8,14 @@ struct SimpleRocket {
 };
 
 struct PlayerBullet {
-    const sf::Vector2i SIZE = {54, 25};
+//    const sf::Vector2i SIZE = {54, 25};
+    const sf::Vector2i SIZE = {26, 26};
     const size_t DAMAGE = 15;
 };
 
 struct PlayerProperties {
-    const sf::Vector2i SIZE = {79, 99};
+//    const sf::Vector2i SIZE = {79, 99};
+    const sf::Vector2i SIZE = {50, 50};
     const size_t HEALTH = 300;
     size_t shield = 500;
     const float SPEED = 0.2;
